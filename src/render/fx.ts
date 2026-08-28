@@ -111,18 +111,6 @@ export class Particles {
     }
   }
 
-  trail(x: number, y: number, colour: string): void {
-    this.spawn({
-      x,
-      y,
-      vx: (Math.random() - 0.5) * 40,
-      vy: (Math.random() - 0.5) * 40,
-      maxLife: 0.28,
-      size: 1.8,
-      colour,
-    });
-  }
-
   update(dt: number): void {
     for (const p of this.pool) {
       if (!p.alive) continue;

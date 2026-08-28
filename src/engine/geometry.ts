@@ -30,10 +30,6 @@ export function boxesOverlap(a: Box, b: Box): boolean {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
-export function pointInBox(px: number, py: number, b: Box): boolean {
-  return px >= b.x && px <= b.x + b.w && py >= b.y && py <= b.y + b.h;
-}
-
 export function clampPointToBox(px: number, py: number, b: Box): Vec2 {
   return { x: clamp(px, b.x, b.x + b.w), y: clamp(py, b.y, b.y + b.h) };
 }

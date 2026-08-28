@@ -14,7 +14,6 @@ import { WORLD } from "../engine/constants.ts";
 import type { PlatformSpec } from "../data/types.ts";
 
 const SUPERSAMPLE = 2;
-const TITLE_H = 24;
 const BODY_FONT = 11.5;
 const LINE_H = 15.5;
 
@@ -106,5 +105,3 @@ export function buildPanel(spec: PlatformSpec, accent: string): PanelSprite {
 
   return { canvas, w, h, dx: (spec.width - w) / 2 };
 }
-
-export const PANEL_TITLE_HEIGHT = TITLE_H;

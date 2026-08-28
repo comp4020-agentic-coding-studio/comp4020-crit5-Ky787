@@ -206,7 +206,7 @@ export class Game {
     this.last = performance.now();
   }
 
-  private pause(): void {
+  pause(): void {
     if (!this.runtime) return;
     this.mode = "paused";
     this.input.releaseAll();

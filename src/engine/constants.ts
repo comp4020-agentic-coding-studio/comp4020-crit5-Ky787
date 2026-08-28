@@ -135,7 +135,6 @@ export const WORLD = {
   /** Height of the non-solid code panel drawn under each platform slab. */
   codePanelHeight: 132,
   codePanelMinWidth: 236,
-  respawnFadeIn: 0.45,
   deathFreeze: 0.5,
 } as const;
 
