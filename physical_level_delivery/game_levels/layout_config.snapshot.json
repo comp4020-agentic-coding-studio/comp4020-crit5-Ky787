@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "seed": 12345,
+  "player": {
+    "width": 30,
+    "height": 48
+  },
+  "platform": {
+    "height": 24,
+    "route_width_min": 150,
+    "route_width_max": 240,
+    "split_width_min": 90,
+    "split_width_max": 130,
+    "crumble_width": 112
+  },
+  "grapple": {
+    "comfortable_distance_min": 260,
+    "comfortable_distance_max": 500,
+    "maximum_required_distance": 600,
+    "maximum_optional_distance": 620,
+    "maximum_vertical_delta": 270
+  },
+  "world": {
+    "margin_x": 120,
+    "height": 1500,
+    "death_y": 1425,
+    "ceiling_y": 120
+  },
+  "layout": {
+    "minimum_platform_clearance": 28,
+    "crumble_vertical_offset": 185,
+    "crumble_horizontal_offset": 80,
+    "preview_scale": 0.14
+  }
+}

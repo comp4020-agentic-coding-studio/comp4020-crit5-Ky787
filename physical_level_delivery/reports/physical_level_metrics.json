@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "all_ready": true,
+  "all_routes_reachable": true,
+  "all_complete_without_crumble": true,
+  "layouts_visually_distinct": true,
+  "browser_export_clean": true,
+  "browser_leaks": {},
+  "levels": {
+    "level01": {
+      "status": "READY FOR FRONTEND",
+      "route_platforms": 19,
+      "crumble_platforms": 8,
+      "total_platforms": 27,
+      "required_links": 18,
+      "optional_links": 16,
+      "semantic_events": 10,
+      "checkpoints": 2,
+      "world_width": 5590,
+      "maximum_required_gap": 310.2,
+      "repeated_logical_nodes": 0,
+      "physical_instances_of_repeated_nodes": 0,
+      "additional_repeat_instances": 0,
+      "complete_without_crumble": true,
+      "string_encryption": false,
+      "event_types": {
+        "authentication": 1,
+        "cleanup": 1,
+        "decrypt": 1,
+        "firewall": 2,
+        "network_scan": 1,
+        "scanner": 2,
+        "transfer": 1,
+        "watchdog": 1
+      }
+    },
+    "level02": {
+      "status": "READY FOR FRONTEND",
+      "route_platforms": 19,
+      "crumble_platforms": 8,
+      "total_platforms": 27,
+      "required_links": 18,
+      "optional_links": 16,
+      "semantic_events": 7,
+      "checkpoints": 3,
+      "world_width": 5595,
+      "maximum_required_gap": 350.5,
+      "repeated_logical_nodes": 0,
+      "physical_instances_of_repeated_nodes": 0,
+      "additional_repeat_instances": 0,
+      "complete_without_crumble": true,
+      "string_encryption": false,
+      "event_types": {
+        "authentication": 3,
+        "cleanup": 1,
+        "firewall": 2,
+        "navigation": 1
+      }
+    },
+    "level03": {
+      "status": "READY FOR FRONTEND",
+      "route_platforms": 50,
+      "crumble_platforms": 8,
+      "total_platforms": 58,
+      "required_links": 49,
+      "optional_links": 16,
+      "semantic_events": 12,
+      "checkpoints": 2,
+      "world_width": 13290,
+      "maximum_required_gap": 348.2,
+      "repeated_logical_nodes": 13,
+      "physical_instances_of_repeated_nodes": 44,
+      "additional_repeat_instances": 31,
+      "complete_without_crumble": true,
+      "string_encryption": false,
+      "event_types": {
+        "authentication": 1,
+        "cleanup": 1,
+        "scanner": 10
+      }
+    },
+    "level04": {
+      "status": "READY FOR FRONTEND",
+      "route_platforms": 47,
+      "crumble_platforms": 8,
+      "total_platforms": 55,
+      "required_links": 46,
+      "optional_links": 16,
+      "semantic_events": 13,
+      "checkpoints": 2,
+      "world_width": 15585,
+      "maximum_required_gap": 365.4,
+      "repeated_logical_nodes": 15,
+      "physical_instances_of_repeated_nodes": 43,
+      "additional_repeat_instances": 28,
+      "complete_without_crumble": true,
+      "string_encryption": false,
+      "event_types": {
+        "authentication": 1,
+        "checkpoint": 3,
+        "navigation": 3,
+        "watchdog": 6
+      }
+    },
+    "level05": {
+      "status": "READY FOR FRONTEND",
+      "route_platforms": 40,
+      "crumble_platforms": 8,
+      "total_platforms": 48,
+      "required_links": 39,
+      "optional_links": 16,
+      "semantic_events": 17,
+      "checkpoints": 3,
+      "world_width": 16665,
+      "maximum_required_gap": 545.9,
+      "repeated_logical_nodes": 8,
+      "physical_instances_of_repeated_nodes": 29,
+      "additional_repeat_instances": 21,
+      "complete_without_crumble": true,
+      "string_encryption": true,
+      "event_types": {
+        "authentication": 1,
+        "cleanup": 1,
+        "firewall": 2,
+        "navigation": 3,
+        "objective": 1,
+        "scanner": 2,
+        "transfer": 3,
+        "watchdog": 4
+      }
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "levels": [
+    {
+      "id": "level01",
+      "name": "Ghostline",
+      "theme": "tutorial",
+      "path": "levels/level01.json",
+      "world": {
+        "width": 5590,
+        "height": 1500,
+        "death_y": 1425,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 27
+    },
+    {
+      "id": "level02",
+      "name": "Firewall",
+      "theme": "vertical_chambers",
+      "path": "levels/level02.json",
+      "world": {
+        "width": 5595,
+        "height": 1500,
+        "death_y": 1425,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 27
+    },
+    {
+      "id": "level03",
+      "name": "Sweep",
+      "theme": "scanner_chambers",
+      "path": "levels/level03.json",
+      "world": {
+        "width": 13290,
+        "height": 1500,
+        "death_y": 1425,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 58
+    },
+    {
+      "id": "level04",
+      "name": "Watchdog",
+      "theme": "forward_pressure",
+      "path": "levels/level04.json",
+      "world": {
+        "width": 15585,
+        "height": 1500,
+        "death_y": 1425,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 55
+    },
+    {
+      "id": "level05",
+      "name": "Blackout",
+      "theme": "finale",
+      "path": "levels/level05.json",
+      "world": {
+        "width": 16665,
+        "height": 1500,
+        "death_y": 1425,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 48
+    }
+  ]
+}
