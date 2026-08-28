@@ -117,15 +117,30 @@ export const HAZARD = {
     armDelay: 0.9,
   },
   watchdog: {
-    /** How far behind the player the pressure wall starts. */
-    leadIn: 1500,
-    baseSpeed: 105,
+    /**
+     * How far behind the player the wall starts. Roughly two thirds of a
+     * screen, so it is visible almost immediately rather than a rumour.
+     */
+    leadIn: 1250,
+    /**
+     * Speed of the first activation. A bot playing the trace cleanly averages
+     * about 180 units/second, so the wall starts above that — sloppy play gets
+     * caught — and climbs as more call sites arm, while a player who keeps
+     * chaining swings still outruns it.
+     */
+    baseSpeed: 145,
     /** Added to speed by each further watchdog call site. */
-    speedStep: 22,
+    speedStep: 21,
     /** Wall is pushed back this far when a checkpoint is claimed. */
-    checkpointRelief: 900,
-    /** Wall never gets closer than this to the newest checkpoint on respawn. */
-    respawnSetback: 1700,
+    checkpointRelief: 620,
+    /**
+     * The furthest the wall may fall behind. This is what stops a strong run
+     * from retiring the threat for the rest of the level, and it also caps the
+     * room a respawn can buy, so both are set together.
+     */
+    maxTrail: 2000,
+    /** Wall is put this far behind the player after a death. */
+    respawnSetback: 2000,
   },
 } as const;
 

@@ -47,6 +47,21 @@ for (const entry of index.levels) {
       withCrumble.completed ? "COMPLETED" : `STALLED at ${withCrumble.stalledAt}`
     } in ${withCrumble.seconds.toFixed(0)}s (${full.completed ? "" : "!"}${collapsed.platforms.filter((p) => p.crumble === "collapsed").length} decoys collapsed)`,
   );
+
+  // Hazards on. The bot cannot read a beam or a gate, so deaths here are not a
+  // verdict on fairness — but the watchdog is a pure pace contest, and this is
+  // the only way to measure whether the wall is actually a threat.
+  const live = new LevelRuntime(level);
+  const hot = playThrough(live, { budgetSeconds: 600 });
+  const wd = live.hazards.watchdog;
+  const pace = hot.seconds > 0 ? level.world.width / hot.seconds : 0;
+  console.log(
+    `   with hazards live: ${hot.completed ? "COMPLETED" : `STALLED at ${hot.stalledAt}`}` +
+      ` in ${hot.seconds.toFixed(0)}s, ${hot.deaths} deaths` +
+      (wd.strength > 0
+        ? ` | watchdog ${wd.activations} armed, ${wd.speed.toFixed(0)}u/s vs bot pace ${pace.toFixed(0)}u/s`
+        : ""),
+  );
   for (const hop of report.hops) {
     if (!hop.result.ok) {
       console.log(`   ✗ ${hop.from} -> ${hop.to}  closest ${hop.result.bestDistance.toFixed(0)}u`);

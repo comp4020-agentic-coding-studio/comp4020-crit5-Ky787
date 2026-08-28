@@ -263,9 +263,9 @@ export function stepWatchdog(
   wd.speed =
     (HAZARD.watchdog.baseSpeed + HAZARD.watchdog.speedStep * (wd.activations - 1)) * wd.strength;
   wd.x += wd.speed * dt;
-  // The wall never falls hopelessly far behind, so backtracking has a cost
-  // without the level ever becoming unwinnable.
-  const floor = playerX - HAZARD.watchdog.leadIn * 1.35;
+  // The wall never falls hopelessly far behind, so a strong run cannot retire
+  // the threat — but it never closes in from nowhere either.
+  const floor = playerX - HAZARD.watchdog.maxTrail;
   if (wd.x < floor) wd.x = floor;
 }
 

@@ -6,7 +6,7 @@
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
-import { HAZARD, THEME_PROFILES } from "../src/engine/constants.ts";
+import { HAZARD, PLAYER, THEME_PROFILES } from "../src/engine/constants.ts";
 import { boxesOverlap } from "../src/engine/geometry.ts";
 import { LevelRuntime } from "../src/engine/level-runtime.ts";
 import type { RuntimeEvent } from "../src/engine/level-runtime.ts";
@@ -275,6 +275,61 @@ describe("engine: semantic events drive mechanics by type", () => {
     expect(checkpoint.claimed).toBe(true);
     expect(runtime.hazards.watchdog.x).toBeLessThan(before - HAZARD.watchdog.checkpointRelief / 2);
     expect(runtime.hazards.watchdog.reliefFlash).toBeGreaterThan(0);
+  });
+
+  it("catches a player who stops moving", () => {
+    const { tuned } = level("level04");
+    const runtime = new LevelRuntime(tuned);
+    // A route platform clear of every safe harbour, so this measures the wall
+    // and not the sanctuary rule.
+    const perch = runtime
+      .routePlatforms()
+      .find(
+        (p) =>
+          !runtime.checkpoints.some((c) => c.platformId === p.spec.id) &&
+          p.spec.route_index !== null &&
+          p.spec.route_index > 20,
+      )!;
+    runtime.player.x = perch.solid.x + perch.solid.w / 2;
+    runtime.player.y = perch.solid.y - 40;
+    run(runtime, 0.6);
+    expect(runtime.player.grounded).toBe(true);
+
+    runtime.hazards.watchdog.active = true;
+    runtime.hazards.watchdog.activations = runtime.hazards.watchdogTriggers.length;
+    runtime.hazards.watchdog.x = runtime.player.x - 400;
+    const before = runtime.deaths;
+    run(runtime, 6);
+    expect(runtime.deaths, "idling in front of the watchdog has to cost you").toBe(before + 1);
+  });
+
+  it("stays outrunnable: full speed beats the wall even fully armed", () => {
+    const { tuned } = level("level04");
+    const runtime = new LevelRuntime(tuned);
+    const armed = runtime.hazards.watchdogTriggers.length;
+    const top =
+      (HAZARD.watchdog.baseSpeed + HAZARD.watchdog.speedStep * (armed - 1)) *
+      runtime.profile.watchdog;
+    expect(armed).toBeGreaterThan(1);
+    // Faster than a bot playing the trace cleanly (~165u/s), so sloppy play is
+    // punished; slower than a flat-out run, so it is never a death sentence.
+    expect(top).toBeGreaterThan(200);
+    expect(top).toBeLessThan(PLAYER.maxRunSpeed);
+  });
+
+  it("gets faster with every watchdog call site the player passes", () => {
+    const { tuned } = level("level04");
+    const runtime = new LevelRuntime(tuned);
+    const speeds: number[] = [];
+    for (const trigger of runtime.hazards.watchdogTriggers) {
+      runtime.player.x = trigger.x + 5;
+      run(runtime, 0.05);
+      speeds.push(runtime.hazards.watchdog.speed);
+    }
+    expect(speeds.length).toBeGreaterThan(2);
+    for (let i = 1; i < speeds.length; i += 1) {
+      expect(speeds[i]).toBeGreaterThan(speeds[i - 1]);
+    }
   });
 
   it("pushes the watchdog well behind the player on respawn", () => {
