@@ -137,13 +137,25 @@ async function evaluate<T>(cdp: Cdp, expression: string): Promise<T> {
   return result.result?.value as T;
 }
 
-async function key(cdp: Cdp, type: "keyDown" | "keyUp", code: string, keyName: string): Promise<void> {
+/**
+ * Virtual key codes matter: the browser's own default actions (Escape closing a
+ * dialog, for one) key off them, not off `code`.
+ */
+const VIRTUAL_KEYS: Record<string, number> = { " ": 32, Escape: 27, Tab: 9, Enter: 13 };
+
+async function key(
+  cdp: Cdp,
+  type: "keyDown" | "keyUp",
+  code: string,
+  keyName: string,
+): Promise<void> {
+  const virtual = VIRTUAL_KEYS[keyName] ?? keyName.toUpperCase().charCodeAt(0);
   await cdp.send("Input.dispatchKeyEvent", {
-    type,
+    type: type === "keyDown" ? "rawKeyDown" : "keyUp",
     code,
     key: keyName,
-    windowsVirtualKeyCode: keyName === " " ? 32 : keyName.toUpperCase().charCodeAt(0),
-    nativeVirtualKeyCode: keyName === " " ? 32 : keyName.toUpperCase().charCodeAt(0),
+    windowsVirtualKeyCode: virtual,
+    nativeVirtualKeyCode: virtual,
   });
 }
 
@@ -372,8 +384,60 @@ async function main(): Promise<void> {
       `${decoy?.id} ${collapse.state}`,
     );
 
+    // Reading the controls mid-mission must suspend the run, not end it.
+    await waitFor(cdp, (s) => s.grounded && !s.dead, 6000);
+    const beforeSheet = await evaluate<Snapshot>(cdp, "globalThis.binaryNinja.snapshot()");
+    await evaluate(cdp, `document.querySelector('[data-opens-modal="howto"]').click()`);
+    await sleep(300);
+    const sheetOpen = await evaluate<{ open: boolean; text: boolean }>(
+      cdp,
+      `(() => { const d = document.querySelector('dialog[data-modal="howto"]');
+        return { open: d.open, text: (d.textContent ?? '').includes('grappling gun') }; })()`,
+    );
+    check("the top bar opens a How to play dialog", sheetOpen.open && sheetOpen.text);
+
+    await sleep(900);
+    const duringSheet = await evaluate<Snapshot>(cdp, "globalThis.binaryNinja.snapshot()");
+    check(
+      "the run is suspended while a dialog is open",
+      Math.abs(duringSheet.elapsed - beforeSheet.elapsed) < 0.05 &&
+        duringSheet.level === "level01",
+      `${beforeSheet.elapsed.toFixed(2)}s -> ${duringSheet.elapsed.toFixed(2)}s`,
+    );
+
+    // Escape belongs to the dialog, not to the pause menu behind it.
+    await key(cdp, "keyDown", "Escape", "Escape");
+    await key(cdp, "keyUp", "Escape", "Escape");
+    await sleep(400);
+    const afterEscape = await evaluate<{ open: boolean; mode: string; elapsed: number }>(
+      cdp,
+      `(() => { const d = document.querySelector('dialog[data-modal="howto"]');
+        const s = globalThis.binaryNinja.snapshot();
+        return { open: d.open, mode: s.mode, elapsed: s.elapsed }; })()`,
+    );
+    check("escape closes the dialog without opening the pause menu", !afterEscape.open && afterEscape.mode === "playing");
+
+    await sleep(700);
+    const carriedOn = await evaluate<Snapshot>(cdp, "globalThis.binaryNinja.snapshot()");
+    check(
+      "the same run carries on afterwards",
+      carriedOn.elapsed > duringSheet.elapsed + 0.3 && carriedOn.level === "level01",
+      `${carriedOn.elapsed.toFixed(2)}s`,
+    );
+
+    await evaluate(cdp, `document.querySelector('[data-opens-modal="about"]').click()`);
+    await sleep(300);
+    const about = await evaluate<boolean>(
+      cdp,
+      `(() => { const d = document.querySelector('dialog[data-modal="about"]');
+        return d.open && (d.textContent ?? '').includes('alteredBB'); })()`,
+    );
+    check("the About the data dialog opens over the game", about);
+    await evaluate(cdp, `document.querySelector('dialog[data-modal="about"] [data-close]').click()`);
+    await sleep(250);
+
     // Mission select, and starting a different level from it.
-    await evaluate(cdp, "globalThis.binaryNinja.showSelect()");
+    await evaluate(cdp, `document.querySelector('[data-nav="missions"]').click()`);
     await sleep(400);
     const missions = await evaluate<number>(
       cdp,

@@ -6,7 +6,7 @@
  * binary it says there are no plaintext strings rather than inventing any.
  */
 
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { LevelRuntime } from "../src/engine/level-runtime.ts";
 import { Hud, formatTime } from "../src/ui/hud.ts";
 import { Inspector } from "../src/ui/inspector.ts";
@@ -14,6 +14,7 @@ import { Screens } from "../src/ui/screens.ts";
 import type { MissionFacts } from "../src/ui/screens.ts";
 import { Progress } from "../src/ui/progress.ts";
 import { DebugPanel } from "../src/ui/debug-panel.ts";
+import { Modals, anyDialogOpen } from "../src/ui/modals.ts";
 import { index, level, levels } from "./fixtures.ts";
 
 function host(): HTMLElement {
@@ -195,6 +196,70 @@ describe("screens", () => {
     screens.hide();
     expect(screens.root.classList.contains("is-hidden")).toBe(true);
     expect(screens.name).toBe("none");
+  });
+});
+
+describe("top-bar dialogs", () => {
+  // `anyDialogOpen` reads the whole document, so each case starts from a page
+  // with nothing left open by the last one.
+  beforeEach(() => {
+    document.body.replaceChildren();
+  });
+
+  function page(): { root: HTMLElement; modals: Modals } {
+    const root = host();
+    root.innerHTML = `
+      <nav>
+        <button type="button" data-nav="missions">Missions</button>
+        <button type="button" data-opens-modal="howto">How to play</button>
+        <button type="button" data-opens-modal="about">About the data</button>
+      </nav>
+      <dialog data-modal="howto"><div><button data-close>x</button>controls</div></dialog>
+      <dialog data-modal="about"><div><button data-close>x</button>provenance</div></dialog>`;
+    return { root, modals: new Modals(root) };
+  }
+
+  it("starts closed", () => {
+    const { modals } = page();
+    expect(modals.isOpen).toBe(false);
+    expect(modals.has("howto")).toBe(true);
+    expect(modals.has("about")).toBe(true);
+  });
+
+  it("opens from its top-bar button and closes from the close button", () => {
+    const { root, modals } = page();
+    root.querySelector<HTMLButtonElement>('[data-opens-modal="howto"]')!.click();
+    expect(modals.isOpen).toBe(true);
+    expect(root.querySelector<HTMLDialogElement>('[data-modal="howto"]')!.open).toBe(true);
+
+    root.querySelector<HTMLButtonElement>('[data-modal="howto"] [data-close]')!.click();
+    expect(modals.isOpen).toBe(false);
+  });
+
+  it("only shows one dialog at a time", () => {
+    const { root, modals } = page();
+    modals.open("howto");
+    modals.open("about");
+    expect(root.querySelector<HTMLDialogElement>('[data-modal="howto"]')!.open).toBe(false);
+    expect(root.querySelector<HTMLDialogElement>('[data-modal="about"]')!.open).toBe(true);
+  });
+
+  it("reports every open and close, so the game can suspend and resume", () => {
+    const { modals } = page();
+    const seen: boolean[] = [];
+    modals.watch((open) => seen.push(open));
+    modals.open("about");
+    modals.close();
+    expect(seen).toEqual([true, false]);
+  });
+
+  it("is visible to the input layer, so game keys stay out of a dialog", () => {
+    const { modals } = page();
+    expect(anyDialogOpen()).toBe(false);
+    modals.open("howto");
+    expect(anyDialogOpen()).toBe(true);
+    modals.close();
+    expect(anyDialogOpen()).toBe(false);
   });
 });
 

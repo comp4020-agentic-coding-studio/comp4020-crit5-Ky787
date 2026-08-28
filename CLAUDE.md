@@ -6,7 +6,7 @@ Binary Ninja is a browser grappling platformer built from pre-generated analysis
 
 Use `physical_level_delivery/web_game_data/index.json` as the browser dataset entry point.
 
-The workspace folder is /home/ky/Documents/ANU/2026 Semester 2/COMP8020 - Agentic Coding Studio/comp4020-crit5-Ky787
+All paths in this file are relative to the repository root.
 
 The supplied level data is authoritative for binary facts. Never invent or alter:
 

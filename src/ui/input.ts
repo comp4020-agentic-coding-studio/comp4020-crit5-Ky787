@@ -8,6 +8,7 @@
  */
 
 import type { Vec2 } from "../engine/geometry.ts";
+import { anyDialogOpen } from "./modals.ts";
 import type { InputState } from "../engine/physics.ts";
 import { emptyInput } from "../engine/physics.ts";
 
@@ -30,6 +31,12 @@ export class InputManager {
     const onKey = (e: KeyboardEvent, down: boolean): void => {
       const code = e.code;
       if (down && e.repeat) return;
+      // A dialog owns the keyboard while it is open — including Escape, which
+      // closes it rather than toggling the pause menu behind it.
+      if (anyDialogOpen()) {
+        this.releaseAll();
+        return;
+      }
       if (
         [
           "KeyA",
@@ -76,6 +83,7 @@ export class InputManager {
     };
 
     const down = (e: PointerEvent): void => {
+      if (anyDialogOpen()) return;
       setAim(e);
       if (e.button === 2) {
         this.held.add("ReelIn");

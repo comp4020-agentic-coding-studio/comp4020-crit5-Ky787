@@ -16,6 +16,7 @@ import { DebugPanel } from "./ui/debug-panel.ts";
 import { Hud } from "./ui/hud.ts";
 import { InputManager } from "./ui/input.ts";
 import { Inspector } from "./ui/inspector.ts";
+import { Modals } from "./ui/modals.ts";
 import { Progress } from "./ui/progress.ts";
 import { Screens } from "./ui/screens.ts";
 import type { MissionFacts } from "./ui/screens.ts";
@@ -29,6 +30,7 @@ export class Game {
   private inspector: Inspector;
   private debug: DebugPanel;
   private screens: Screens;
+  private modals: Modals;
   private progress = new Progress();
 
   private entries: LevelIndexEntry[] = [];
@@ -74,6 +76,15 @@ export class Game {
       toSelect: () => this.showSelect(),
       next: () => void this.startIndex(this.levelIndex + 1),
     });
+    // Reading the controls or the provenance notes must not cost you the run,
+    // so both live in dialogs that suspend the simulation rather than pages
+    // that throw it away.
+    this.modals = new Modals(document);
+    this.modals.watch(() => this.input.releaseAll());
+    for (const button of document.querySelectorAll<HTMLElement>('[data-nav="missions"]')) {
+      button.addEventListener("click", () => this.showSelect());
+    }
+
     this.input.attach(canvas, host);
     this.hud.setVisible(false);
   }
@@ -150,6 +161,7 @@ export class Game {
   }
 
   showSelect(): void {
+    this.modals.close();
     this.mode = "select";
     this.hud.setVisible(false);
     this.inspector.clear();
@@ -208,6 +220,7 @@ export class Game {
 
   pause(): void {
     if (!this.runtime) return;
+    this.modals.close();
     this.mode = "paused";
     this.input.releaseAll();
     this.screens.pause(this.runtime.data.level.name);
@@ -248,7 +261,7 @@ export class Game {
     this.completeFlash = Math.max(0, this.completeFlash - dt * 1.4);
 
     const aim = this.resolveAim();
-    if (this.mode === "playing") this.simulate(dt, aim);
+    if (this.mode === "playing" && !this.modals.isOpen) this.simulate(dt, aim);
 
     this.renderer.particles.update(dt);
     this.updateCamera(dt, aim);

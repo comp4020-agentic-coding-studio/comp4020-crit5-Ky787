@@ -25,6 +25,10 @@ F1               analysis overlay
 
 `?level=level03` deep-links a mission; `?analysis=1` opens the overlay on load.
 
+**How to play** and **About the data** in the top bar open as dialogs rather
+than pages, so reading either mid-mission suspends the run instead of throwing
+it away.
+
 ## The five missions
 
 | # | Mission | Identity |
@@ -47,8 +51,8 @@ binary-analysis pipeline. The browser entry point is
 there is exactly one copy of the authoritative data. The page never parses a PE
 file, LLVM IR, a CFG or an emulator trace.
 
-The rules the game holds itself to are described on `about.html` and enforced by
-the spec:
+The rules the game holds itself to are spelled out in the **About the data**
+dialog in the top bar, and enforced by the spec:
 
 - addresses, instructions, raw-block mappings, strings and Hikari provenance are
   reproduced verbatim, never invented;

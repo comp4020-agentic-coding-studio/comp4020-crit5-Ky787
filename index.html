@@ -20,8 +20,9 @@
     <header class="topbar">
       <h1>Binary Ninja</h1>
       <nav aria-label="Primary">
-        <a href="./" aria-current="page">Play</a>
-        <a href="./about.html">About the data</a>
+        <button type="button" data-nav="missions">Missions</button>
+        <button type="button" data-opens-modal="howto">How to play</button>
+        <button type="button" data-opens-modal="about">About the data</button>
       </nav>
       <p class="topbar-note">Hikari-obfuscated x86-64 · five real traces</p>
     </header>
@@ -39,6 +40,138 @@
         </p>
       </noscript>
     </main>
+
+    <!--
+      Dialogs, not pages: navigating away mid-mission would throw the run away.
+      Opening one suspends the simulation until it closes.
+    -->
+    <dialog data-modal="howto" aria-labelledby="howto-title" class="sheet">
+      <div class="sheet-inner">
+        <header class="sheet-head">
+          <h2 id="howto-title">How to play</h2>
+          <button type="button" class="sheet-close" data-close aria-label="Close">✕</button>
+        </header>
+
+        <p class="sheet-lede">
+          You are a reverse-engineer with a grappling gun, following a program's execution trace
+          from its entry block to the end of the run. The route is solid. The obfuscator's invented
+          control flow is not.
+        </p>
+
+        <h3>Controls</h3>
+        <ul class="sheet-keys">
+          <li><span><kbd>A</kbd> <kbd>D</kbd></span> move left and right</li>
+          <li><span><kbd>Space</kbd></span> jump — or let go of the line with a kick</li>
+          <li><span>Mouse</span> aim; the reticle fills in when a block is in range</li>
+          <li><span>Left click</span> hold to fire and hold the line, release to let go</li>
+          <li><span><kbd>W</kbd> / right click</span> reel the line in</li>
+          <li><span><kbd>S</kbd></span> pay line out, or drop through the block you are standing on</li>
+          <li><span><kbd>R</kbd></span> restart at the last checkpoint</li>
+          <li><span><kbd>Esc</kbd></span> pause</li>
+          <li><span><kbd>F1</kbd></span> analysis overlay</li>
+        </ul>
+
+        <h3>Swinging</h3>
+        <ul>
+          <li>
+            Aim past the gap, hold the button, and run off the edge. The line goes taut and you
+            swing under the anchor.
+          </li>
+          <li>
+            Holding the button also winches you in, which tightens the arc and lifts you toward the
+            block. Let go near the top of the swing and your momentum carries you onto it.
+          </li>
+          <li>
+            Releasing keeps every bit of your speed, so one swing can be launched straight into the
+            next. Short gaps you can simply jump.
+          </li>
+        </ul>
+
+        <h3>What will drop you</h3>
+        <ul>
+          <li>
+            <strong>Bogus blocks.</strong> Some code here was invented by the obfuscator to waste
+            your time. Stand on one or hook it and it cracks, then falls. They look like everything
+            else until you touch them, and no route ever needs one.
+          </li>
+          <li><strong>Firewall gates</strong> pulse between open and lethal. Cross on the gap.</li>
+          <li><strong>Scanner beams</strong> sweep their chamber. Wait for the pass, then move.</li>
+          <li>
+            <strong>The watchdog</strong> advances from behind once the program arms it. Keep moving.
+          </li>
+        </ul>
+
+        <p class="sheet-note">
+          Checkpoints and the spawn are safe harbours — nothing can kill you inside one. Dying costs
+          a retry and puts you back at the last one, with the collapsed blocks restored.
+        </p>
+      </div>
+    </dialog>
+
+    <dialog data-modal="about" aria-labelledby="about-title" class="sheet">
+      <div class="sheet-inner">
+        <header class="sheet-head">
+          <h2 id="about-title">About the data</h2>
+          <button type="button" class="sheet-close" data-close aria-label="Close">✕</button>
+        </header>
+
+        <p class="sheet-lede">
+          Every code block you swing between is a real fragment of a compiled, Hikari-obfuscated
+          x86-64 program. An offline analysis pipeline produced five datasets — one per level — and
+          the game loads them in the browser from <code>web_game_data/index.json</code>. Nothing in
+          the page parses a PE file, an LLVM module, a control-flow graph or an emulator trace; that
+          work happened before the game existed, and the game only reads its result.
+        </p>
+
+        <h3>What is real</h3>
+        <ul>
+          <li>Addresses, entry RVAs and instruction listings on every block.</li>
+          <li>The raw basic blocks each visible block stands for.</li>
+          <li>String references, where the binary has any in plaintext.</li>
+          <li>
+            Semantic call sites — authentication, firewall, scanner, watchdog, transfer, cleanup.
+          </li>
+          <li>
+            Hikari provenance on the unstable blocks: each retains a strongly proven
+            <code>alteredBB</code> classification from the obfuscator's own output.
+          </li>
+        </ul>
+
+        <h3>One block is not one basic block</h3>
+        <p>
+          A visible platform is a <em>chronological instance of a compact gameplay node</em>. It
+          commonly maps to several machine basic blocks, and where a program revisits the same
+          logical node the trace gets a new forward platform with an incremented occurrence rather
+          than a loop you have to walk backwards. The inspector shows the real count for whatever
+          you are aiming at, and the analysis overlay (<kbd>F1</kbd>) shows the node and occurrence.
+        </p>
+
+        <h3>Which blocks crumble</h3>
+        <p>
+          Only blocks the dataset classifies as Hikari bogus control flow can collapse under you.
+          Legitimate code that simply was not executed on the traced run is not fake, and the game
+          never treats it as fake. Every level's successful route is completable without ever
+          touching a crumbling block — checked by a test that drives the game's own physics.
+        </p>
+
+        <h3>Blackout has no strings</h3>
+        <p>
+          The fifth program was built with string encryption, so its exported blocks carry no
+          plaintext strings at all. The game does not restore them, and does not substitute guesses
+          drawn from the semantic event metadata. The mission is deliberately harder to read.
+        </p>
+
+        <h3>Layout is tuned; mappings are not</h3>
+        <p>
+          The delivered <code>x</code>/<code>y</code> coordinates passed an abstract reachability
+          check that was explicitly not a rope-physics simulation, and at their supplied spacing the
+          platforms very nearly form a continuous walkway. The game widens the horizontal gaps
+          between route platforms with a monotone, deterministic transform before play, and leaves
+          every <code>y</code>, every width, every id and every binary fact untouched. The analysis
+          overlay reports the tuned and delivered link distances side by side.
+        </p>
+      </div>
+    </dialog>
 
     <script type="module" src="./main.ts"></script>
   </body>
