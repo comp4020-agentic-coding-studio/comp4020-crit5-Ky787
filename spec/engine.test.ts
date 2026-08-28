@@ -227,10 +227,19 @@ describe("engine: semantic events drive mechanics by type", () => {
   it("makes transfer and checkpoint call sites into respawn points", () => {
     const { tuned } = level("level05");
     const runtime = new LevelRuntime(tuned);
-    const transfers = tuned.events.filter((e) => e.type === "transfer").length;
-    const soft = runtime.checkpoints.filter((c) => c.soft);
-    expect(soft.length).toBe(transfers);
-    expect(runtime.checkpoints.length).toBe(tuned.checkpoints.length + transfers);
+    const transferPlatforms = tuned.events
+      .filter((e) => e.type === "transfer")
+      .map((e) => e.platform);
+    for (const platform of transferPlatforms) {
+      expect(
+        runtime.checkpoints.some((c) => c.platformId === platform),
+        `${platform} carries a transfer, so it should be a respawn point`,
+      ).toBe(true);
+    }
+    // Every delivered checkpoint survives too.
+    for (const c of tuned.checkpoints) {
+      expect(runtime.checkpoints.some((r) => r.id === c.id)).toBe(true);
+    }
   });
 
   it("dispatches a beacon event the first time the player reaches a call site", () => {
@@ -279,6 +288,61 @@ describe("engine: semantic events drive mechanics by type", () => {
     expect(runtime.respawnPoint().x - runtime.hazards.watchdog.x).toBeGreaterThanOrEqual(
       HAZARD.watchdog.respawnSetback - 1,
     );
+  });
+});
+
+describe("engine: checkpoint spacing", () => {
+  it.each(levels)(
+    "$entry.id never asks for a longer hold than its theme allows",
+    ({ tuned }) => {
+      const runtime = new LevelRuntime(tuned);
+      const route = tuned.route.platform_ids;
+      const index = new Map(route.map((id, i) => [id, i]));
+      const anchors = [
+        0,
+        ...runtime.checkpoints.map((c) => index.get(c.platformId) ?? -1).filter((i) => i >= 0),
+        route.length - 1,
+      ].sort((a, b) => a - b);
+      const longest = Math.max(...anchors.slice(1).map((v, i) => v - anchors[i]));
+      // One over the spacing is the deliberate guard against dropping a relief
+      // checkpoint immediately next to a delivered one.
+      expect(longest).toBeLessThanOrEqual(runtime.profile.checkpointSpacing + 1);
+    },
+  );
+
+  it("keeps every delivered checkpoint, and adds relief ones only on the route", () => {
+    for (const { tuned } of levels) {
+      const runtime = new LevelRuntime(tuned);
+      const route = new Set(tuned.route.platform_ids);
+      for (const c of tuned.checkpoints) {
+        expect(runtime.checkpoints.some((r) => r.id === c.id)).toBe(true);
+      }
+      for (const c of runtime.checkpoints) {
+        expect(route.has(c.platformId), `${c.id} must sit on a route platform`).toBe(true);
+      }
+      // Never on the exit block: the objective is not a rest stop.
+      expect(runtime.checkpoints.some((c) => c.platformId === tuned.objective.platform)).toBe(
+        false,
+      );
+    }
+  });
+
+  it("breaks Sweep's long unbroken run into several saves", () => {
+    const { tuned, source } = level("level03");
+    const runtime = new LevelRuntime(tuned);
+    expect(source.checkpoints.length).toBe(2);
+    expect(runtime.checkpoints.length).toBeGreaterThanOrEqual(6);
+    expect(runtime.profile.checkpointSpacing).toBeLessThan(
+      THEME_PROFILES.tutorial.checkpointSpacing,
+    );
+  });
+
+  it("numbers the plain checkpoints in the order the player meets them", () => {
+    const { tuned } = level("level03");
+    const runtime = new LevelRuntime(tuned);
+    const labels = runtime.checkpoints.map((c) => c.label);
+    expect(labels[0]).toBe("CHECKPOINT 1");
+    expect(new Set(labels).size).toBe(labels.length);
   });
 });
 

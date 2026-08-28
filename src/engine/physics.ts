@@ -8,7 +8,7 @@
 
 import { GRAPPLE, PLAYER } from "./constants.ts";
 import type { Box, Vec2 } from "./geometry.ts";
-import { clamp, raycastBoxes } from "./geometry.ts";
+import { raycastBoxes } from "./geometry.ts";
 
 export interface Solid extends Box {
   id: string;
@@ -28,9 +28,12 @@ export interface RopeState {
   anchor: Vec2;
   /** Animated hook position while firing or retracting. */
   tip: Vec2;
-  /** Distance the hook still has to travel. */
-  flightRemaining: number;
-  flightTotal: number;
+  /** Unit direction the hook was fired along. */
+  dir: Vec2;
+  /** Where the hook was fired from; the hook flies a straight world ray. */
+  origin: Vec2;
+  /** How far along that ray the hook has flown. */
+  travelled: number;
   length: number;
   taut: boolean;
   /** Units the rope shortened this step; converted into inward momentum. */
@@ -107,8 +110,9 @@ export function createPlayer(x: number, y: number): PlayerState {
       anchorId: null,
       anchor: { x: 0, y: 0 },
       tip: { x, y },
-      flightRemaining: 0,
-      flightTotal: 0,
+      dir: { x: 1, y: 0 },
+      origin: { x, y },
+      travelled: 0,
       length: 0,
       taut: false,
       shrink: 0,
@@ -132,26 +136,23 @@ export interface GrappleTarget {
 }
 
 /**
- * What the hook would attach to if fired at `aim` right now. Shared by the
- * targeting reticle, the code inspector and the firing code itself, so the
- * player always grapples exactly what the reticle highlighted.
+ * What the rope would catch on, running `maxDistance` from `origin` along
+ * `dir`. Used for the targeting reticle, and every step of the hook's flight to
+ * see whether the line has swept across a block.
  */
-export function findGrappleTarget(
+export function probeRope(
   origin: Vec2,
-  aim: Vec2,
+  dir: Vec2,
+  maxDistance: number,
   solids: readonly Solid[],
   /** Block the player is standing on; never a useful anchor. */
   ignoreId?: string | null,
 ): GrappleTarget | null {
-  const dx = aim.x - origin.x;
-  const dy = aim.y - origin.y;
-  const len = Math.hypot(dx, dy);
-  if (len < 1e-4) return null;
-  const dir = { x: dx / len, y: dy / len };
+  if (maxDistance <= 0) return null;
   const hit = raycastBoxes(
     origin,
     dir,
-    GRAPPLE.maxRange,
+    maxDistance,
     solids,
     GRAPPLE.aimAssistRadius,
     (i) => solids[i].grappleable && solids[i].id !== ignoreId,
@@ -160,8 +161,29 @@ export function findGrappleTarget(
   const solid = solids[hit.index];
   // Anything already within arm's reach is scenery, not an anchor.
   const reach = Math.hypot(hit.point.x - origin.x, hit.point.y - origin.y);
-  if (reach < GRAPPLE.minRange) return null;
-  return { solid, point: hit.point, distance: hit.distance };
+  if (reach < GRAPPLE.minRange || reach > GRAPPLE.maxRange) return null;
+  return { solid, point: hit.point, distance: reach };
+}
+
+/** Unit vector from `origin` to `aim`, or null if they coincide. */
+export function aimDirection(origin: Vec2, aim: Vec2): Vec2 | null {
+  const dx = aim.x - origin.x;
+  const dy = aim.y - origin.y;
+  const len = Math.hypot(dx, dy);
+  if (len < 1e-4) return null;
+  return { x: dx / len, y: dy / len };
+}
+
+/** What the hook would attach to if fired at `aim` right now (the reticle). */
+export function findGrappleTarget(
+  origin: Vec2,
+  aim: Vec2,
+  solids: readonly Solid[],
+  ignoreId?: string | null,
+): GrappleTarget | null {
+  const dir = aimDirection(origin, aim);
+  if (!dir) return null;
+  return probeRope(origin, dir, GRAPPLE.maxRange, solids, ignoreId);
 }
 
 export function releaseRope(p: PlayerState, boost = true): void {
@@ -177,14 +199,33 @@ export function releaseRope(p: PlayerState, boost = true): void {
   p.airTime = 0;
 }
 
-function fireRope(p: PlayerState, target: GrappleTarget): void {
-  p.rope.phase = "firing";
-  p.rope.anchorId = target.solid.id;
-  p.rope.anchor = { x: target.point.x, y: target.point.y };
-  p.rope.tip = { x: p.x, y: p.y };
-  p.rope.flightTotal = Math.max(1, target.distance);
-  p.rope.flightRemaining = p.rope.flightTotal;
-  p.rope.taut = false;
+/**
+ * The hook always leaves the gun. It flies a straight world ray from where it
+ * was fired, and attaches to the first block the *rope* — the line from the
+ * player to the hook — touches. Because the player keeps moving while the hook
+ * is in the air, that line sweeps, so a shot that flies just past a block can
+ * still catch it. If the hook runs out of line without catching anything, it
+ * comes back.
+ */
+function fireRope(p: PlayerState, dir: Vec2): void {
+  const rope = p.rope;
+  rope.phase = "firing";
+  rope.anchorId = null;
+  rope.dir = { x: dir.x, y: dir.y };
+  rope.origin = { x: p.x, y: p.y };
+  rope.travelled = 0;
+  rope.tip = { x: p.x, y: p.y };
+  rope.taut = false;
+}
+
+function attachRope(p: PlayerState, target: GrappleTarget): void {
+  const rope = p.rope;
+  rope.phase = "attached";
+  rope.anchorId = target.solid.id;
+  rope.anchor = { x: target.point.x, y: target.point.y };
+  rope.tip = { ...rope.anchor };
+  rope.length = Math.max(GRAPPLE.minLength, Math.hypot(p.x - rope.anchor.x, p.y - rope.anchor.y));
+  rope.taut = false;
 }
 
 function stepRope(p: PlayerState, input: InputState, solids: readonly Solid[], dt: number): void {
@@ -192,31 +233,35 @@ function stepRope(p: PlayerState, input: InputState, solids: readonly Solid[], d
   rope.shrink = 0;
 
   if (input.grapplePressed && (rope.phase === "idle" || rope.phase === "retracting")) {
-    const target = findGrappleTarget({ x: p.x, y: p.y }, input.aim, solids, p.groundId);
-    if (target) fireRope(p, target);
+    const dir = aimDirection({ x: p.x, y: p.y }, input.aim);
+    if (dir) fireRope(p, dir);
   }
 
   if (rope.phase === "firing") {
-    rope.flightRemaining -= GRAPPLE.hookSpeed * dt;
-    const travelled = rope.flightTotal - Math.max(0, rope.flightRemaining);
-    const dx = rope.anchor.x - p.x;
-    const dy = rope.anchor.y - p.y;
-    const t = clamp(travelled / rope.flightTotal, 0, 1);
-    rope.tip = { x: p.x + dx * t, y: p.y + dy * t };
     if (!input.grappleHeld) {
       rope.phase = "retracting";
-      rope.anchorId = null;
-    } else if (rope.flightRemaining <= 0) {
-      const anchorSolid = solids.find((s) => s.id === rope.anchorId);
-      if (!anchorSolid || !anchorSolid.grappleable) {
-        rope.phase = "retracting";
-        rope.anchorId = null;
-      } else {
-        rope.phase = "attached";
-        rope.length = Math.max(GRAPPLE.minLength, Math.hypot(dx, dy));
-        rope.tip = { ...rope.anchor };
-      }
+      return;
     }
+    rope.travelled = Math.min(GRAPPLE.maxRange, rope.travelled + GRAPPLE.hookSpeed * dt);
+    rope.tip = {
+      x: rope.origin.x + rope.dir.x * rope.travelled,
+      y: rope.origin.y + rope.dir.y * rope.travelled,
+    };
+
+    // The rope, not the hook, is what catches: test the whole line the player
+    // is trailing, so a near miss that the line sweeps across still hooks up.
+    const toTip = aimDirection({ x: p.x, y: p.y }, rope.tip);
+    const reach = Math.hypot(rope.tip.x - p.x, rope.tip.y - p.y);
+    const caught = toTip
+      ? probeRope({ x: p.x, y: p.y }, toTip, reach, solids, p.groundId)
+      : null;
+    if (caught) {
+      attachRope(p, caught);
+      return;
+    }
+
+    // Out of line with nothing caught: the hook is gone.
+    if (rope.travelled >= GRAPPLE.maxRange) rope.phase = "retracting";
     return;
   }
 

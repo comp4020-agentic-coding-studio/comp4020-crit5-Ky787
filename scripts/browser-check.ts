@@ -185,6 +185,7 @@ type Snapshot = {
   grounded: boolean;
   dead: boolean;
   theme: string;
+  anchorId: string | null;
   rope: string;
   elapsed: number;
   targetId: string | null;
@@ -383,6 +384,58 @@ async function main(): Promise<void> {
       collapse.state === "collapsed",
       `${decoy?.id} ${collapse.state}`,
     );
+
+    // The hook always leaves the gun, even aimed at nothing. Find a spot on
+    // screen the reticle reports as empty, then fire at it anyway.
+    await waitFor(cdp, (s) => s.grounded && !s.dead, 6000);
+    const playerScreenX = await evaluate<number>(
+      cdp,
+      `(() => { const g = globalThis.binaryNinja, cam = g.renderer.camera;
+        return (g.runtime.player.x - cam.originX()) * cam.zoom; })()`,
+    );
+    let sky: { sx: number; sy: number } | null = null;
+    for (const dx of [0, -90, 90, -180, 180]) {
+      const candidate = { sx: playerScreenX + dx, sy: 72 };
+      await pointer(cdp, "mouseMoved", candidate.sx, candidate.sy);
+      await sleep(120);
+      const aimed = await evaluate<Snapshot>(cdp, "globalThis.binaryNinja.snapshot()");
+      if (aimed.targetId === null) {
+        sky = candidate;
+        break;
+      }
+    }
+    check("there is empty sky on screen to fire into", sky !== null);
+
+    if (sky) {
+      // The whole flight is ~180ms, so sample from inside the page rather than
+      // polling across the wire and hoping to land on it.
+      await evaluate(
+        cdp,
+        `(() => { globalThis.__phases = [];
+          globalThis.__watch = setInterval(() => {
+            globalThis.__phases.push(globalThis.binaryNinja.snapshot().rope);
+          }, 8); })()`,
+      );
+      await pointer(cdp, "mousePressed", sky.sx, sky.sy);
+      await sleep(700);
+      await pointer(cdp, "mouseReleased", sky.sx, sky.sy);
+      await sleep(300);
+      const seen = await evaluate<string[]>(
+        cdp,
+        "(clearInterval(globalThis.__watch), globalThis.__phases)",
+      );
+      check(
+        "firing at empty sky still shoots the hook",
+        seen.includes("firing"),
+        [...new Set(seen)].join(" → "),
+      );
+      const empty = await evaluate<Snapshot>(cdp, "globalThis.binaryNinja.snapshot()");
+      check(
+        "a hook that catches nothing comes back empty",
+        !seen.includes("attached") && empty.anchorId === null,
+        empty.rope,
+      );
+    }
 
     // Reading the controls mid-mission must suspend the run, not end it.
     await waitFor(cdp, (s) => s.grounded && !s.dead, 6000);

@@ -11,7 +11,15 @@ import { describe, expect, it } from "vitest";
 import { GRAPPLE, PLAYER } from "../src/engine/constants.ts";
 import { LevelRuntime } from "../src/engine/level-runtime.ts";
 import { analyseRoute, playThrough, planHop, standOn } from "../src/engine/traversal.ts";
-import { emptyInput, stepPlayer, findGrappleTarget, releaseRope } from "../src/engine/physics.ts";
+import {
+  createPlayer,
+  emptyInput,
+  findGrappleTarget,
+  probeRope,
+  releaseRope,
+  stepPlayer,
+} from "../src/engine/physics.ts";
+import type { Solid } from "../src/engine/physics.ts";
 import { levels, level } from "./fixtures.ts";
 
 function bare(tuned: (typeof levels)[number]["tuned"]): LevelRuntime {
@@ -67,6 +75,83 @@ describe("traversal: level identity comes out of the same engine", () => {
     };
     expect(jumpShare("level01")).toBeGreaterThan(0.1);
     expect(jumpShare("level05")).toBeLessThan(0.15);
+  });
+});
+
+describe("physics: the hook always leaves the gun", () => {
+  const block = (id: string, x: number, y: number, w = 200, h = 24): Solid => ({
+    id,
+    x,
+    y,
+    w,
+    h,
+    oneWay: true,
+    enabled: true,
+    grappleable: true,
+  });
+
+  /** Fires and holds, reporting what the rope did. */
+  function fireAndHold(
+    solids: Solid[],
+    start: { x: number; y: number; vx?: number; vy?: number },
+    aim: { x: number; y: number },
+    steps = 90,
+  ): { phases: Set<string>; anchorId: string | null; attachPoint: { x: number; y: number } } {
+    const p = createPlayer(start.x, start.y);
+    p.vx = start.vx ?? 0;
+    p.vy = start.vy ?? 0;
+    const input = emptyInput();
+    input.aim = aim;
+    const phases = new Set<string>();
+    for (let i = 0; i < steps; i += 1) {
+      input.grappleHeld = true;
+      input.grapplePressed = i === 0;
+      stepPlayer(p, input, solids, 1 / 120);
+      phases.add(p.rope.phase);
+      if (p.rope.phase === "attached") break;
+    }
+    return { phases, anchorId: p.rope.anchorId, attachPoint: { ...p.rope.anchor } };
+  }
+
+  it("fires into empty space and comes back with nothing", () => {
+    const solids = [block("floor", -300, 60, 600)];
+    const shot = fireAndHold(solids, { x: 0, y: 0 }, { x: 0, y: -900 });
+    expect(shot.phases.has("firing"), "the hook should visibly leave the gun").toBe(true);
+    expect(shot.phases.has("attached")).toBe(false);
+    expect(shot.phases.has("retracting"), "and then disappear").toBe(true);
+    expect(shot.anchorId).toBeNull();
+  });
+
+  it("attaches when the shot is aimed at a block", () => {
+    const solids = [block("target", -100, -400)];
+    const shot = fireAndHold(solids, { x: 0, y: 0 }, { x: 0, y: -400 });
+    expect(shot.anchorId).toBe("target");
+  });
+
+  it("catches a block the hook missed but the rope swept across", () => {
+    // Straight up from x=0: the hook's own path never touches the block, which
+    // sits off to the side. Moving fast drags the rope line across it.
+    const target = block("swept", 60, -248, 80);
+    const shot = fireAndHold([target], { x: 0, y: 0, vx: 900 }, { x: 0, y: -900 });
+    expect(shot.anchorId, "the rope line should have caught it").toBe("swept");
+    // And it attaches where the line met the block, not out at the hook.
+    expect(shot.attachPoint.x).toBeGreaterThanOrEqual(target.x - 1);
+    expect(shot.attachPoint.x).toBeLessThanOrEqual(target.x + target.w + 1);
+
+    // Standing still, the same shot catches nothing: the sweep is what does it.
+    const still = fireAndHold([target], { x: 0, y: 0 }, { x: 0, y: -900 });
+    expect(still.anchorId).toBeNull();
+  });
+
+  it("will not catch on something at arm's length, or out of range", () => {
+    const near = probeRope({ x: 0, y: 0 }, { x: 1, y: 0 }, 600, [block("near", 20, -12, 40)]);
+    expect(near, "arm's-length scenery is not an anchor").toBeNull();
+
+    const far = probeRope({ x: 0, y: 0 }, { x: 1, y: 0 }, 900, [block("far", 900, -12, 200)]);
+    expect(far, "nothing attaches beyond the rope's reach").toBeNull();
+
+    const good = probeRope({ x: 0, y: 0 }, { x: 1, y: 0 }, 600, [block("good", 300, -12, 200)]);
+    expect(good?.solid.id).toBe("good");
   });
 });
 

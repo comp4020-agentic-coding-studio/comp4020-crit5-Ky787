@@ -15,7 +15,7 @@ code.**
 A / D            move
 Space            jump — or let go of the line with a kick
 Mouse            aim
-Left click       hold to grapple, release to let go
+Left click       hold to grapple, release to let go (fires hit or miss)
 W / right click  reel the line in
 S                pay line out, or drop through a block
 R                restart at the last checkpoint

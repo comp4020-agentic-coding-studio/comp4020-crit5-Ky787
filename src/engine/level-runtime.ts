@@ -38,6 +38,8 @@ export interface PlatformRuntime {
 export interface CheckpointRuntime {
   id: string;
   label: string;
+  /** Route platform this checkpoint sits on. */
+  platformId: string;
   sequence: number;
   x: number;
   y: number;
@@ -173,6 +175,7 @@ export class LevelRuntime {
       this.checkpoints.push({
         id: c.id,
         label: `CHECKPOINT ${c.sequence}`,
+        platformId: platform.id,
         sequence: c.sequence,
         x: c.respawn.x,
         y: c.respawn.y,
@@ -198,6 +201,7 @@ export class LevelRuntime {
       this.checkpoints.push({
         id: beacon.id,
         label: beacon.label,
+        platformId: platform.id,
         sequence: 100 + this.checkpoints.length,
         x: platform.x + 24,
         y: platform.y - 48,
@@ -206,7 +210,16 @@ export class LevelRuntime {
         soft: true,
       });
     }
+    this.addReliefCheckpoints(routeSpecs);
     this.checkpoints.sort((a, b) => a.x - b.x);
+    // Number the plain checkpoints in the order the player will meet them;
+    // milestone checkpoints keep the event's own label.
+    let ordinal = 0;
+    for (const c of this.checkpoints) {
+      if (!c.label.startsWith("CHECKPOINT")) continue;
+      ordinal += 1;
+      c.label = `CHECKPOINT ${ordinal}`;
+    }
 
     this.sanctuaries = [
       {
@@ -233,6 +246,49 @@ export class LevelRuntime {
     this.spawn = { x: data.player.spawn.x, y: data.player.spawn.y };
     this.player = createPlayer(this.spawn.x, this.spawn.y);
     this.respawnGrace = HAZARD.scanner.armDelay;
+  }
+
+  /**
+   * Fills in checkpoints where the delivered ones leave too long a run. Every
+   * one lands on a real route platform, so a save point is still a place the
+   * program actually executed; only how often you get one is a game decision.
+   */
+  private addReliefCheckpoints(route: readonly PlatformSpec[]): void {
+    const spacing = this.profile.checkpointSpacing;
+    if (spacing <= 0 || route.length < spacing * 2) return;
+    const indexOf = new Map(route.map((p, i) => [p.id, i]));
+    const taken = new Set<number>([0]);
+    for (const c of this.checkpoints) {
+      const at = indexOf.get(c.platformId);
+      if (at !== undefined) taken.add(at);
+    }
+    // Never put one on the exit block: the objective is not a rest stop.
+    const last = route.length - 2;
+    const anchors = [...taken, route.length - 1].sort((a, b) => a - b);
+
+    let added = 0;
+    for (let i = 1; i < anchors.length; i += 1) {
+      let at = anchors[i - 1] + spacing;
+      while (at < anchors[i] - 1 && at <= last) {
+        if (!taken.has(at)) {
+          const platform = route[at];
+          taken.add(at);
+          added += 1;
+          this.checkpoints.push({
+            id: `checkpoint_relief_${platform.id}`,
+            label: `CHECKPOINT ${this.checkpoints.length + 1}`,
+            platformId: platform.id,
+            sequence: 200 + added,
+            x: platform.x + 24,
+            y: platform.y - 48,
+            box: { x: platform.x - 20, y: platform.y - 110, w: platform.width + 40, h: 130 },
+            claimed: false,
+            soft: true,
+          });
+        }
+        at += spacing;
+      }
+    }
   }
 
   get accent(): string {

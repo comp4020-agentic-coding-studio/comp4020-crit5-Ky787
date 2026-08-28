@@ -153,6 +153,14 @@ export interface ThemeProfile {
   authGates: boolean;
   /** Seconds the player must hold the objective region to finish the run. */
   objectiveDwell: number;
+  /**
+   * The longest run of route platforms the level may ask the player to hold in
+   * one go. Where the delivered checkpoints leave a bigger gap than this, the
+   * engine adds relief checkpoints on real route platforms in between. Sweep
+   * asks for 50 platforms with two saves, which is a much longer hold than any
+   * other level, so it gets a tighter spacing.
+   */
+  checkpointSpacing: number;
   /** Background/accent tint, used by the renderer only. */
   accent: string;
   tagline: string;
@@ -165,6 +173,7 @@ export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
     watchdog: 0,
     authGates: false,
     objectiveDwell: 1.0,
+    checkpointSpacing: 8,
     accent: "#4ee0a1",
     tagline: "Learn the line. Nothing here is in a hurry.",
   },
@@ -174,6 +183,7 @@ export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
     watchdog: 0,
     authGates: true,
     objectiveDwell: 1.2,
+    checkpointSpacing: 8,
     accent: "#ff9f4a",
     tagline: "Climb the chambers. Every tier is gated.",
   },
@@ -183,6 +193,7 @@ export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
     watchdog: 0,
     authGates: false,
     objectiveDwell: 1.2,
+    checkpointSpacing: 6,
     accent: "#59c8ff",
     tagline: "Sweeping detection. Move on the beat.",
   },
@@ -192,6 +203,7 @@ export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
     watchdog: 1.0,
     authGates: false,
     objectiveDwell: 1.4,
+    checkpointSpacing: 8,
     accent: "#ff5f6d",
     tagline: "Something is following the trace. Do not stall.",
   },
@@ -201,6 +213,7 @@ export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
     watchdog: 0.85,
     authGates: false,
     objectiveDwell: 2.6,
+    checkpointSpacing: 8,
     accent: "#c08cff",
     tagline: "Every countermeasure at once, and no strings to read by.",
   },
