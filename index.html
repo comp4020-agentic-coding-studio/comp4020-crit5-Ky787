@@ -2,37 +2,44 @@
 <html lang="en-AU">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>COMP4020 prototype</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Binary Ninja — swing through an obfuscated binary</title>
     <meta
       name="description"
-      content="Replace this with one sentence saying what this page is. A search result and a link preview both show it."
+      content="A browser grappling platformer built from real Hikari-obfuscated x86-64 programs: swing between floating blocks of actual disassembly, and don't trust the fake ones."
     />
 
-    <!--
-      The link-preview card: public/card.png, 1200x630 --- replace it. The URL
-      resolves against this page, like any link. No og:title/og:description:
-      scrapers fall back to the <title> and description above.
-    -->
     <meta property="og:type" content="website" />
     <meta property="og:image" content="./card.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#04060a" />
 
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header>
+    <header class="topbar">
+      <h1>Binary Ninja</h1>
       <nav aria-label="Primary">
-        <a href="./">Home</a>
+        <a href="./" aria-current="page">Play</a>
+        <a href="./about.html">About the data</a>
       </nav>
+      <p class="topbar-note">Hikari-obfuscated x86-64 · five real traces</p>
     </header>
-    <main>
-      <h1>COMP4020 prototype</h1>
-      <p>
-        Replace this with your prototype. This week's brief is on the course website;
-        <code>spec/README.md</code> explains how the checks in this repo relate to it.
-      </p>
+
+    <main id="app">
+      <canvas
+        id="stage"
+        tabindex="0"
+        aria-label="Binary Ninja game view. Use A and D to move, space to jump, and hold the left mouse button to fire the grappling line."
+      ></canvas>
+      <noscript>
+        <p class="noscript">
+          Binary Ninja is a real-time game and needs JavaScript. The level data it reads is at
+          <code>web_game_data/index.json</code>.
+        </p>
+      </noscript>
     </main>
+
     <script type="module" src="./main.ts"></script>
   </body>
 </html>
