@@ -1,67 +1,111 @@
-# COMP4020 static prototype template
+# Binary Ninja
 
-A starter template for static-site prototypes in **COMP4020 / COMP8020 Agentic
-Coding Studio**. The course provisions a repo from this template for each
-deliverable --- you don't create it yourself. The `start` course skill clones it
-for you; from there, build your prototype and deploy it to GitHub Pages.
+A browser grappling platformer whose levels are five real, Hikari-obfuscated
+x86-64 programs. You play a reverse-engineer swinging between floating blocks of
+actual disassembly, following a program's execution trace from its entry block
+to the end of the run — while the obfuscator's fake control flow crumbles under
+anyone who trusts it.
 
-## CI and Pages only turn on when you ship
+**Swing through the control flow of an obfuscated binary without trusting fake
+code.**
 
-Your repo starts private, and both CI jobs (`check` and `deploy`) are gated on
-it being public. While private, a push to `main` runs nothing in CI ---
-`pnpm check` (below) is your feedback loop until then. When you're ready, the
-course's `/ship` skill flips the repo public, turns on GitHub Pages, and
-dispatches the deploy for you; there's nothing to configure in the Pages
-settings yourself. From that point, every push to `main` builds and deploys, and
-the deploy step prints your live URL and checks it returns 200.
+## Playing it
 
-## What gets marked
-
-The deployed site is the deliverable, assessed live in Chrome at two fixed
-viewports --- see the course website's
-[assessment page](https://comp.anu.edu.au/courses/comp4020-agentic-coding-studio/topics/assessment/#marking-environment)
-for the details.
-
-## Quick start
-
-```sh
-mise install       # supported path: install the template's Node and pnpm
-pnpm install
-pnpm dev             # local dev server
-pnpm check           # most of what CI runs (links, secrets and deploy are CI-only)
-pnpm check:evidence  # the process-evidence check CI runs before you ship
-pnpm build           # produce dist/ (what gets deployed)
-
-# reproduce CI's links check before you push
-pnpm dlx linkinator ./dist --silent --skip "^https?://(?!localhost|127)"
+```text
+A / D            move
+Space            jump — or let go of the line with a kick
+Mouse            aim
+Left click       hold to grapple, release to let go
+W / right click  reel the line in
+S                pay line out, or drop through a block
+R                restart at the last checkpoint
+Esc              pause
+F1               analysis overlay
 ```
 
-`mise` is the course's recommended runtime manager. If you use another manager
-or the official installers, that is fine: provide the Node and pnpm versions in
-`mise.toml`, then run the same commands. Tutor support reproduces runtime
-problems with mise.
+`?level=level03` deep-links a mission; `?analysis=1` opens the overlay on load.
 
-## What's here
+## The five missions
 
-- `index.html`, `styles.css`, `main.ts` --- a minimal starting site. Replace it.
-- `mise.toml` --- the tested Node and pnpm versions for this template.
-- `spec/` --- what the checks are for (`README.md`) and the shipped invariants
-  (`invariants.test.ts`); the spec tests you write live alongside them.
-- `CLAUDE.md` --- orients whoever works in this repo, you or a coding agent.
-  Yours to grow.
-- `PROCESS.md` --- a template for your process overview, showing the
-  cited-moment format. Replace it with your own; `pnpm check:evidence` verifies
-  your citations resolve.
-- `.github/workflows/checks.yml` --- the CI sensors that run on every push once
-  your repo is public, and the GitHub Pages deploy.
-- `.githooks/pre-commit` --- blocks any commit that contains something shaped
-  like an API key, so your COMP4020 key can't end up in a public repo. Installed
-  automatically by `pnpm install`.
+| # | Mission | Identity |
+|---|---------|----------|
+| 01 | **Ghostline** | Tutorial. Hops, then swings, then your first bogus block. |
+| 02 | **Firewall** | A climb through gated tiers; firewall and identity gates pulse open. |
+| 03 | **Sweep** | Scanner chambers — a timing gauntlet of sweeping detection beams. |
+| 04 | **Watchdog** | Forward pressure: a detection wall advances from behind. |
+| 05 | **Blackout** | Everything at once, and a binary whose strings are encrypted. |
 
-This template is SSG-agnostic: plain HTML/CSS/TypeScript on Vite, so you can add
-Astro, Eleventy, or any static generator later without changing how it deploys.
-The course plugin's `stack` skill performs the swap for you — to the course
-default (Astro) or bare HTML/CSS — with the Pages base path, lockfile, and CI
-link check handled.
+All five run on one data-driven engine. The differences come from the dataset's
+own semantic call sites plus a theme profile — no level-specific game code, and
+no addresses anywhere in gameplay logic.
 
-See the course site for how the checks map to each week of the course.
+## Where the levels come from
+
+`physical_level_delivery/` is a completed handoff from an offline
+binary-analysis pipeline. The browser entry point is
+`web_game_data/index.json`; the build serves and ships that folder as-is, so
+there is exactly one copy of the authoritative data. The page never parses a PE
+file, LLVM IR, a CFG or an emulator trace.
+
+The rules the game holds itself to are described on `about.html` and enforced by
+the spec:
+
+- addresses, instructions, raw-block mappings, strings and Hikari provenance are
+  reproduced verbatim, never invented;
+- a visible block is a chronological instance of a compact gameplay node, and
+  usually stands for several machine basic blocks — the inspector says so and
+  shows the real count;
+- only blocks classified `obfuscator_bogus` / `hikari_alteredBB` with strong
+  confidence can crumble, and no successful route ever needs one;
+- Blackout ships no plaintext strings, and the game does not put any back.
+
+### Layout is tuned; mappings are not
+
+The delivered coordinates passed an abstract reachability check that was
+explicitly *not* a rope-physics simulation, and at their supplied spacing the
+platforms very nearly form a continuous walkway — a grappling hook would have
+nothing to do. `src/data/tuning.ts` widens the horizontal gaps between route
+platforms with a deterministic, monotone transform before play. It touches `x`
+and the derived link distances, and nothing else: every `y`, width, id, mapping,
+code payload and provenance record survives untouched, and the spec asserts it.
+The analysis overlay reports the tuned and delivered link distances side by side.
+
+## Development
+
+```sh
+mise install
+pnpm install
+pnpm dev              # local dev server
+pnpm check            # typecheck, production build, and the spec
+pnpm check:evidence   # process-evidence gate CI runs before shipping
+pnpm route-report     # drive the real physics over all five routes
+pnpm check:browser    # play test the built site in headless Chrome
+```
+
+`pnpm route-report` and `pnpm check:browser` are local tools rather than CI
+gates: the first is a tuning aid, and the second needs a browser on the machine.
+
+### How the routes are proven playable
+
+The offline validator said what it was: a graph simulator, not a rope-physics
+engine. `src/engine/traversal.ts` closes that gap. It drives the game's own
+fixed-step physics with scripted input, searching a small space of jumps and
+grapple plans for one that lands a hop, and then plays whole levels end to end —
+planning each hop from the player's actual state, replaying it against a live
+`LevelRuntime`, and dying and retrying from checkpoints like a person would.
+`spec/traversal.test.ts` runs that over all five levels with every crumble block
+removed, so "the route never needs a bogus block" is a test, not a claim.
+
+### Layout
+
+```text
+src/data/      dataset types, loading, and the layout tuning pass
+src/engine/    fixed-step physics, rope, hazards, level runtime, traversal solver
+src/render/    canvas renderer, camera, cached code panels, particles
+src/ui/        HUD, code inspector, screens, analysis overlay, input
+spec/          the checks: dataset contracts, engine behaviour, traversal, UI
+```
+
+Binary facts, physical layout, gameplay behaviour and presentation are kept in
+separate layers, and every movement, camera and hazard constant lives in
+`src/engine/constants.ts`.

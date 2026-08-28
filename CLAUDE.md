@@ -1,34 +1,65 @@
-# COMP4020 prototype
+# Binary Ninja
 
-Your starter repo for a COMP4020 prototype: a static site in HTML/CSS/TypeScript
-that builds to plain HTML/CSS/JS and deploys to GitHub Pages. The deployed site
-is what gets marked, not this repo.
+Binary Ninja is a browser grappling platformer built from pre-generated analysis of real Hikari-obfuscated x86-64 programs.
 
-The
-[course website](https://comp.anu.edu.au/courses/comp4020-agentic-coding-studio/)
-publishes this deliverable's brief and spec, and this repo's name tells you
-which deliverable applies. Read both before you plan or build.
+## Data
 
-## The link-preview card
+Use `physical_level_delivery/web_game_data/index.json` as the browser dataset entry point.
 
-`public/card.png` (1200x630) is the image a shared link shows; `index.html`'s
-head points at it. Replace it and the `description` meta, and copy the head
-block into any new page. The card URL resolves against the page that names it,
-like any link --- `./card.png` is wrong one directory down, and nothing in CI
-checks it, so the deployed head is the only place a broken one shows up.
+The workspace folder is /home/ky/Documents/ANU/2026 Semester 2/COMP8020 - Agentic Coding Studio/comp4020-crit5-Ky787
 
-## The checks
+The supplied level data is authoritative for binary facts. Never invent or alter:
 
-`pnpm check` runs them, and `pnpm check:evidence` is the extra gate before you
-ship. CI runs the same plus links, secrets and the deploy.
+* assembly instructions
+* addresses
+* strings
+* raw-block mappings
+* CFG/provenance classifications
 
-`spec/README.md`, `PROCESS.md` and `reflections/README.md` are in this repo and
-say what they are for.
+A physical platform may represent multiple raw blocks or a chronological occurrence of a logical node. Do not describe every platform as literally one basic block.
 
-## This file is yours
+Only supplied strongly proven Hikari bogus/crumble objects may use the crumble mechanic. Never infer `not executed == bogus`.
 
-A starting point, not a rulebook: what you add to it is the harness, and the
-harness is assessed. This file and the sensors you wire into `check` carry
-across the course --- both come with you into next week's repo. The prototype
-doesn't: source, and the tests answering this week's published spec, stay
-behind. `spec/README.md` draws the line.
+Level 5 intentionally has encrypted strings. Do not invent plaintext strings for its player-facing code.
+
+Physical coordinates are first-pass gameplay layout data and may be tuned when necessary without changing their binary mappings.
+
+## Architecture
+
+Keep the game data-driven. All five levels must use the same engine.
+
+Keep these separate:
+
+* binary/source facts
+* physical platform layout
+* gameplay/hazard behaviour
+* rendering/UI
+
+Do not hard-code raw addresses or individual level routes into engine logic.
+
+Semantic event types should drive reusable mechanics such as firewall, scanner, watchdog and transfer behaviour.
+
+Keep movement, grapple, camera and hazard tuning values centralized.
+
+## Gameplay
+
+Prioritise responsive movement and satisfying grapple/swing physics over decorative polish.
+
+The successful route must never require a crumble platform.
+
+Death should respawn at the latest checkpoint without reloading the webpage.
+
+Preserve a lightweight developer/debug overlay for inspecting level geometry, links and event placement.
+
+## Development
+
+Inspect existing code before replacing it.
+
+Prefer small coherent changes over unnecessary rewrites.
+
+Reuse the current project stack unless there is a strong technical reason not to.
+
+Run relevant tests/type checks and the production build after substantial changes.
+
+Do not weaken existing deployment checks to hide failures.
+
