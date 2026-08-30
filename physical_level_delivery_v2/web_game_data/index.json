@@ -1,0 +1,126 @@
+{
+  "schema_version": 2,
+  "level_count": 8,
+  "levels": [
+    {
+      "id": "level01",
+      "number": 1,
+      "name": "Ghostline",
+      "theme": "tutorial_horizontal",
+      "spatial_identity": "tutorial horizontal",
+      "path": "level01.json",
+      "world": {
+        "width": 5650,
+        "height": 1399,
+        "death_y": 1299,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 30
+    },
+    {
+      "id": "level02",
+      "number": 2,
+      "name": "Firewall",
+      "theme": "gated_mixed",
+      "spatial_identity": "gated mixed traversal",
+      "path": "level02.json",
+      "world": {
+        "width": 4750,
+        "height": 1664,
+        "death_y": 1564,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 32
+    },
+    {
+      "id": "level03",
+      "number": 3,
+      "name": "Sweep",
+      "theme": "scanner_zigzag",
+      "spatial_identity": "scanner zig-zag",
+      "path": "level03.json",
+      "world": {
+        "width": 5110,
+        "height": 1459,
+        "death_y": 1359,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 32
+    },
+    {
+      "id": "level04",
+      "number": 4,
+      "name": "Watchdog",
+      "theme": "pressure_momentum",
+      "spatial_identity": "pressure and momentum",
+      "path": "level04.json",
+      "world": {
+        "width": 6595,
+        "height": 1619,
+        "death_y": 1519,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 34
+    },
+    {
+      "id": "level05",
+      "number": 5,
+      "name": "Blackout",
+      "theme": "mixed_first_finale",
+      "spatial_identity": "mixed first finale",
+      "path": "level05.json",
+      "world": {
+        "width": 5880,
+        "height": 1664,
+        "death_y": 1564,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 34
+    },
+    {
+      "id": "level06",
+      "number": 6,
+      "name": "Relay",
+      "theme": "fork_reconvergence",
+      "spatial_identity": "long fork and reconvergence",
+      "path": "level06.json",
+      "world": {
+        "width": 8020,
+        "height": 1739,
+        "death_y": 1639,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 42
+    },
+    {
+      "id": "level07",
+      "number": 7,
+      "name": "Quarantine",
+      "theme": "vertical_containment",
+      "spatial_identity": "vertical ascent",
+      "path": "level07.json",
+      "world": {
+        "width": 1510,
+        "height": 8444,
+        "death_y": 8344,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 46
+    },
+    {
+      "id": "level08",
+      "number": 8,
+      "name": "Root",
+      "theme": "multiphase_finale",
+      "spatial_identity": "multi-phase true finale",
+      "path": "level08.json",
+      "world": {
+        "width": 7274,
+        "height": 4924,
+        "death_y": 4824,
+        "units": "normalized_game_units"
+      },
+      "platform_count": 50
+    }
+  ]
+}

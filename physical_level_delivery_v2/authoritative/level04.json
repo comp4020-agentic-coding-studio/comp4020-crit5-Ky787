@@ -1,0 +1,3617 @@
+{
+  "schema_version": 2,
+  "level": {
+    "id": "level04",
+    "number": 4,
+    "name": "Watchdog",
+    "theme": "pressure_momentum",
+    "spatial_identity": "pressure and momentum",
+    "direction": "chronological",
+    "binary_candidate": "level04_watchdog_house"
+  },
+  "world": {
+    "width": 6595,
+    "height": 1619,
+    "death_y": 1519,
+    "units": "normalized_game_units"
+  },
+  "player": {
+    "spawn": {
+      "x": 164,
+      "y": 972,
+      "platform": "platform_001"
+    }
+  },
+  "movement_model": {
+    "config_version": 2,
+    "solver": "fixed_step_grapple_reachability_v2",
+    "maximum_required_grapple_distance": 600,
+    "maximum_optional_grapple_distance": 620,
+    "maximum_vertical_delta": 270
+  },
+  "platforms": [
+    {
+      "id": "platform_001",
+      "logical_node": "game_00",
+      "logical_nodes": [
+        "game_00",
+        "game_01"
+      ],
+      "occurrence": 1,
+      "route_index": 0,
+      "trace_occurrence_start": 0,
+      "trace_occurrence_end_exclusive": 2,
+      "trace_occurrences": [
+        {
+          "index": 0,
+          "logical_node": "game_00"
+        },
+        {
+          "index": 1,
+          "logical_node": "game_01"
+        }
+      ],
+      "x": 140,
+      "y": 1020,
+      "width": 155,
+      "height": 24,
+      "kind": "start",
+      "required": true,
+      "raw_blocks": [
+        "bb_00004590",
+        "bb_000045E7",
+        "bb_000046AB",
+        "bb_000046AD",
+        "bb_00004752",
+        "bb_000047D4",
+        "bb_000047D6",
+        "bb_00004806",
+        "bb_00004841",
+        "bb_00004848",
+        "bb_000049C5",
+        "bb_00004A0D",
+        "bb_00004A3C",
+        "bb_00004A3E",
+        "bb_00004A80",
+        "bb_00004AE1",
+        "bb_00004AE3",
+        "bb_00004B31",
+        "bb_00004B64",
+        "bb_00004B66"
+      ],
+      "display": {
+        "address": "0x0000000140004590",
+        "entry_rva": "0x4590",
+        "instructions": [
+          "push rbp",
+          "push rsi",
+          "push rdi",
+          "sub rsp, 0x100",
+          "lea rbp, [rsp + 0x80]",
+          "mov ecx, dword ptr [rip + 0x1de04]"
+        ],
+        "strings": [
+          "MISSION WATCHDOG",
+          "TICK-9",
+          "WATCHDOG ONLINE"
+        ]
+      },
+      "semantic_event_ids": [
+        "event_001",
+        "event_002"
+      ],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_002",
+      "logical_node": "game_02",
+      "logical_nodes": [
+        "game_02",
+        "game_03",
+        "game_04"
+      ],
+      "occurrence": 1,
+      "route_index": 1,
+      "trace_occurrence_start": 2,
+      "trace_occurrence_end_exclusive": 5,
+      "trace_occurrences": [
+        {
+          "index": 2,
+          "logical_node": "game_02"
+        },
+        {
+          "index": 3,
+          "logical_node": "game_03"
+        },
+        {
+          "index": 4,
+          "logical_node": "game_04"
+        }
+      ],
+      "x": 480,
+      "y": 800,
+      "width": 170,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_00004C16",
+        "bb_00004CDB",
+        "bb_00004CDD",
+        "bb_00004D60",
+        "bb_00004DE6",
+        "bb_00004DE8",
+        "bb_00004E32",
+        "bb_00004E62",
+        "bb_00004E6E",
+        "bb_00004EA0",
+        "bb_00004F53",
+        "bb_00004F55",
+        "bb_0000502B",
+        "bb_000050F2",
+        "bb_000050F4",
+        "bb_00005150",
+        "bb_000051CE",
+        "bb_000051D5",
+        "bb_00005433",
+        "bb_0000546C",
+        "bb_000054CF",
+        "bb_000054D1",
+        "bb_000054FC",
+        "bb_000055A6",
+        "bb_000055A8",
+        "bb_000055E4",
+        "bb_0000560A",
+        "bb_00005611",
+        "bb_00005BD6"
+      ],
+      "display": {
+        "address": "0x0000000140004C16",
+        "entry_rva": "0x4C16",
+        "instructions": [
+          "mov rcx, qword ptr [rbp + 0x58]",
+          "mov edx, dword ptr [rip + 0x1d824]",
+          "mov r8d, dword ptr [rip + 0x1d821]",
+          "xor eax, eax",
+          "sub eax, edx",
+          "xor edx, edx"
+        ],
+        "strings": []
+      },
+      "semantic_event_ids": [
+        "event_003"
+      ],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_003",
+      "logical_node": "game_05",
+      "logical_nodes": [
+        "game_05",
+        "game_06"
+      ],
+      "occurrence": 1,
+      "route_index": 2,
+      "trace_occurrence_start": 5,
+      "trace_occurrence_end_exclusive": 7,
+      "trace_occurrences": [
+        {
+          "index": 5,
+          "logical_node": "game_05"
+        },
+        {
+          "index": 6,
+          "logical_node": "game_06"
+        }
+      ],
+      "x": 820,
+      "y": 620,
+      "width": 185,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_00005C51",
+        "bb_00005C80",
+        "bb_00005C82",
+        "bb_00005CA8",
+        "bb_00005CE6",
+        "bb_00005CE8",
+        "bb_00005D4F",
+        "bb_00005D85",
+        "bb_00005D91",
+        "bb_00005DC1",
+        "bb_00005E2C",
+        "bb_00005E2E",
+        "bb_00005E75",
+        "bb_00005EB5",
+        "bb_00005EB7",
+        "bb_00005F33",
+        "bb_00005FC0",
+        "bb_00006246"
+      ],
+      "display": {
+        "address": "0x0000000140005C51",
+        "entry_rva": "0x5C51",
+        "instructions": [
+          "mov rcx, qword ptr [rbp + 0x68]",
+          "mov eax, dword ptr [rip + 0x1c929]",
+          "add eax, dword ptr [rip + 0x1c927]",
+          "sub eax, 0x44c566ec",
+          "add eax, 0x6239f70a",
+          "and eax, 0x43f5c57e"
+        ],
+        "strings": [
+          "ROUTE GAMMA"
+        ]
+      },
+      "semantic_event_ids": [],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_004",
+      "logical_node": "game_07",
+      "logical_nodes": [
+        "game_07",
+        "game_08",
+        "game_09"
+      ],
+      "occurrence": 1,
+      "route_index": 3,
+      "trace_occurrence_start": 7,
+      "trace_occurrence_end_exclusive": 10,
+      "trace_occurrences": [
+        {
+          "index": 7,
+          "logical_node": "game_07"
+        },
+        {
+          "index": 8,
+          "logical_node": "game_08"
+        },
+        {
+          "index": 9,
+          "logical_node": "game_09"
+        }
+      ],
+      "x": 1160,
+      "y": 830,
+      "width": 155,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_0000628B",
+        "bb_00006330",
+        "bb_00006332",
+        "bb_000063DE",
+        "bb_000064EA",
+        "bb_000064EC",
+        "bb_00006542",
+        "bb_0000658D",
+        "bb_0000658F",
+        "bb_000065E9",
+        "bb_00006646",
+        "bb_00006648",
+        "bb_0000667A",
+        "bb_000066C7",
+        "bb_000068E0",
+        "bb_0000699C",
+        "bb_000069FF",
+        "bb_00006A01",
+        "bb_00006A48",
+        "bb_00006B10",
+        "bb_00006B12",
+        "bb_00006B38",
+        "bb_00006B69",
+        "bb_00006B70",
+        "bb_00006E49",
+        "bb_00006E87",
+        "bb_00006EC8"
+      ],
+      "display": {
+        "address": "0x000000014000628B",
+        "entry_rva": "0x628B",
+        "instructions": [
+          "mov ecx, dword ptr [rip + 0x1c383]",
+          "mov eax, dword ptr [rip + 0x1c381]",
+          "sub ecx, 0x7e39b681",
+          "sub ecx, eax",
+          "add ecx, 0x7e39b681",
+          "mov eax, ecx"
+        ],
+        "strings": []
+      },
+      "semantic_event_ids": [
+        "event_004",
+        "event_005"
+      ],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_005",
+      "logical_node": "game_10",
+      "logical_nodes": [
+        "game_10",
+        "game_11"
+      ],
+      "occurrence": 1,
+      "route_index": 4,
+      "trace_occurrence_start": 10,
+      "trace_occurrence_end_exclusive": 12,
+      "trace_occurrences": [
+        {
+          "index": 10,
+          "logical_node": "game_10"
+        },
+        {
+          "index": 11,
+          "logical_node": "game_11"
+        }
+      ],
+      "x": 1500,
+      "y": 1050,
+      "width": 170,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_00006ECA",
+        "bb_00006EF0",
+        "bb_00006FB8",
+        "bb_00006FBA",
+        "bb_00007034",
+        "bb_00007075",
+        "bb_0000707C",
+        "bb_000071A8",
+        "bb_0000720B",
+        "bb_00007250",
+        "bb_00007252",
+        "bb_00007284",
+        "bb_00007323",
+        "bb_00007325",
+        "bb_0000739D",
+        "bb_00007404",
+        "bb_00007406",
+        "bb_0000749F"
+      ],
+      "display": {
+        "address": "0x0000000140006ECA",
+        "entry_rva": "0x6ECA",
+        "instructions": [
+          "mov eax, dword ptr [rip + 0x1b82c]",
+          "add eax, dword ptr [rip + 0x1b82a]",
+          "xor eax, 0x8e20d0e1",
+          "and eax, 0x4c02be05",
+          "and eax, 0x2ea3fc5c",
+          "cmp eax, 0xa8d09148"
+        ],
+        "strings": [
+          "WATCHDOG TRACKING"
+        ]
+      },
+      "semantic_event_ids": [],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_006",
+      "logical_node": "game_12",
+      "logical_nodes": [
+        "game_12",
+        "game_01",
+        "game_02"
+      ],
+      "occurrence": 1,
+      "route_index": 5,
+      "trace_occurrence_start": 12,
+      "trace_occurrence_end_exclusive": 15,
+      "trace_occurrences": [
+        {
+          "index": 12,
+          "logical_node": "game_12"
+        },
+        {
+          "index": 13,
+          "logical_node": "game_01"
+        },
+        {
+          "index": 14,
+          "logical_node": "game_02"
+        }
+      ],
+      "x": 1840,
+      "y": 790,
+      "width": 185,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_000074F3",
+        "bb_000074F5",
+        "bb_00007527",
+        "bb_00007588",
+        "bb_0000758A",
+        "bb_00007639",
+        "bb_00007671",
+        "bb_00005616",
+        "bb_00005653",
+        "bb_000049C5",
+        "bb_00004A0D",
+        "bb_00004A3C",
+        "bb_00004A3E",
+        "bb_00004A80",
+        "bb_00004AE1",
+        "bb_00004AE3",
+        "bb_00004B31",
+        "bb_00004B64",
+        "bb_00004B66",
+        "bb_00004C16",
+        "bb_00004CDB",
+        "bb_00004CDD",
+        "bb_00004D60",
+        "bb_00004DE6",
+        "bb_00004DE8",
+        "bb_00004E32",
+        "bb_00004E62",
+        "bb_00004E6E",
+        "bb_00004EA0"
+      ],
+      "display": {
+        "address": "0x00000001400074F3",
+        "entry_rva": "0x74F3",
+        "instructions": [
+          "jmp 0x1400074f5",
+          "mov eax, dword ptr [rip + 0x1b281]",
+          "mov ecx, dword ptr [rip + 0x1b27f]",
+          "sub eax, 0x1697422",
+          "sub eax, ecx",
+          "add eax, 0x1697422"
+        ],
+        "strings": [
+          "ROUTE BETA",
+          "WATCHDOG ONLINE"
+        ]
+      },
+      "semantic_event_ids": [
+        "event_006"
+      ],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_007",
+      "logical_node": "game_03",
+      "logical_nodes": [
+        "game_03",
+        "game_04"
+      ],
+      "occurrence": 1,
+      "route_index": 6,
+      "trace_occurrence_start": 15,
+      "trace_occurrence_end_exclusive": 17,
+      "trace_occurrences": [
+        {
+          "index": 15,
+          "logical_node": "game_03"
+        },
+        {
+          "index": 16,
+          "logical_node": "game_04"
+        }
+      ],
+      "x": 2180,
+      "y": 570,
+      "width": 155,
+      "height": 24,
+      "kind": "checkpoint",
+      "required": true,
+      "raw_blocks": [
+        "bb_00004F53",
+        "bb_00004F55",
+        "bb_0000502B",
+        "bb_000050F2",
+        "bb_000050F4",
+        "bb_00005150",
+        "bb_000051CE",
+        "bb_000051D5",
+        "bb_00005433",
+        "bb_0000546C",
+        "bb_000054CF",
+        "bb_000054D1",
+        "bb_000054FC",
+        "bb_000055A6",
+        "bb_000055A8",
+        "bb_000055E4",
+        "bb_0000560A",
+        "bb_00005611",
+        "bb_00005BD6"
+      ],
+      "display": {
+        "address": "0x0000000140004F53",
+        "entry_rva": "0x4F53",
+        "instructions": [
+          "jmp 0x140004f55",
+          "mov r11d, dword ptr [rip + 0x1d520]",
+          "mov ecx, dword ptr [rip + 0x1d51e]",
+          "xor r11d, 0xffffffff",
+          "xor ecx, 0xffffffff",
+          "mov eax, 0xffffffff"
+        ],
+        "strings": []
+      },
+      "semantic_event_ids": [],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_008",
+      "logical_node": "game_12",
+      "logical_nodes": [
+        "game_12",
+        "game_13",
+        "game_14"
+      ],
+      "occurrence": 2,
+      "route_index": 7,
+      "trace_occurrence_start": 17,
+      "trace_occurrence_end_exclusive": 20,
+      "trace_occurrences": [
+        {
+          "index": 17,
+          "logical_node": "game_12"
+        },
+        {
+          "index": 18,
+          "logical_node": "game_13"
+        },
+        {
+          "index": 19,
+          "logical_node": "game_14"
+        }
+      ],
+      "x": 2520,
+      "y": 760,
+      "width": 170,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_000074F3",
+        "bb_000074F5",
+        "bb_00007527",
+        "bb_00007588",
+        "bb_0000758A",
+        "bb_00007639",
+        "bb_00007671",
+        "bb_00005616",
+        "bb_00005653",
+        "bb_000056DF",
+        "bb_000056E1",
+        "bb_00005798",
+        "bb_000057ED",
+        "bb_000057EF",
+        "bb_0000587F",
+        "bb_000058E6",
+        "bb_00005AD5",
+        "bb_00005B06",
+        "bb_00005B6A",
+        "bb_00005B6C",
+        "bb_00005BAF",
+        "bb_00005BD1",
+        "bb_00005D8C",
+        "bb_00005FC5",
+        "bb_0000604C",
+        "bb_000060F7",
+        "bb_000060F9"
+      ],
+      "display": {
+        "address": "0x00000001400074F3",
+        "entry_rva": "0x74F3",
+        "instructions": [
+          "jmp 0x1400074f5",
+          "mov eax, dword ptr [rip + 0x1b281]",
+          "mov ecx, dword ptr [rip + 0x1b27f]",
+          "sub eax, 0x1697422",
+          "sub eax, ecx",
+          "add eax, 0x1697422"
+        ],
+        "strings": [
+          "ROUTE BETA",
+          "ALARM SUPPRESSED",
+          "ROUTE SHADOW"
+        ]
+      },
+      "semantic_event_ids": [
+        "event_007"
+      ],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_009",
+      "logical_node": "game_07",
+      "logical_nodes": [
+        "game_07",
+        "game_08"
+      ],
+      "occurrence": 2,
+      "route_index": 8,
+      "trace_occurrence_start": 20,
+      "trace_occurrence_end_exclusive": 22,
+      "trace_occurrences": [
+        {
+          "index": 20,
+          "logical_node": "game_07"
+        },
+        {
+          "index": 21,
+          "logical_node": "game_08"
+        }
+      ],
+      "x": 2860,
+      "y": 1020,
+      "width": 185,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_0000628B",
+        "bb_00006330",
+        "bb_00006332",
+        "bb_000063DE",
+        "bb_000064EA",
+        "bb_000064EC",
+        "bb_00006542",
+        "bb_0000658D",
+        "bb_0000658F",
+        "bb_000065E9",
+        "bb_00006646",
+        "bb_00006648",
+        "bb_0000667A",
+        "bb_000066C7",
+        "bb_000068E0",
+        "bb_0000699C",
+        "bb_000069FF",
+        "bb_00006A01"
+      ],
+      "display": {
+        "address": "0x000000014000628B",
+        "entry_rva": "0x628B",
+        "instructions": [
+          "mov ecx, dword ptr [rip + 0x1c383]",
+          "mov eax, dword ptr [rip + 0x1c381]",
+          "sub ecx, 0x7e39b681",
+          "sub ecx, eax",
+          "add ecx, 0x7e39b681",
+          "mov eax, ecx"
+        ],
+        "strings": []
+      },
+      "semantic_event_ids": [
+        "event_008",
+        "event_009"
+      ],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_010",
+      "logical_node": "game_09",
+      "logical_nodes": [
+        "game_09",
+        "game_10",
+        "game_11"
+      ],
+      "occurrence": 1,
+      "route_index": 9,
+      "trace_occurrence_start": 22,
+      "trace_occurrence_end_exclusive": 25,
+      "trace_occurrences": [
+        {
+          "index": 22,
+          "logical_node": "game_09"
+        },
+        {
+          "index": 23,
+          "logical_node": "game_10"
+        },
+        {
+          "index": 24,
+          "logical_node": "game_11"
+        }
+      ],
+      "x": 3200,
+      "y": 800,
+      "width": 155,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_00006A48",
+        "bb_00006B10",
+        "bb_00006B12",
+        "bb_00006B38",
+        "bb_00006B69",
+        "bb_00006B70",
+        "bb_00006E49",
+        "bb_00006E87",
+        "bb_00006EC8",
+        "bb_00006ECA",
+        "bb_00006EF0",
+        "bb_00006FB8",
+        "bb_00006FBA",
+        "bb_00007034",
+        "bb_00007075",
+        "bb_0000707C",
+        "bb_000071A8",
+        "bb_0000720B",
+        "bb_00007250",
+        "bb_00007252",
+        "bb_00007284",
+        "bb_00007323",
+        "bb_00007325",
+        "bb_0000739D",
+        "bb_00007404",
+        "bb_00007406",
+        "bb_0000749F"
+      ],
+      "display": {
+        "address": "0x0000000140006A48",
+        "entry_rva": "0x6A48",
+        "instructions": [
+          "mov r11d, dword ptr [rip + 0x1bc55]",
+          "or r11d, dword ptr [rip + 0x1bc52]",
+          "mov ecx, r11d",
+          "xor ecx, 0xffffffff",
+          "mov r8d, 0xffffffff",
+          "xor r8d, 0x50d26808"
+        ],
+        "strings": [
+          "WATCHDOG TRACKING"
+        ]
+      },
+      "semantic_event_ids": [],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_011",
+      "logical_node": "game_12",
+      "logical_nodes": [
+        "game_12",
+        "game_01"
+      ],
+      "occurrence": 3,
+      "route_index": 10,
+      "trace_occurrence_start": 25,
+      "trace_occurrence_end_exclusive": 27,
+      "trace_occurrences": [
+        {
+          "index": 25,
+          "logical_node": "game_12"
+        },
+        {
+          "index": 26,
+          "logical_node": "game_01"
+        }
+      ],
+      "x": 3540,
+      "y": 620,
+      "width": 170,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_000074F3",
+        "bb_000074F5",
+        "bb_00007527",
+        "bb_00007588",
+        "bb_0000758A",
+        "bb_00007639",
+        "bb_00007671",
+        "bb_00005616",
+        "bb_00005653",
+        "bb_000049C5",
+        "bb_00004A0D",
+        "bb_00004A3C",
+        "bb_00004A3E",
+        "bb_00004A80",
+        "bb_00004AE1",
+        "bb_00004AE3",
+        "bb_00004B31",
+        "bb_00004B64",
+        "bb_00004B66"
+      ],
+      "display": {
+        "address": "0x00000001400074F3",
+        "entry_rva": "0x74F3",
+        "instructions": [
+          "jmp 0x1400074f5",
+          "mov eax, dword ptr [rip + 0x1b281]",
+          "mov ecx, dword ptr [rip + 0x1b27f]",
+          "sub eax, 0x1697422",
+          "sub eax, ecx",
+          "add eax, 0x1697422"
+        ],
+        "strings": [
+          "ROUTE BETA",
+          "WATCHDOG ONLINE"
+        ]
+      },
+      "semantic_event_ids": [],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_012",
+      "logical_node": "game_02",
+      "logical_nodes": [
+        "game_02",
+        "game_03",
+        "game_04"
+      ],
+      "occurrence": 2,
+      "route_index": 11,
+      "trace_occurrence_start": 27,
+      "trace_occurrence_end_exclusive": 30,
+      "trace_occurrences": [
+        {
+          "index": 27,
+          "logical_node": "game_02"
+        },
+        {
+          "index": 28,
+          "logical_node": "game_03"
+        },
+        {
+          "index": 29,
+          "logical_node": "game_04"
+        }
+      ],
+      "x": 3880,
+      "y": 830,
+      "width": 185,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_00004C16",
+        "bb_00004CDB",
+        "bb_00004CDD",
+        "bb_00004D60",
+        "bb_00004DE6",
+        "bb_00004DE8",
+        "bb_00004E32",
+        "bb_00004E62",
+        "bb_00004E6E",
+        "bb_00004EA0",
+        "bb_00004F53",
+        "bb_00004F55",
+        "bb_0000502B",
+        "bb_000050F2",
+        "bb_000050F4",
+        "bb_00005150",
+        "bb_000051CE",
+        "bb_000051D5",
+        "bb_00005433",
+        "bb_0000546C",
+        "bb_000054CF",
+        "bb_000054D1",
+        "bb_000054FC",
+        "bb_000055A6",
+        "bb_000055A8",
+        "bb_000055E4",
+        "bb_0000560A",
+        "bb_00005611",
+        "bb_00005BD6"
+      ],
+      "display": {
+        "address": "0x0000000140004C16",
+        "entry_rva": "0x4C16",
+        "instructions": [
+          "mov rcx, qword ptr [rbp + 0x58]",
+          "mov edx, dword ptr [rip + 0x1d824]",
+          "mov r8d, dword ptr [rip + 0x1d821]",
+          "xor eax, eax",
+          "sub eax, edx",
+          "xor edx, edx"
+        ],
+        "strings": []
+      },
+      "semantic_event_ids": [
+        "event_010"
+      ],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_013",
+      "logical_node": "game_05",
+      "logical_nodes": [
+        "game_05",
+        "game_14"
+      ],
+      "occurrence": 2,
+      "route_index": 12,
+      "trace_occurrence_start": 30,
+      "trace_occurrence_end_exclusive": 32,
+      "trace_occurrences": [
+        {
+          "index": 30,
+          "logical_node": "game_05"
+        },
+        {
+          "index": 31,
+          "logical_node": "game_14"
+        }
+      ],
+      "x": 4220,
+      "y": 1050,
+      "width": 155,
+      "height": 24,
+      "kind": "checkpoint",
+      "required": true,
+      "raw_blocks": [
+        "bb_00005C51",
+        "bb_00005C80",
+        "bb_00005C82",
+        "bb_00005CA8",
+        "bb_00005CE6",
+        "bb_00005CE8",
+        "bb_00005D4F",
+        "bb_00005D85",
+        "bb_00005D91",
+        "bb_00005B6A",
+        "bb_00005B6C",
+        "bb_00005BAF",
+        "bb_00005BD1",
+        "bb_00005D8C",
+        "bb_00005FC5",
+        "bb_0000604C",
+        "bb_000060F7",
+        "bb_000060F9"
+      ],
+      "display": {
+        "address": "0x0000000140005C51",
+        "entry_rva": "0x5C51",
+        "instructions": [
+          "mov rcx, qword ptr [rbp + 0x68]",
+          "mov eax, dword ptr [rip + 0x1c929]",
+          "add eax, dword ptr [rip + 0x1c927]",
+          "sub eax, 0x44c566ec",
+          "add eax, 0x6239f70a",
+          "and eax, 0x43f5c57e"
+        ],
+        "strings": [
+          "ROUTE SHADOW"
+        ]
+      },
+      "semantic_event_ids": [],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_014",
+      "logical_node": "game_15",
+      "logical_nodes": [
+        "game_15",
+        "game_06",
+        "game_07"
+      ],
+      "occurrence": 1,
+      "route_index": 13,
+      "trace_occurrence_start": 32,
+      "trace_occurrence_end_exclusive": 35,
+      "trace_occurrences": [
+        {
+          "index": 32,
+          "logical_node": "game_15"
+        },
+        {
+          "index": 33,
+          "logical_node": "game_06"
+        },
+        {
+          "index": 34,
+          "logical_node": "game_07"
+        }
+      ],
+      "x": 4560,
+      "y": 790,
+      "width": 170,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_00006140",
+        "bb_000061DC",
+        "bb_000061DE",
+        "bb_0000620E",
+        "bb_00006244",
+        "bb_00007081",
+        "bb_000070B6",
+        "bb_00007102",
+        "bb_00007104",
+        "bb_00005DC1",
+        "bb_00005E2C",
+        "bb_00005E2E",
+        "bb_00005E75",
+        "bb_00005EB5",
+        "bb_00005EB7",
+        "bb_00005F33",
+        "bb_00005FC0",
+        "bb_00006246",
+        "bb_0000628B",
+        "bb_00006330",
+        "bb_00006332",
+        "bb_000063DE",
+        "bb_000064EA",
+        "bb_000064EC",
+        "bb_00006542",
+        "bb_0000658D",
+        "bb_0000658F"
+      ],
+      "display": {
+        "address": "0x0000000140006140",
+        "entry_rva": "0x6140",
+        "instructions": [
+          "mov eax, dword ptr [rip + 0x1c4ae]",
+          "mov ecx, dword ptr [rip + 0x1c4ac]",
+          "mov r11d, eax",
+          "and r11d, ecx",
+          "xor eax, ecx",
+          "or r11d, eax"
+        ],
+        "strings": [
+          "WATCHDOG CLOSE",
+          "ROUTE GAMMA"
+        ]
+      },
+      "semantic_event_ids": [],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_015",
+      "logical_node": "game_08",
+      "logical_nodes": [
+        "game_08",
+        "game_09"
+      ],
+      "occurrence": 1,
+      "route_index": 14,
+      "trace_occurrence_start": 35,
+      "trace_occurrence_end_exclusive": 37,
+      "trace_occurrences": [
+        {
+          "index": 35,
+          "logical_node": "game_08"
+        },
+        {
+          "index": 36,
+          "logical_node": "game_09"
+        }
+      ],
+      "x": 4900,
+      "y": 570,
+      "width": 185,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_000065E9",
+        "bb_00006646",
+        "bb_00006648",
+        "bb_0000667A",
+        "bb_000066C7",
+        "bb_000068E0",
+        "bb_0000699C",
+        "bb_000069FF",
+        "bb_00006A01",
+        "bb_00006A48",
+        "bb_00006B10",
+        "bb_00006B12",
+        "bb_00006B38",
+        "bb_00006B69",
+        "bb_00006B70",
+        "bb_00006E49",
+        "bb_00006E87",
+        "bb_00006EC8"
+      ],
+      "display": {
+        "address": "0x00000001400065E9",
+        "entry_rva": "0x65E9",
+        "instructions": [
+          "mov edx, dword ptr [rbp - 0x1c]",
+          "mov rax, qword ptr [rbp + 0x70]",
+          "mov ecx, dword ptr [rip + 0x1c04e]",
+          "sub ecx, dword ptr [rip + 0x1c04c]",
+          "xor r8d, r8d",
+          "sub r8d, ecx"
+        ],
+        "strings": []
+      },
+      "semantic_event_ids": [
+        "event_011",
+        "event_012"
+      ],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_016",
+      "logical_node": "game_10",
+      "logical_nodes": [
+        "game_10",
+        "game_15",
+        "game_16"
+      ],
+      "occurrence": 2,
+      "route_index": 15,
+      "trace_occurrence_start": 37,
+      "trace_occurrence_end_exclusive": 40,
+      "trace_occurrences": [
+        {
+          "index": 37,
+          "logical_node": "game_10"
+        },
+        {
+          "index": 38,
+          "logical_node": "game_15"
+        },
+        {
+          "index": 39,
+          "logical_node": "game_16"
+        }
+      ],
+      "x": 5240,
+      "y": 760,
+      "width": 155,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_00006ECA",
+        "bb_00006EF0",
+        "bb_00006FB8",
+        "bb_00006FBA",
+        "bb_00007034",
+        "bb_00007075",
+        "bb_0000707C",
+        "bb_000071A8",
+        "bb_0000720B",
+        "bb_00006140",
+        "bb_000061DC",
+        "bb_000061DE",
+        "bb_0000620E",
+        "bb_00006244",
+        "bb_00007081",
+        "bb_000070B6",
+        "bb_00007102",
+        "bb_00007104",
+        "bb_00007152",
+        "bb_000071A3",
+        "bb_00004E69",
+        "bb_00007676",
+        "bb_000076BF",
+        "bb_00007724",
+        "bb_00007726",
+        "bb_0000776D",
+        "bb_00007830"
+      ],
+      "display": {
+        "address": "0x0000000140006ECA",
+        "entry_rva": "0x6ECA",
+        "instructions": [
+          "mov eax, dword ptr [rip + 0x1b82c]",
+          "add eax, dword ptr [rip + 0x1b82a]",
+          "xor eax, 0x8e20d0e1",
+          "and eax, 0x4c02be05",
+          "and eax, 0x2ea3fc5c",
+          "cmp eax, 0xa8d09148"
+        ],
+        "strings": [
+          "WATCHDOG TRACKING",
+          "WATCHDOG CLOSE",
+          "FINAL SAFE ZONE"
+        ]
+      },
+      "semantic_event_ids": [
+        "event_013"
+      ],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_017",
+      "logical_node": "game_11",
+      "logical_nodes": [
+        "game_11",
+        "game_12"
+      ],
+      "occurrence": 1,
+      "route_index": 16,
+      "trace_occurrence_start": 40,
+      "trace_occurrence_end_exclusive": 42,
+      "trace_occurrences": [
+        {
+          "index": 40,
+          "logical_node": "game_11"
+        },
+        {
+          "index": 41,
+          "logical_node": "game_12"
+        }
+      ],
+      "x": 5580,
+      "y": 1020,
+      "width": 170,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_00007250",
+        "bb_00007252",
+        "bb_00007284",
+        "bb_00007323",
+        "bb_00007325",
+        "bb_0000739D",
+        "bb_00007404",
+        "bb_00007406",
+        "bb_0000749F",
+        "bb_000074F3",
+        "bb_000074F5",
+        "bb_00007527",
+        "bb_00007588",
+        "bb_0000758A",
+        "bb_00007639",
+        "bb_00007671",
+        "bb_00005616",
+        "bb_00005653"
+      ],
+      "display": {
+        "address": "0x0000000140007250",
+        "entry_rva": "0x7250",
+        "instructions": [
+          "jmp 0x140007252",
+          "mov ecx, dword ptr [rip + 0x1b4f4]",
+          "xor ecx, dword ptr [rip + 0x1b4f2]",
+          "mov edx, 0xffffffff",
+          "xor edx, 0x7a31294c",
+          "mov eax, ecx"
+        ],
+        "strings": [
+          "ROUTE BETA"
+        ]
+      },
+      "semantic_event_ids": [],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_018",
+      "logical_node": "game_01",
+      "logical_nodes": [
+        "game_01",
+        "game_02",
+        "game_16"
+      ],
+      "occurrence": 1,
+      "route_index": 17,
+      "trace_occurrence_start": 42,
+      "trace_occurrence_end_exclusive": 45,
+      "trace_occurrences": [
+        {
+          "index": 42,
+          "logical_node": "game_01"
+        },
+        {
+          "index": 43,
+          "logical_node": "game_02"
+        },
+        {
+          "index": 44,
+          "logical_node": "game_16"
+        }
+      ],
+      "x": 5920,
+      "y": 800,
+      "width": 185,
+      "height": 24,
+      "kind": "route",
+      "required": true,
+      "raw_blocks": [
+        "bb_000049C5",
+        "bb_00004A0D",
+        "bb_00004A3C",
+        "bb_00004A3E",
+        "bb_00004A80",
+        "bb_00004AE1",
+        "bb_00004AE3",
+        "bb_00004B31",
+        "bb_00004B64",
+        "bb_00004B66",
+        "bb_00004C16",
+        "bb_00004CDB",
+        "bb_00004CDD",
+        "bb_00004D60",
+        "bb_00004DE6",
+        "bb_00004DE8",
+        "bb_00004E32",
+        "bb_00004E62",
+        "bb_00004E6E",
+        "bb_00004EA0",
+        "bb_00007152",
+        "bb_000071A3",
+        "bb_00004E69",
+        "bb_00007676",
+        "bb_000076BF",
+        "bb_00007724",
+        "bb_00007726",
+        "bb_0000776D",
+        "bb_00007830"
+      ],
+      "display": {
+        "address": "0x00000001400049C5",
+        "entry_rva": "0x49C5",
+        "instructions": [
+          "mov eax, dword ptr [rip + 0x1da41]",
+          "mov ecx, dword ptr [rip + 0x1da3f]",
+          "sub eax, 0xe3ec27d8",
+          "sub eax, ecx",
+          "add eax, 0xe3ec27d8",
+          "sub eax, 0xff7d1b76"
+        ],
+        "strings": [
+          "WATCHDOG ONLINE",
+          "FINAL SAFE ZONE"
+        ]
+      },
+      "semantic_event_ids": [],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_019",
+      "logical_node": "game_17",
+      "logical_nodes": [
+        "game_17",
+        "game_18"
+      ],
+      "occurrence": 1,
+      "route_index": 18,
+      "trace_occurrence_start": 45,
+      "trace_occurrence_end_exclusive": 47,
+      "trace_occurrences": [
+        {
+          "index": 45,
+          "logical_node": "game_17"
+        },
+        {
+          "index": 46,
+          "logical_node": "game_18"
+        }
+      ],
+      "x": 6260,
+      "y": 620,
+      "width": 155,
+      "height": 24,
+      "kind": "objective",
+      "required": true,
+      "raw_blocks": [
+        "bb_00007832",
+        "bb_0000789F",
+        "bb_000078E6",
+        "bb_00007B56",
+        "bb_00007B90",
+        "bb_00007BD0",
+        "bb_00007BD2",
+        "bb_00007C4E",
+        "bb_00007CA3",
+        "bb_00007CA5",
+        "bb_00007CF6",
+        "bb_00007D3F",
+        "bb_00007D41",
+        "bb_00007DC7",
+        "bb_00007E48",
+        "bb_00007E4A",
+        "bb_00007EA6",
+        "bb_00007F49"
+      ],
+      "display": {
+        "address": "0x0000000140007832",
+        "entry_rva": "0x7832",
+        "instructions": [
+          "mov eax, dword ptr [rip + 0x1af84]",
+          "mov ecx, dword ptr [rip + 0x1af82]",
+          "mov edx, eax",
+          "xor edx, 0xffffffff",
+          "mov r8d, ecx",
+          "and r8d, edx"
+        ],
+        "strings": [
+          "WATCHDOG OFFLINE",
+          "MISSION COMPLETE"
+        ]
+      },
+      "semantic_event_ids": [],
+      "mapping_note": "Chronological physical segment compacting one or more gameplay-node trace occurrences; every logical node and raw block remains listed."
+    },
+    {
+      "id": "platform_020",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 1019,
+      "y": 905,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_00007F57"
+      ],
+      "display": {
+        "address": "0x0000000140007F57",
+        "entry_rva": "0x7F57",
+        "instructions": [
+          "mov eax, 0x10",
+          "mov qword ptr [rbp - 0x80], rax",
+          "call 0x1400083a0",
+          "sub rsp, rax",
+          "mov rax, qword ptr [rbp - 0x80]",
+          "mov rcx, rsp"
+        ],
+        "strings": [
+          "MISSION WATCHDOG",
+          "TICK-9"
+        ]
+      },
+      "semantic_event_ids": [],
+      "physical_role": "false_recovery",
+      "physical_anchor_platform": "platform_003",
+      "apparent_target_platform": "platform_004",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        0
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 26.9,
+        "instruction_count": 25,
+        "control_flow_instruction_count": 5,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 6,
+        "arithmetic_density": 0.24,
+        "memory_load_store_count": 8,
+        "call_count": 4,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 6,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": false,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_00007F57",
+        "start_rva": "0x7F57",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_000045E7",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_00004590",
+            "kind": "branch_taken"
+          },
+          {
+            "source": "bb_000045E7",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_021",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 1529,
+      "y": 880,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_00007FFD"
+      ],
+      "display": {
+        "address": "0x0000000140007FFD",
+        "entry_rva": "0x7FFD",
+        "instructions": [
+          "mov ecx, dword ptr [rbp + 0x44]",
+          "sub rsp, 0x20",
+          "call 0x140002e30",
+          "add rsp, 0x20",
+          "lea rcx, [rip + 0xf311]",
+          "sub rsp, 0x20"
+        ],
+        "strings": [
+          "WATCHDOG ONLINE"
+        ]
+      },
+      "semantic_event_ids": [],
+      "physical_role": "apparent_shortcut",
+      "physical_anchor_platform": "platform_004",
+      "apparent_target_platform": "platform_006",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        0,
+        5,
+        10,
+        17
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 18.0,
+        "instruction_count": 11,
+        "control_flow_instruction_count": 3,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 4,
+        "arithmetic_density": 0.3636,
+        "memory_load_store_count": 3,
+        "call_count": 2,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 6,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": false,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_00007FFD",
+        "start_rva": "0x7FFD",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_00004A80",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_00004A3E",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_022",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 2154,
+      "y": 680,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_00008044"
+      ],
+      "display": {
+        "address": "0x0000000140008044",
+        "entry_rva": "0x8044",
+        "instructions": [
+          "mov rax, qword ptr [rbp + 0x70]",
+          "mov rcx, qword ptr [rbp + 0x58]",
+          "mov edx, dword ptr [rcx]",
+          "mov ecx, dword ptr [rax]",
+          "sub rsp, 0x20",
+          "call 0x1400033d0"
+        ],
+        "strings": []
+      },
+      "semantic_event_ids": [],
+      "physical_role": "forward_anchor",
+      "physical_anchor_platform": "platform_006",
+      "apparent_target_platform": "platform_007",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        1,
+        5,
+        11,
+        17
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 17.05,
+        "instruction_count": 11,
+        "control_flow_instruction_count": 2,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 2,
+        "arithmetic_density": 0.1818,
+        "memory_load_store_count": 6,
+        "call_count": 1,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 5,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": false,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_00008044",
+        "start_rva": "0x8044",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_00004EA0",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_00004E6E",
+            "kind": "branch_taken"
+          },
+          {
+            "source": "bb_00004EA0",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_023",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 2723,
+      "y": 1060,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_000080CE"
+      ],
+      "display": {
+        "address": "0x00000001400080CE",
+        "entry_rva": "0x80CE",
+        "instructions": [
+          "mov rax, qword ptr [rbp + 0x70]",
+          "mov rcx, qword ptr [rbp + 0x58]",
+          "mov edx, dword ptr [rcx]",
+          "mov ecx, dword ptr [rax]",
+          "sub rsp, 0x20",
+          "call 0x140003b30"
+        ],
+        "strings": []
+      },
+      "semantic_event_ids": [],
+      "physical_role": "low_route",
+      "physical_anchor_platform": "platform_008",
+      "apparent_target_platform": "platform_009",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        7
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 14.15,
+        "instruction_count": 8,
+        "control_flow_instruction_count": 2,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 2,
+        "arithmetic_density": 0.25,
+        "memory_load_store_count": 4,
+        "call_count": 1,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 5,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": false,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_000080CE",
+        "start_rva": "0x80CE",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_00005798",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_000056E1",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_024",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 3059,
+      "y": 755,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_000082C0"
+      ],
+      "display": {
+        "address": "0x00000001400082C0",
+        "entry_rva": "0x82C0",
+        "instructions": [
+          "mov rax, qword ptr [rbp + 0x58]",
+          "mov ecx, dword ptr [rbp - 0x4c]",
+          "sub ecx, 0x68d58082",
+          "add ecx, 1",
+          "add ecx, 0x68d58082",
+          "mov dword ptr [rax], ecx"
+        ],
+        "strings": []
+      },
+      "semantic_event_ids": [],
+      "physical_role": "alternate_route",
+      "physical_anchor_platform": "platform_009",
+      "apparent_target_platform": "platform_010",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        5,
+        7,
+        10,
+        16
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 12.8,
+        "instruction_count": 7,
+        "control_flow_instruction_count": 1,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 3,
+        "arithmetic_density": 0.4286,
+        "memory_load_store_count": 3,
+        "call_count": 0,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 4,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": false,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_000082C0",
+        "start_rva": "0x82C0",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_00007527",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_000074F5",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_025",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 3743,
+      "y": 820,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_000081C3"
+      ],
+      "display": {
+        "address": "0x00000001400081C3",
+        "entry_rva": "0x81C3",
+        "instructions": [
+          "mov edx, dword ptr [rbp - 0x1c]",
+          "mov rax, qword ptr [rbp + 0x70]",
+          "mov ecx, dword ptr [rax]",
+          "sub rsp, 0x20",
+          "call 0x140003f60",
+          "add rsp, 0x20"
+        ],
+        "strings": []
+      },
+      "semantic_event_ids": [],
+      "physical_role": "gap_stepping_stone",
+      "physical_anchor_platform": "platform_011",
+      "apparent_target_platform": "platform_012",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        3,
+        8,
+        13,
+        14
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 12.7,
+        "instruction_count": 7,
+        "control_flow_instruction_count": 2,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 2,
+        "arithmetic_density": 0.2857,
+        "memory_load_store_count": 3,
+        "call_count": 1,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 5,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": false,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_000081C3",
+        "start_rva": "0x81C3",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_000065E9",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_0000658F",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_026",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 4535,
+      "y": 1075,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_00008210"
+      ],
+      "display": {
+        "address": "0x0000000140008210",
+        "entry_rva": "0x8210",
+        "instructions": [
+          "mov rax, qword ptr [rbp + 0x58]",
+          "mov ecx, dword ptr [rax]",
+          "sub rsp, 0x20",
+          "call 0x1400037e0",
+          "add rsp, 0x20",
+          "jmp 0x14000699c"
+        ],
+        "strings": []
+      },
+      "semantic_event_ids": [],
+      "physical_role": "false_recovery",
+      "physical_anchor_platform": "platform_013",
+      "apparent_target_platform": "platform_014",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        3,
+        8,
+        14
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 11.25,
+        "instruction_count": 6,
+        "control_flow_instruction_count": 2,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 2,
+        "arithmetic_density": 0.3333,
+        "memory_load_store_count": 2,
+        "call_count": 1,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 5,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": false,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_00008210",
+        "start_rva": "0x8210",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_0000699C",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_000068E0",
+            "kind": "branch_taken"
+          },
+          {
+            "source": "bb_0000699C",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_027",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 5088,
+      "y": 795,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_0000814B"
+      ],
+      "display": {
+        "address": "0x000000014000814B",
+        "entry_rva": "0x814B",
+        "instructions": [
+          "lea rcx, [rip + 0xf21b]",
+          "sub rsp, 0x20",
+          "call 0x140001000",
+          "add rsp, 0x20",
+          "mov eax, dword ptr [rip + 0x19e9b]",
+          "jmp 0x140005dc1"
+        ],
+        "strings": [
+          "ROUTE GAMMA"
+        ]
+      },
+      "semantic_event_ids": [],
+      "physical_role": "apparent_shortcut",
+      "physical_anchor_platform": "platform_015",
+      "apparent_target_platform": "platform_017",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        2,
+        12,
+        13
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 10.9,
+        "instruction_count": 6,
+        "control_flow_instruction_count": 2,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 2,
+        "arithmetic_density": 0.3333,
+        "memory_load_store_count": 1,
+        "call_count": 1,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 6,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": false,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_0000814B",
+        "start_rva": "0x814B",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_00005DC1",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_00005D91",
+            "kind": "branch_taken"
+          },
+          {
+            "source": "bb_00005DC1",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_028",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 5435,
+      "y": 780,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_000080B5"
+      ],
+      "display": {
+        "address": "0x00000001400080B5",
+        "entry_rva": "0x80B5",
+        "instructions": [
+          "lea rcx, [rip + 0xf285]",
+          "sub rsp, 0x20",
+          "call 0x140001000",
+          "add rsp, 0x20",
+          "jmp 0x140005653"
+        ],
+        "strings": [
+          "ROUTE BETA"
+        ]
+      },
+      "semantic_event_ids": [],
+      "physical_role": "forward_anchor",
+      "physical_anchor_platform": "platform_016",
+      "apparent_target_platform": "platform_017",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        5,
+        7,
+        10,
+        16
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 8.8,
+        "instruction_count": 5,
+        "control_flow_instruction_count": 2,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 2,
+        "arithmetic_density": 0.4,
+        "memory_load_store_count": 0,
+        "call_count": 1,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 5,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": true,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_000080B5",
+        "start_rva": "0x80B5",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_00005653",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_00005616",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_029",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 854,
+      "y": 905,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_0000817D"
+      ],
+      "display": {
+        "address": "0x000000014000817D",
+        "entry_rva": "0x817D",
+        "instructions": [
+          "lea rcx, [rip + 0xf1f5]",
+          "sub rsp, 0x20",
+          "call 0x140001000",
+          "add rsp, 0x20",
+          "jmp 0x14000604c"
+        ],
+        "strings": [
+          "ROUTE SHADOW"
+        ]
+      },
+      "semantic_event_ids": [],
+      "physical_role": "low_route",
+      "physical_anchor_platform": "platform_003",
+      "apparent_target_platform": "platform_004",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        7,
+        12
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 8.8,
+        "instruction_count": 5,
+        "control_flow_instruction_count": 2,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 2,
+        "arithmetic_density": 0.4,
+        "memory_load_store_count": 0,
+        "call_count": 1,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 5,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": true,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_0000817D",
+        "start_rva": "0x817D",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_0000604C",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_00005FC5",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_030",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 1215,
+      "y": 1040,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_000082E2"
+      ],
+      "display": {
+        "address": "0x00000001400082E2",
+        "entry_rva": "0x82E2",
+        "instructions": [
+          "lea rcx, [rip + 0xf0e8]",
+          "sub rsp, 0x20",
+          "call 0x140001000",
+          "mov rax, qword ptr [rbp + 0x70]",
+          "add rsp, 0x20",
+          "mov ecx, dword ptr [rax]"
+        ],
+        "strings": [
+          "FINAL SAFE ZONE"
+        ]
+      },
+      "semantic_event_ids": [],
+      "physical_role": "alternate_route",
+      "physical_anchor_platform": "platform_004",
+      "apparent_target_platform": "platform_005",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        15,
+        17
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 17.0,
+        "instruction_count": 10,
+        "control_flow_instruction_count": 3,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 4,
+        "arithmetic_density": 0.4,
+        "memory_load_store_count": 2,
+        "call_count": 2,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 6,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": false,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_000082E2",
+        "start_rva": "0x82E2",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_000076BF",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_00007676",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_031",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 2039,
+      "y": 585,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_0000827A"
+      ],
+      "display": {
+        "address": "0x000000014000827A",
+        "entry_rva": "0x827A",
+        "instructions": [
+          "lea rcx, [rip + 0xf12f]",
+          "sub rsp, 0x20",
+          "call 0x140001000",
+          "add rsp, 0x20",
+          "jmp 0x1400070b6"
+        ],
+        "strings": [
+          "WATCHDOG CLOSE"
+        ]
+      },
+      "semantic_event_ids": [],
+      "physical_role": "gap_stepping_stone",
+      "physical_anchor_platform": "platform_006",
+      "apparent_target_platform": "platform_007",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        13,
+        15
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 8.8,
+        "instruction_count": 5,
+        "control_flow_instruction_count": 2,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 2,
+        "arithmetic_density": 0.4,
+        "memory_load_store_count": 0,
+        "call_count": 1,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 5,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": true,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_0000827A",
+        "start_rva": "0x827A",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_000070B6",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_00007081",
+            "kind": "branch_taken"
+          },
+          {
+            "source": "bb_000070B6",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_032",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 2558,
+      "y": 1045,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_0000835E"
+      ],
+      "display": {
+        "address": "0x000000014000835E",
+        "entry_rva": "0x835E",
+        "instructions": [
+          "lea rcx, [rip + 0xf0a4]",
+          "sub rsp, 0x20",
+          "call 0x140001000",
+          "mov rax, qword ptr [rbp + 0x60]",
+          "add rsp, 0x20",
+          "mov dword ptr [rax], 0"
+        ],
+        "strings": [
+          "MISSION COMPLETE"
+        ]
+      },
+      "semantic_event_ids": [],
+      "physical_role": "false_recovery",
+      "physical_anchor_platform": "platform_008",
+      "apparent_target_platform": "platform_009",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        18
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 12.35,
+        "instruction_count": 7,
+        "control_flow_instruction_count": 2,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 2,
+        "arithmetic_density": 0.2857,
+        "memory_load_store_count": 2,
+        "call_count": 1,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 6,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": false,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_0000835E",
+        "start_rva": "0x835E",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_00007C4E",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_00007BD2",
+            "kind": "branch_taken"
+          },
+          {
+            "source": "bb_00007C4E",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_033",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 3233,
+      "y": 890,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_00008298"
+      ],
+      "display": {
+        "address": "0x0000000140008298",
+        "entry_rva": "0x8298",
+        "instructions": [
+          "lea rcx, [rip + 0xf120]",
+          "sub rsp, 0x20",
+          "call 0x140001000",
+          "add rsp, 0x20",
+          "jmp 0x14000720b"
+        ],
+        "strings": [
+          "WATCHDOG TRACKING"
+        ]
+      },
+      "semantic_event_ids": [],
+      "physical_role": "apparent_shortcut",
+      "physical_anchor_platform": "platform_009",
+      "apparent_target_platform": "platform_011",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        4,
+        9,
+        15
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 8.8,
+        "instruction_count": 5,
+        "control_flow_instruction_count": 2,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 2,
+        "arithmetic_density": 0.4,
+        "memory_load_store_count": 0,
+        "call_count": 1,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 5,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": true,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_00008298",
+        "start_rva": "0x8298",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_0000720B",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_000071A8",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    },
+    {
+      "id": "platform_034",
+      "logical_node": null,
+      "logical_nodes": [],
+      "occurrence": 1,
+      "route_index": null,
+      "trace_occurrence_start": null,
+      "trace_occurrence_end_exclusive": null,
+      "trace_occurrences": [],
+      "x": 3858,
+      "y": 725,
+      "width": 112,
+      "height": 24,
+      "kind": "crumble",
+      "required": false,
+      "raw_blocks": [
+        "bb_00008345"
+      ],
+      "display": {
+        "address": "0x0000000140008345",
+        "entry_rva": "0x8345",
+        "instructions": [
+          "lea rcx, [rip + 0xf0ac]",
+          "sub rsp, 0x20",
+          "call 0x140001000",
+          "add rsp, 0x20",
+          "jmp 0x140007b90"
+        ],
+        "strings": [
+          "WATCHDOG OFFLINE"
+        ]
+      },
+      "semantic_event_ids": [],
+      "physical_role": "forward_anchor",
+      "physical_anchor_platform": "platform_011",
+      "apparent_target_platform": "platform_012",
+      "plausible_fake_choice": true,
+      "machine_adjacent_route_indices": [
+        18
+      ],
+      "cfg_distance": 1,
+      "provenance": {
+        "classification": "obfuscator_bogus",
+        "source": "hikari_alteredBB",
+        "confidence": "strong",
+        "method": "Exact verbose-assembly block label retained in the authoritative assembled COFF object"
+      },
+      "richness": {
+        "visual_richness_score": 8.8,
+        "instruction_count": 5,
+        "control_flow_instruction_count": 2,
+        "conditional_branch_count": 0,
+        "unconditional_branch_count": 1,
+        "arithmetic_boolean_instruction_count": 2,
+        "arithmetic_density": 0.4,
+        "memory_load_store_count": 0,
+        "call_count": 1,
+        "comparison_test_count": 0,
+        "unique_mnemonic_count": 5,
+        "one_instruction_only": false,
+        "two_or_fewer_instructions": false,
+        "unconditional_jump_only": false,
+        "branch_control_flow_only": false,
+        "no_arithmetic_boolean": false,
+        "no_memory_operations": true,
+        "trivial_glue": false
+      },
+      "machine_truth": {
+        "raw_block": "bb_00008345",
+        "start_rva": "0x8345",
+        "actual_cfg_successors": [
+          {
+            "target": "bb_00007B90",
+            "kind": "jump"
+          }
+        ],
+        "actual_cfg_predecessors": [
+          {
+            "source": "bb_00007B56",
+            "kind": "branch_taken"
+          },
+          {
+            "source": "bb_00007B90",
+            "kind": "branch_taken"
+          }
+        ],
+        "physical_links_are_separate": true
+      },
+      "mapping_note": "One strongly mapped alteredBB machine block. Richness ranks it only after provenance; physical grapple links do not claim machine-CFG edges."
+    }
+  ],
+  "route": {
+    "platform_ids": [
+      "platform_001",
+      "platform_002",
+      "platform_003",
+      "platform_004",
+      "platform_005",
+      "platform_006",
+      "platform_007",
+      "platform_008",
+      "platform_009",
+      "platform_010",
+      "platform_011",
+      "platform_012",
+      "platform_013",
+      "platform_014",
+      "platform_015",
+      "platform_016",
+      "platform_017",
+      "platform_018",
+      "platform_019"
+    ],
+    "chronology": "balanced_compaction_of_complete_gameplay_trace",
+    "source_gameplay_trace_length": 47,
+    "visible_route_target": 19,
+    "logical_node_physical_instances": {
+      "game_00": [
+        "platform_001"
+      ],
+      "game_01": [
+        "platform_001",
+        "platform_006",
+        "platform_011",
+        "platform_018"
+      ],
+      "game_02": [
+        "platform_002",
+        "platform_006",
+        "platform_012",
+        "platform_018"
+      ],
+      "game_03": [
+        "platform_002",
+        "platform_007",
+        "platform_012"
+      ],
+      "game_04": [
+        "platform_002",
+        "platform_007",
+        "platform_012"
+      ],
+      "game_05": [
+        "platform_003",
+        "platform_013"
+      ],
+      "game_06": [
+        "platform_003",
+        "platform_014"
+      ],
+      "game_07": [
+        "platform_004",
+        "platform_009",
+        "platform_014"
+      ],
+      "game_08": [
+        "platform_004",
+        "platform_009",
+        "platform_015"
+      ],
+      "game_09": [
+        "platform_004",
+        "platform_010",
+        "platform_015"
+      ],
+      "game_10": [
+        "platform_005",
+        "platform_010",
+        "platform_016"
+      ],
+      "game_11": [
+        "platform_005",
+        "platform_010",
+        "platform_017"
+      ],
+      "game_12": [
+        "platform_006",
+        "platform_008",
+        "platform_011",
+        "platform_017"
+      ],
+      "game_13": [
+        "platform_008"
+      ],
+      "game_14": [
+        "platform_008",
+        "platform_013"
+      ],
+      "game_15": [
+        "platform_014",
+        "platform_016"
+      ],
+      "game_16": [
+        "platform_016",
+        "platform_018"
+      ],
+      "game_17": [
+        "platform_019"
+      ],
+      "game_18": [
+        "platform_019"
+      ]
+    }
+  },
+  "grapple_links": [
+    {
+      "id": "link_required_001",
+      "from": "platform_001",
+      "to": "platform_002",
+      "distance": 411.3,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_002",
+      "from": "platform_002",
+      "to": "platform_003",
+      "distance": 391.4,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_003",
+      "from": "platform_003",
+      "to": "platform_004",
+      "distance": 386.9,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_004",
+      "from": "platform_004",
+      "to": "platform_005",
+      "distance": 411.3,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_005",
+      "from": "platform_005",
+      "to": "platform_006",
+      "distance": 434.0,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_006",
+      "from": "platform_006",
+      "to": "platform_007",
+      "distance": 392.5,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_007",
+      "from": "platform_007",
+      "to": "platform_008",
+      "distance": 396.1,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_008",
+      "from": "platform_008",
+      "to": "platform_009",
+      "distance": 434.0,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_009",
+      "from": "platform_009",
+      "to": "platform_010",
+      "distance": 392.5,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_010",
+      "from": "platform_010",
+      "to": "platform_011",
+      "distance": 391.4,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_011",
+      "from": "platform_011",
+      "to": "platform_012",
+      "distance": 406.0,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_012",
+      "from": "platform_012",
+      "to": "platform_013",
+      "distance": 392.5,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_013",
+      "from": "platform_013",
+      "to": "platform_014",
+      "distance": 434.0,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_014",
+      "from": "platform_014",
+      "to": "platform_015",
+      "distance": 411.3,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_015",
+      "from": "platform_015",
+      "to": "platform_016",
+      "distance": 376.5,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_016",
+      "from": "platform_016",
+      "to": "platform_017",
+      "distance": 434.0,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_017",
+      "from": "platform_017",
+      "to": "platform_018",
+      "distance": 411.3,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_required_018",
+      "from": "platform_018",
+      "to": "platform_019",
+      "distance": 371.5,
+      "kind": "required_progression",
+      "required": true,
+      "relationship_layer": "physical_gameplay"
+    },
+    {
+      "id": "link_fake_choice_001",
+      "from": "platform_003",
+      "to": "platform_020",
+      "distance": 328.1,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_001",
+      "from": "platform_020",
+      "to": "platform_004",
+      "distance": 179.0,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_002",
+      "from": "platform_004",
+      "to": "platform_021",
+      "distance": 351.1,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_002",
+      "from": "platform_021",
+      "to": "platform_006",
+      "distance": 359.0,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_003",
+      "from": "platform_006",
+      "to": "platform_022",
+      "distance": 298.5,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_003",
+      "from": "platform_022",
+      "to": "platform_007",
+      "distance": 119.8,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_004",
+      "from": "platform_008",
+      "to": "platform_023",
+      "distance": 346.8,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_004",
+      "from": "platform_023",
+      "to": "platform_009",
+      "distance": 178.1,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_005",
+      "from": "platform_009",
+      "to": "platform_024",
+      "distance": 310.9,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_005",
+      "from": "platform_024",
+      "to": "platform_010",
+      "distance": 168.6,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_006",
+      "from": "platform_011",
+      "to": "platform_025",
+      "distance": 265.1,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_006",
+      "from": "platform_025",
+      "to": "platform_012",
+      "distance": 173.8,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_007",
+      "from": "platform_013",
+      "to": "platform_026",
+      "distance": 294.6,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_007",
+      "from": "platform_026",
+      "to": "platform_014",
+      "distance": 290.1,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_008",
+      "from": "platform_015",
+      "to": "platform_027",
+      "distance": 271.3,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_008",
+      "from": "platform_027",
+      "to": "platform_017",
+      "distance": 567.5,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_009",
+      "from": "platform_016",
+      "to": "platform_028",
+      "distance": 174.6,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_009",
+      "from": "platform_028",
+      "to": "platform_017",
+      "distance": 296.4,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_010",
+      "from": "platform_003",
+      "to": "platform_029",
+      "distance": 285.0,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_010",
+      "from": "platform_029",
+      "to": "platform_004",
+      "distance": 336.0,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_011",
+      "from": "platform_004",
+      "to": "platform_030",
+      "distance": 212.7,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_011",
+      "from": "platform_030",
+      "to": "platform_005",
+      "distance": 314.2,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_012",
+      "from": "platform_006",
+      "to": "platform_031",
+      "distance": 261.6,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_012",
+      "from": "platform_031",
+      "to": "platform_007",
+      "distance": 163.2,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_013",
+      "from": "platform_008",
+      "to": "platform_032",
+      "distance": 285.1,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_013",
+      "from": "platform_032",
+      "to": "platform_009",
+      "distance": 339.4,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_014",
+      "from": "platform_009",
+      "to": "platform_033",
+      "distance": 360.7,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_014",
+      "from": "platform_033",
+      "to": "platform_011",
+      "distance": 431.0,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_choice_015",
+      "from": "platform_011",
+      "to": "platform_034",
+      "distance": 307.5,
+      "kind": "optional_fake_choice",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    },
+    {
+      "id": "link_fake_apparent_015",
+      "from": "platform_034",
+      "to": "platform_012",
+      "distance": 120.2,
+      "kind": "optional_apparent_progression",
+      "required": false,
+      "relationship_layer": "physical_gameplay",
+      "machine_cfg_edge_claimed": false
+    }
+  ],
+  "events": [
+    {
+      "id": "event_001",
+      "type": "authentication",
+      "platform": "platform_001",
+      "raw_block": "bb_000045E7",
+      "instruction_address": "0x0000000140004687",
+      "call_target": "session_hash",
+      "call_site_occurrence": 1,
+      "params": {
+        "intent": "identity gate",
+        "source_symbol": "session_hash"
+      },
+      "source_event_instance": "event_000"
+    },
+    {
+      "id": "event_002",
+      "type": "watchdog",
+      "platform": "platform_001",
+      "raw_block": "bb_00004A80",
+      "instruction_address": "0x0000000140004AB0",
+      "call_target": "arm_watchdog",
+      "call_site_occurrence": 1,
+      "params": {
+        "intent": "defensive timer and pursuer pressure",
+        "source_symbol": "arm_watchdog",
+        "pressure": "time"
+      },
+      "source_event_instance": "event_001"
+    },
+    {
+      "id": "event_003",
+      "type": "navigation",
+      "platform": "platform_002",
+      "raw_block": "bb_00004EA0",
+      "instruction_address": "0x0000000140004F2F",
+      "call_target": "choose_route",
+      "call_site_occurrence": 1,
+      "params": {
+        "intent": "route selection",
+        "source_symbol": "choose_route"
+      },
+      "source_event_instance": "event_002"
+    },
+    {
+      "id": "event_004",
+      "type": "checkpoint",
+      "platform": "platform_004",
+      "raw_block": "bb_000065E9",
+      "instruction_address": "0x000000014000662E",
+      "call_target": "cross_checkpoint",
+      "call_site_occurrence": 1,
+      "params": {
+        "intent": "temporary safe location",
+        "source_symbol": "cross_checkpoint"
+      },
+      "source_event_instance": "event_003"
+    },
+    {
+      "id": "event_005",
+      "type": "watchdog",
+      "platform": "platform_004",
+      "raw_block": "bb_0000699C",
+      "instruction_address": "0x00000001400069E8",
+      "call_target": "watchdog_step",
+      "call_site_occurrence": 1,
+      "params": {
+        "intent": "defensive timer and pursuer pressure",
+        "source_symbol": "watchdog_step",
+        "pressure": "time"
+      },
+      "source_event_instance": "event_004"
+    },
+    {
+      "id": "event_006",
+      "type": "navigation",
+      "platform": "platform_006",
+      "raw_block": "bb_00004EA0",
+      "instruction_address": "0x0000000140004F2F",
+      "call_target": "choose_route",
+      "call_site_occurrence": 2,
+      "params": {
+        "intent": "route selection",
+        "source_symbol": "choose_route"
+      },
+      "source_event_instance": "event_005"
+    },
+    {
+      "id": "event_007",
+      "type": "watchdog",
+      "platform": "platform_008",
+      "raw_block": "bb_00005798",
+      "instruction_address": "0x00000001400057D5",
+      "call_target": "suppress_alarm",
+      "call_site_occurrence": 1,
+      "params": {
+        "intent": "defensive timer and pursuer pressure",
+        "source_symbol": "suppress_alarm",
+        "pressure": "time"
+      },
+      "source_event_instance": "event_006"
+    },
+    {
+      "id": "event_008",
+      "type": "checkpoint",
+      "platform": "platform_009",
+      "raw_block": "bb_000065E9",
+      "instruction_address": "0x000000014000662E",
+      "call_target": "cross_checkpoint",
+      "call_site_occurrence": 2,
+      "params": {
+        "intent": "temporary safe location",
+        "source_symbol": "cross_checkpoint"
+      },
+      "source_event_instance": "event_007"
+    },
+    {
+      "id": "event_009",
+      "type": "watchdog",
+      "platform": "platform_009",
+      "raw_block": "bb_0000699C",
+      "instruction_address": "0x00000001400069E8",
+      "call_target": "watchdog_step",
+      "call_site_occurrence": 2,
+      "params": {
+        "intent": "defensive timer and pursuer pressure",
+        "source_symbol": "watchdog_step",
+        "pressure": "time"
+      },
+      "source_event_instance": "event_008"
+    },
+    {
+      "id": "event_010",
+      "type": "navigation",
+      "platform": "platform_012",
+      "raw_block": "bb_00004EA0",
+      "instruction_address": "0x0000000140004F2F",
+      "call_target": "choose_route",
+      "call_site_occurrence": 3,
+      "params": {
+        "intent": "route selection",
+        "source_symbol": "choose_route"
+      },
+      "source_event_instance": "event_009"
+    },
+    {
+      "id": "event_011",
+      "type": "checkpoint",
+      "platform": "platform_015",
+      "raw_block": "bb_000065E9",
+      "instruction_address": "0x000000014000662E",
+      "call_target": "cross_checkpoint",
+      "call_site_occurrence": 3,
+      "params": {
+        "intent": "temporary safe location",
+        "source_symbol": "cross_checkpoint"
+      },
+      "source_event_instance": "event_010"
+    },
+    {
+      "id": "event_012",
+      "type": "watchdog",
+      "platform": "platform_015",
+      "raw_block": "bb_0000699C",
+      "instruction_address": "0x00000001400069E8",
+      "call_target": "watchdog_step",
+      "call_site_occurrence": 3,
+      "params": {
+        "intent": "defensive timer and pursuer pressure",
+        "source_symbol": "watchdog_step",
+        "pressure": "time"
+      },
+      "source_event_instance": "event_011"
+    },
+    {
+      "id": "event_013",
+      "type": "watchdog",
+      "platform": "platform_016",
+      "raw_block": "bb_000076BF",
+      "instruction_address": "0x000000014000770C",
+      "call_target": "disarm_watchdog",
+      "call_site_occurrence": 1,
+      "params": {
+        "intent": "defensive timer and pursuer pressure",
+        "source_symbol": "disarm_watchdog",
+        "pressure": "time"
+      },
+      "source_event_instance": "event_012"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "checkpoint_01",
+      "sequence": 1,
+      "platform": "platform_007",
+      "respawn": {
+        "x": 2204,
+        "y": 522
+      }
+    },
+    {
+      "id": "checkpoint_02",
+      "sequence": 2,
+      "platform": "platform_013",
+      "respawn": {
+        "x": 4244,
+        "y": 1002
+      }
+    }
+  ],
+  "objective": {
+    "id": "objective_end",
+    "platform": "platform_019",
+    "region": {
+      "x": 6260,
+      "y": 520,
+      "width": 155,
+      "height": 100
+    }
+  },
+  "physical_choice_summary": {
+    "plausible_fake_choice_situations": 9,
+    "route_choice_density": 0.5,
+    "selected_bogus_platforms": 15,
+    "apparent_shortcuts": 3,
+    "recovery_looking": 5,
+    "apparent_alternate_route_members": 9,
+    "role_counts": {
+      "alternate_route": 2,
+      "apparent_shortcut": 3,
+      "false_recovery": 3,
+      "forward_anchor": 3,
+      "gap_stepping_stone": 2,
+      "low_route": 2
+    }
+  },
+  "analysis_metadata": {
+    "projection_schema_version": 1,
+    "source_gameplay_trace_length": 47,
+    "raw_ordered_execution_count": 346,
+    "raw_unique_executed_blocks": 175,
+    "physical_route_instances": 19,
+    "strong_bogus_machine_blocks": 74,
+    "direct_strong_bogus_candidates": 56,
+    "selected_strong_bogus_candidates": 15,
+    "selected_average_richness": 13.14,
+    "selected_jump_only": 0,
+    "selected_trivial_glue": 0,
+    "crumble_selection": "strong alteredBB provenance -> direct machine-CFG proximity -> richness and physical usefulness ranking",
+    "string_encryption": false,
+    "plaintext_display_policy": "STR displays omit plaintext strings; semantic event truth remains separate",
+    "source_sha256": "3D4C9F9EEBFA97EE0226A7FE6B672A7BCD57F274707DE0AC2620F93D0A20FC97",
+    "executable_sha256": "E15C862B583C3C95EACB7465DC8BFCC7D440926E9BAC3834E474E5E28BC06BA0",
+    "input_validation_ok": true,
+    "input_trace_stop_reason": "main_return_sentinel",
+    "input_trace_return": 0,
+    "fixed_recipe": {
+      "optimization": "O0",
+      "bcf_probability": 100,
+      "bcf_loop": 1,
+      "bcf_condition_complexity": 3,
+      "substitution_probability": 50,
+      "substitution_loop": 1,
+      "split_num": 2,
+      "string_encryption": false,
+      "flattening": false,
+      "seed": 12345
+    }
+  }
+}

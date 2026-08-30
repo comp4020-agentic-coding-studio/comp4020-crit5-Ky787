@@ -50,10 +50,20 @@ export class Inspector {
     rows.push(`<header><span class="ins-kind">${escape(spec.kind)}</span>
       <code class="ins-addr">${escape(spec.display.address)}</code></header>`);
 
+    const nodes =
+      spec.logical_nodes.length > 0 ? spec.logical_nodes.join(", ") : (spec.logical_node ?? "—");
+    const occurrences = spec.trace_occurrences.length;
     rows.push(`<dl class="ins-meta">
       <div><dt>Platform</dt><dd>${escape(spec.id)}</dd></div>
-      <div><dt>Logical node</dt><dd>${escape(spec.logical_node ?? "—")}${
+      <div><dt>Logical node${spec.logical_nodes.length > 1 ? "s" : ""}</dt><dd>${escape(nodes)}${
         spec.logical_node ? ` <span class="ins-dim">occurrence ${spec.occurrence}</span>` : ""
+      }</dd></div>
+      <div><dt>Trace occurrences</dt><dd>${
+        occurrences === 0
+          ? "<span class=\"ins-dim\">not on the executed trace</span>"
+          : `${occurrences} <span class="ins-dim">index ${spec.trace_occurrence_start} – ${
+              (spec.trace_occurrence_end_exclusive ?? 0) - 1
+            }</span>`
       }</dd></div>
       <div><dt>Raw blocks</dt><dd>${spec.raw_blocks.length}</dd></div>
     </dl>`);
@@ -97,6 +107,27 @@ export class Inspector {
         <p class="ins-prov"><strong>${escape(spec.provenance.classification)}</strong>
         <span class="ins-dim">${escape(spec.provenance.source)} · ${escape(spec.provenance.confidence)}</span></p>
         <p class="ins-note">${escape(spec.provenance.method)}</p>`);
+    }
+
+    // Machine control flow, kept explicitly apart from the physical grapple
+    // links the player can see in the world. A grapple link is reachability,
+    // never a claim that the binary has an edge here.
+    const truth = spec.machine_truth;
+    if (truth) {
+      const edge = (label: string, list: { target?: string; source?: string; kind: string }[]): string =>
+        list.length === 0
+          ? ""
+          : `<li><span>${label}</span> ${list
+              .map((e) => `<code>${escape(e.target ?? e.source ?? "?")}</code> <span class="ins-dim">${escape(e.kind)}</span>`)
+              .join(", ")}</li>`;
+      rows.push(`<p class="ins-label">Machine CFG (binary truth)</p>
+        <ul class="ins-events">
+          <li><span>block</span> <code>${escape(truth.raw_block)}</code> <span class="ins-dim">@ ${escape(truth.start_rva)}</span></li>
+          ${edge("to", truth.actual_cfg_successors)}
+          ${edge("from", truth.actual_cfg_predecessors)}
+        </ul>
+        <p class="ins-note">Physical grapple links are a separate layer: they describe what the
+        player can reach, not what the machine can branch to.</p>`);
     }
 
     this.root.innerHTML = rows.join("");

@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "levels": {
+    "level01": {
+      "old_metrics_available": true,
+      "old": {
+        "bogus_count": 8,
+        "selected_average_richness": 5.569,
+        "jump_only_selected": 4,
+        "trivial_selected": 4,
+        "world_width": 5590,
+        "world_height": 1500,
+        "physical_route_choice_density": 0.4444
+      },
+      "new": {
+        "bogus_count": 11,
+        "selected_average_richness": 13.032,
+        "jump_only_selected": 0,
+        "trivial_selected": 0,
+        "world_width": 5650,
+        "world_height": 1399,
+        "physical_route_choice_density": 0.2778
+      }
+    },
+    "level02": {
+      "old_metrics_available": true,
+      "old": {
+        "bogus_count": 8,
+        "selected_average_richness": 2.681,
+        "jump_only_selected": 5,
+        "trivial_selected": 5,
+        "world_width": 5595,
+        "world_height": 1500,
+        "physical_route_choice_density": 0.4444
+      },
+      "new": {
+        "bogus_count": 13,
+        "selected_average_richness": 10.708,
+        "jump_only_selected": 0,
+        "trivial_selected": 0,
+        "world_width": 4750,
+        "world_height": 1664,
+        "physical_route_choice_density": 0.3889
+      }
+    },
+    "level03": {
+      "old_metrics_available": true,
+      "old": {
+        "bogus_count": 8,
+        "selected_average_richness": 5.663,
+        "jump_only_selected": 4,
+        "trivial_selected": 4,
+        "world_width": 13290,
+        "world_height": 1500,
+        "physical_route_choice_density": 0.1633
+      },
+      "new": {
+        "bogus_count": 13,
+        "selected_average_richness": 11.235,
+        "jump_only_selected": 0,
+        "trivial_selected": 0,
+        "world_width": 5110,
+        "world_height": 1459,
+        "physical_route_choice_density": 0.3889
+      }
+    },
+    "level04": {
+      "old_metrics_available": true,
+      "old": {
+        "bogus_count": 8,
+        "selected_average_richness": 1.275,
+        "jump_only_selected": 6,
+        "trivial_selected": 6,
+        "world_width": 15585,
+        "world_height": 1500,
+        "physical_route_choice_density": 0.1739
+      },
+      "new": {
+        "bogus_count": 15,
+        "selected_average_richness": 13.14,
+        "jump_only_selected": 0,
+        "trivial_selected": 0,
+        "world_width": 6595,
+        "world_height": 1619,
+        "physical_route_choice_density": 0.5
+      }
+    },
+    "level05": {
+      "old_metrics_available": true,
+      "old": {
+        "bogus_count": 8,
+        "selected_average_richness": 1.275,
+        "jump_only_selected": 6,
+        "trivial_selected": 6,
+        "world_width": 16665,
+        "world_height": 1500,
+        "physical_route_choice_density": 0.2051
+      },
+      "new": {
+        "bogus_count": 15,
+        "selected_average_richness": 273.23,
+        "jump_only_selected": 0,
+        "trivial_selected": 0,
+        "world_width": 5880,
+        "world_height": 1664,
+        "physical_route_choice_density": 0.5556
+      }
+    }
+  }
+}

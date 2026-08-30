@@ -496,16 +496,101 @@ async function main(): Promise<void> {
       cdp,
       "document.querySelectorAll('button.mission').length",
     );
-    check("mission select lists all five missions", missions === 5, `${missions} listed`);
+    check("mission select lists all eight missions", missions === 8, `${missions} listed`);
 
     await evaluate(cdp, "document.querySelectorAll('button.mission')[2].click()");
     const switched = await waitFor(cdp, (s) => s.level === "level03", 8000);
     check("a different mission loads in the same engine", switched.level === "level03");
     check(
       "the new mission runs its own hazard identity",
-      switched.theme === "scanner_chambers",
+      switched.theme === "scanner_zigzag",
       String(switched.theme),
     );
+
+    // Quarantine is the vertical mission: a 8,400-unit shaft barely 1,700
+    // wide. It is the one shape the camera was never exercised on before, so
+    // it gets checked directly rather than assumed.
+    await evaluate(cdp, `document.querySelector('[data-nav="missions"]').click()`);
+    await sleep(400);
+    await evaluate(cdp, "document.querySelectorAll('button.mission')[6].click()");
+    const shaft = await waitFor(cdp, (s) => s.level === "level07", 8000);
+    check("Quarantine loads", shaft.level === "level07", String(shaft.theme));
+
+    const world = await evaluate<{ w: number; h: number; tall: number }>(
+      cdp,
+      `(() => { const g = globalThis.binaryNinja, w = g.runtime.data.world;
+        return { w: w.width, h: w.height, tall: g.renderer.camera.tallness }; })()`,
+    );
+    check(
+      "the shaft really is a shaft, and the camera knows it",
+      world.h > world.w * 3 && world.tall > 0.9,
+      `${world.w}x${world.h}, tallness ${world.tall.toFixed(2)}`,
+    );
+
+    // Climb: hook the block overhead and let the winch pull the player up.
+    await waitFor(cdp, (s) => s.grounded && !s.dead, 6000);
+    const up = await evaluate<{ sx: number; sy: number; id: string; y: number } | null>(
+      cdp,
+      `(() => {
+        const g = globalThis.binaryNinja, rt = g.runtime, cam = g.renderer.camera;
+        const here = rt.player.y;
+        const next = rt.routePlatforms().map(p => p.solid)
+          .filter(s => s.y < here - 120).sort((a, b) => b.y - a.y)[0];
+        if (!next) return null;
+        // The canvas sits below the top bar, so screen coordinates have to be
+        // offset by its own position the way the input layer does.
+        const rect = document.querySelector('canvas').getBoundingClientRect();
+        const wx = next.x + next.w * 0.5, wy = next.y + 6;
+        return {
+          sx: (wx - cam.originX()) * cam.zoom + rect.left,
+          sy: (wy - cam.originY()) * cam.zoom + rect.top,
+          id: next.id, y: rt.player.y,
+        };
+      })()`,
+    );
+    check("the block above is on screen to aim at", up !== null, up?.id ?? "none");
+
+    if (up) {
+      await pointer(cdp, "mouseMoved", up.sx, up.sy);
+      await sleep(140);
+      const aimedUp = await evaluate<Snapshot>(cdp, "globalThis.binaryNinja.snapshot()");
+      check(
+        "the reticle finds the block overhead",
+        aimedUp.targetId === up.id,
+        `${aimedUp.targetId ?? "none"} (wanted ${up.id})`,
+      );
+      await pointer(cdp, "mousePressed", up.sx, up.sy);
+      const hooked = await waitFor(cdp, (v) => v.rope === "attached", 2500);
+      // W is the winch. In a shaft it is the climb, not a fine adjustment.
+      await key(cdp, "keyDown", "KeyW", "w");
+      await sleep(1800);
+      const climbed = await evaluate<Snapshot>(cdp, "globalThis.binaryNinja.snapshot()");
+      await key(cdp, "keyUp", "KeyW", "w");
+      await pointer(cdp, "mouseReleased", up.sx, up.sy);
+      check(
+        "the winch climbs the shaft",
+        climbed.y < hooked.y - 120,
+        `rose ${(hooked.y - climbed.y).toFixed(0)}u from the hook`,
+      );
+      const visible = await evaluate<boolean>(
+        cdp,
+        `(() => { const g = globalThis.binaryNinja, cam = g.renderer.camera, p = g.runtime.player;
+          const sx = (p.x - cam.originX()) * cam.zoom, sy = (p.y - cam.originY()) * cam.zoom;
+          const v = g.renderer.viewSize();
+          return sx > 0 && sx < v.w && sy > 0 && sy < v.h; })()`,
+      );
+      check("the camera keeps the player on screen through the climb", visible);
+    }
+
+    // Root: the biggest world, and the one most likely to cost frames.
+    await evaluate(cdp, `document.querySelector('[data-nav="missions"]').click()`);
+    await sleep(300);
+    await evaluate(cdp, "document.querySelectorAll('button.mission')[7].click()");
+    const root = await waitFor(cdp, (s) => s.level === "level08", 8000);
+    check("Root loads", root.level === "level08", String(root.theme));
+    await sleep(2500);
+    const perf = await evaluate<Snapshot>(cdp, "globalThis.binaryNinja.snapshot()");
+    check("the biggest mission still runs at frame rate", perf.fps > 45, `${perf.fps.toFixed(0)} fps`);
 
     check("no console errors", cdp.errors.length === 0, cdp.errors.slice(0, 3).join(" | "));
   } finally {

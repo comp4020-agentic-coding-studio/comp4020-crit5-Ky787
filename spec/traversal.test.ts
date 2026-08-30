@@ -10,7 +10,13 @@
 import { describe, expect, it } from "vitest";
 import { GRAPPLE, PLAYER } from "../src/engine/constants.ts";
 import { LevelRuntime } from "../src/engine/level-runtime.ts";
-import { analyseRoute, playThrough, planHop, standOn } from "../src/engine/traversal.ts";
+import {
+  analyseRoute,
+  honestOptions,
+  playThrough,
+  planHop,
+  standOn,
+} from "../src/engine/traversal.ts";
 import {
   createPlayer,
   emptyInput,
@@ -47,34 +53,86 @@ describe.each(levels)("traversal: $entry.id", ({ tuned }) => {
   });
 
   it("plays through from spawn to objective with no crumble block present", () => {
-    const play = playThrough(bare(tuned));
+    const play = playThrough(bare(tuned), { budgetSeconds: 900 });
     expect(
       play.completed,
       play.stalledAt ? `stalled before ${play.stalledAt}` : "did not finish",
     ).toBe(true);
   });
 
-  it("plays through with the decoys in place, without ever needing one", () => {
+  it("plays through with the decoys in place, without ever standing on one", () => {
     const world = new LevelRuntime(tuned, { withoutHazards: true });
-    const play = playThrough(world);
-    expect(play.completed).toBe(true);
-    const decoysUsedOnRoute = world.platforms.filter(
-      (p) => p.spec.kind === "crumble" && p.spec.required,
-    );
-    expect(decoysUsedOnRoute).toEqual([]);
+    const play = playThrough(world, { budgetSeconds: 900 });
+    expect(play.completed, play.stalledAt ? `stalled before ${play.stalledAt}` : "").toBe(true);
+    // No crumble object is ever marked required...
+    expect(world.platforms.filter((p) => p.spec.kind === "crumble" && p.spec.required)).toEqual([]);
+    // ...and the run that just finished never armed one, so the successful
+    // route genuinely does not pass through Hikari bogus control flow.
+    const used = world.platforms
+      .filter((p) => p.spec.kind === "crumble" && p.crumble !== "intact")
+      .map((p) => p.spec.id);
+    expect(used, "the winning route leaned on a bogus block").toEqual([]);
+  });
+
+  it("finishes with every crumble block deleted from the world", () => {
+    const world = new LevelRuntime(tuned, { withoutCrumble: true, withoutHazards: true });
+    expect(world.platforms.some((p) => p.spec.kind === "crumble")).toBe(false);
+    const play = playThrough(world, { budgetSeconds: 1200 });
+    expect(play.completed, play.stalledAt ? `stalled before ${play.stalledAt}` : "").toBe(true);
+  });
+
+  it("never lets the decoys seal a required step", () => {
+    // Tempting is the point; mandatory is the bug. Every step has to keep a
+    // way across that does not touch a block the obfuscator invented.
+    const world = new LevelRuntime(tuned, { withoutHazards: true });
+    const sealed = honestOptions(world)
+      .filter((step) => step.honest === 0)
+      .map((step) => `${step.from}->${step.to}`);
+    expect(sealed, "steps whose only way across is a bogus block").toEqual([]);
   });
 });
 
 describe("traversal: level identity comes out of the same engine", () => {
-  it("Ghostline mixes hops and swings; the finale is nearly all rope", () => {
-    const jumpShare = (id: string): number => {
-      const { tuned } = level(id);
-      const runtime = bare(tuned);
-      const report = analyseRoute(id, runtime.solids, tuned.route.platform_ids, runtime.deathY);
-      return (report.hops.length - report.grappleRequired) / report.hops.length;
-    };
+  const jumpShare = (id: string): number => {
+    const { tuned } = level(id);
+    const runtime = bare(tuned);
+    const report = analyseRoute(id, runtime.solids, tuned.route.platform_ids, runtime.deathY);
+    return (report.hops.length - report.grappleRequired) / report.hops.length;
+  };
+
+  it("Ghostline teaches with jumps before it demands the rope", () => {
+    // Some of it is jumpable, most of it is not: that is the tutorial arc.
     expect(jumpShare("level01")).toBeGreaterThan(0.1);
-    expect(jumpShare("level05")).toBeLessThan(0.15);
+    expect(jumpShare("level01")).toBeLessThan(0.6);
+  });
+
+  it("Quarantine is a climb: nothing in the shaft is jumpable", () => {
+    expect(jumpShare("level07")).toBe(0);
+  });
+
+  it("makes the rope the main verb everywhere, not an optional extra", () => {
+    for (const { entry } of levels) {
+      expect(
+        1 - jumpShare(entry.id),
+        `${entry.id} should need the rope for most of its route`,
+      ).toBeGreaterThanOrEqual(0.5);
+    }
+  });
+
+  it("leaves real choice on almost every step, level-wide", () => {
+    // Not just "no step is sealed": on average a step should have several ways
+    // across, so a player who misreads one decoy is not immediately stuck.
+    for (const { entry, tuned } of levels) {
+      const steps = honestOptions(new LevelRuntime(tuned, { withoutHazards: true }));
+      const mean = steps.reduce((n, s) => n + s.honest / s.tried, 0) / steps.length;
+      expect(mean, `${entry.id} leaves too little room`).toBeGreaterThan(0.6);
+    }
+  });
+
+  it("Root is the longest mission the engine has to solve", () => {
+    const hops = (id: string): number => level(id).tuned.route.platform_ids.length - 1;
+    expect(hops("level08")).toBeGreaterThan(hops("level05"));
+    expect(hops("level08")).toBeGreaterThan(hops("level06"));
   });
 });
 

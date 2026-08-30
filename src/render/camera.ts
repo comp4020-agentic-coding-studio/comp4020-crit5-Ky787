@@ -1,7 +1,13 @@
-/** Smooth follow camera over worlds up to ~21k units wide. */
+/**
+ * Smooth follow camera. It has to serve two very different shapes of level:
+ * Root is 9,400 units wide, and Quarantine is a 8,400-unit vertical shaft
+ * barely 1,700 wide. Rather than special-casing a level, the camera reads how
+ * tall the world is in screens and leans its look-ahead, its follow rate and
+ * how far it zooms out accordingly.
+ */
 
 import { CAMERA } from "../engine/constants.ts";
-import { clamp, damp } from "../engine/geometry.ts";
+import { clamp, damp, lerp } from "../engine/geometry.ts";
 import type { Vec2 } from "../engine/geometry.ts";
 
 export class Camera {
@@ -17,9 +23,21 @@ export class Camera {
   viewH = 720;
 
   private world = { width: 1000, height: 1000 };
+  /** 0 for a level that fits one screen vertically, 1 for a tall shaft. */
+  private verticality = 0;
 
   setWorld(width: number, height: number): void {
     this.world = { width, height };
+    this.verticality = clamp(
+      (height - CAMERA.viewHeight) / (CAMERA.viewHeight * 2.5),
+      0,
+      1,
+    );
+  }
+
+  /** How tall this world is, on the 0-1 scale the camera tunes itself with. */
+  get tallness(): number {
+    return this.verticality;
   }
 
   snapTo(x: number, y: number): void {
@@ -51,22 +69,27 @@ export class Camera {
   ): void {
     this.viewW = viewW;
     this.viewH = viewH;
+    const v = this.verticality;
+    // A shaft is travelled vertically at rope speed, so it gets more world
+    // height in view than a level you read left to right.
+    const wantHeight = CAMERA.viewHeight + lerp(...CAMERA.verticalViewBonus, v);
     this.zoom = clamp(
-      Math.min(viewH / CAMERA.viewHeight, viewW / CAMERA.viewWidth),
+      Math.min(viewH / wantHeight, viewW / CAMERA.viewWidth),
       CAMERA.minZoom,
       CAMERA.maxZoom,
     );
 
+    const yLead = CAMERA.velocityLead * lerp(...CAMERA.verticalLead, v);
+    const yMaxLead = CAMERA.maxLead * lerp(1, 1.45, v);
     let wantX = target.x + clamp(velocity.x * CAMERA.velocityLead, -CAMERA.maxLead, CAMERA.maxLead);
-    let wantY =
-      target.y + clamp(velocity.y * CAMERA.velocityLead * 0.6, -CAMERA.maxLead, CAMERA.maxLead);
+    let wantY = target.y + clamp(velocity.y * yLead, -yMaxLead, yMaxLead);
     if (aim) {
       wantX += clamp((aim.x - target.x) * CAMERA.aimLead, -220, 220);
-      wantY += clamp((aim.y - target.y) * CAMERA.aimLead, -160, 160);
+      wantY += clamp((aim.y - target.y) * CAMERA.aimLead, -160, 160 + 120 * v);
     }
 
     this.x = damp(this.x, wantX, CAMERA.followRate, dt);
-    this.y = damp(this.y, wantY, CAMERA.followRate * 0.85, dt);
+    this.y = damp(this.y, wantY, CAMERA.followRate * lerp(...CAMERA.verticalFollow, v), dt);
     this.clampToWorld();
 
     if (this.shake > 0) {

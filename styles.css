@@ -620,6 +620,15 @@ kbd {
   letter-spacing: 0.06em;
 }
 
+/* The shape of the level, so eight missions read as eight different places. */
+.mission-shape {
+  color: var(--accent);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
 .mission-status {
   display: grid;
   justify-items: end;

@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "status": "READY FOR CLAUDE INTEGRATION",
+  "level_count": 8,
+  "total_checks": 24631,
+  "global_errors": [],
+  "all_errors": [],
+  "levels": [
+    {
+      "level": "level01",
+      "status": "PASS",
+      "checks": 1545,
+      "error_count": 0
+    },
+    {
+      "level": "level02",
+      "status": "PASS",
+      "checks": 1611,
+      "error_count": 0
+    },
+    {
+      "level": "level03",
+      "status": "PASS",
+      "checks": 2640,
+      "error_count": 0
+    },
+    {
+      "level": "level04",
+      "status": "PASS",
+      "checks": 2722,
+      "error_count": 0
+    },
+    {
+      "level": "level05",
+      "status": "PASS",
+      "checks": 2822,
+      "error_count": 0
+    },
+    {
+      "level": "level06",
+      "status": "PASS",
+      "checks": 3039,
+      "error_count": 0
+    },
+    {
+      "level": "level07",
+      "status": "PASS",
+      "checks": 4083,
+      "error_count": 0
+    },
+    {
+      "level": "level08",
+      "status": "PASS",
+      "checks": 6169,
+      "error_count": 0
+    }
+  ],
+  "solver_scope": "Versioned fixed-step grapple geometry and directed reachability contract; no frontend physics implementation is present in this workspace."
+}

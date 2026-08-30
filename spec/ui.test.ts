@@ -47,8 +47,39 @@ describe("inspector", () => {
       expect(text).toContain(instruction);
     }
     for (const block of platform.spec.raw_blocks) expect(text).toContain(block);
-    // And it says plainly that a visible block is not one basic block.
-    expect(text).toContain("not necessarily one machine basic block");
+    // And it repeats the exporter's own mapping note verbatim, which says
+    // plainly that one visible block stands for several machine blocks.
+    expect(text).toContain(platform.spec.mapping_note);
+    expect(platform.spec.raw_blocks.length).toBeGreaterThan(1);
+  });
+
+  it("keeps the two relationship layers apart on a bogus block", () => {
+    const { tuned } = level("level01");
+    const runtime = new LevelRuntime(tuned);
+    const inspector = new Inspector(host());
+    const decoy = runtime.platforms.find((p) => p.spec.kind === "crumble")!;
+    inspector.show(decoy, runtime);
+    const text = inspector.root.textContent ?? "";
+    // The machine CFG the binary really has, named as binary truth...
+    expect(text).toContain("Machine CFG");
+    expect(text).toContain(decoy.spec.machine_truth!.raw_block);
+    for (const edge of decoy.spec.machine_truth!.actual_cfg_successors) {
+      expect(text).toContain(edge.target!);
+    }
+    // ...and an explicit statement that grapple links are not CFG edges.
+    expect(text).toContain("separate layer");
+  });
+
+  it("shows a route block's chronological trace occurrences", () => {
+    const { tuned } = level("level03");
+    const runtime = new LevelRuntime(tuned);
+    const inspector = new Inspector(host());
+    const platform = runtime.routePlatforms()[4];
+    inspector.show(platform, runtime);
+    const text = inspector.root.textContent ?? "";
+    expect(platform.spec.trace_occurrences.length).toBeGreaterThan(0);
+    expect(text).toContain("Trace occurrences");
+    expect(text).toContain(String(platform.spec.trace_occurrences.length));
   });
 
   it("shows Hikari provenance on a bogus block, and nothing on a real one", () => {
@@ -65,8 +96,8 @@ describe("inspector", () => {
     expect(inspector.root.textContent).not.toContain("hikari_alteredBB");
   });
 
-  it("never invents a plaintext string for the encrypted binary", () => {
-    const { tuned, source } = level("level05");
+  it.each(["level05", "level08"])("never invents a plaintext string for %s", (id) => {
+    const { tuned, source } = level(id);
     const runtime = new LevelRuntime(tuned);
     const inspector = new Inspector(host());
     // Names that only appear in the semantic event metadata must not leak into
@@ -142,18 +173,30 @@ describe("screens", () => {
     ]),
   );
 
-  it("lists all five missions, all selectable", () => {
+  it("lists all eight missions, all selectable", () => {
     const screens = new Screens(host(), callbacks);
     const progress = new Progress();
     progress.reset();
     screens.select(index.levels, progress, facts);
     const buttons = screens.root.querySelectorAll("button.mission");
-    expect(buttons.length).toBe(5);
+    expect(buttons.length).toBe(8);
     const text = screens.root.textContent ?? "";
-    for (const name of ["GHOSTLINE", "FIREWALL", "SWEEP", "WATCHDOG", "BLACKOUT"]) {
+    for (const name of [
+      "GHOSTLINE",
+      "FIREWALL",
+      "SWEEP",
+      "WATCHDOG",
+      "BLACKOUT",
+      "RELAY",
+      "QUARANTINE",
+      "ROOT",
+    ]) {
       expect(text).toContain(name);
     }
     expect(text, "Blackout's encryption is part of its identity").toContain("strings encrypted");
+    // Each card names the shape of its level, so the eight read as eight
+    // different missions rather than one CFG with different labels.
+    for (const entry of index.levels) expect(text).toContain(entry.spatial_identity);
   });
 
   it("marks a cleared mission with its best time", () => {
@@ -185,7 +228,7 @@ describe("screens", () => {
     const screens = new Screens(host(), callbacks);
     screens.complete("Ghostline", 61.5, 1, { bestTime: 61.5 }, true);
     expect(screens.root.textContent).toContain("Next mission");
-    screens.complete("Blackout", 120, 9, { bestTime: 120 }, false);
+    screens.complete("Root", 120, 9, { bestTime: 120 }, false);
     expect(screens.root.textContent).not.toContain("Next mission");
     expect(screens.root.textContent).toContain("Replay");
   });
@@ -276,7 +319,30 @@ describe("analysis overlay", () => {
     expect(text).toContain("level01");
     expect(text).toContain("crumble");
     expect(text).toContain("max required link");
-    expect(text).toContain(source.analysis_metadata.loop_strategy);
+    expect(text).toContain(source.analysis_metadata.crumble_selection);
+    expect(text).toContain(source.analysis_metadata.executable_sha256);
+  });
+
+  it("separates physical gameplay links from real machine CFG edges", () => {
+    const { tuned, source } = level("level01");
+    const runtime = new LevelRuntime(tuned, { delivered: source });
+    const panel = new DebugPanel(host());
+    panel.setVisible(true);
+    for (let i = 0; i < 6; i += 1) panel.update(runtime, source, 60);
+    const text = panel.root.textContent ?? "";
+    expect(runtime.machineCfgEdges.length).toBeGreaterThan(0);
+    expect(text).toContain("machine cfg edges");
+    expect(text).toContain("physical links");
+    expect(text).toContain("never asserts a CFG edge");
+  });
+
+  it("reports how far layout tuning moved a platform, against the delivered x", () => {
+    const { tuned, source } = level("level01");
+    const runtime = new LevelRuntime(tuned, { delivered: source });
+    const moved = runtime.platforms.filter((p) => Math.abs(runtime.layoutShift(p.spec.id)) > 1);
+    expect(moved.length, "Ghostline is widened, so most blocks move").toBeGreaterThan(5);
+    // And a runtime built without the delivered dataset simply reports none.
+    expect(new LevelRuntime(tuned).layoutShift(tuned.platforms[3].id)).toBe(0);
   });
 });
 

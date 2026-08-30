@@ -1,0 +1,25 @@
+{
+  "schema_version": 2,
+  "seed": 12345,
+  "player": {
+    "width": 30,
+    "height": 48
+  },
+  "platform": {
+    "height": 24,
+    "route_width_min": 150,
+    "route_width_max": 230,
+    "crumble_width": 112
+  },
+  "grapple": {
+    "comfortable_distance_min": 220,
+    "comfortable_distance_max": 500,
+    "maximum_required_distance": 600,
+    "maximum_optional_distance": 620,
+    "maximum_vertical_delta": 270
+  },
+  "layout": {
+    "minimum_platform_clearance": 24,
+    "preview_padding": 70
+  }
+}

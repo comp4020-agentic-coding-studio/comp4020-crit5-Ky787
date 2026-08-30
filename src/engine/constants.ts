@@ -83,6 +83,18 @@ export const CAMERA = {
   /** Aim influence: the camera drifts toward where the pointer is looking. */
   aimLead: 0.16,
   shakeDecay: 4.2,
+  /**
+   * Vertical look-ahead, as a fraction of the horizontal figure. A wide level
+   * reads left to right and wants the first value; a shaft like Quarantine is
+   * travelled at 300+ units/second straight up, and needs the second or the
+   * player arrives at a platform they have not seen yet. The blend comes from
+   * the level's own world aspect, so no level id appears here.
+   */
+  verticalLead: [0.6, 1.5],
+  /** Extra world height kept in view, lerped by the same verticality blend. */
+  verticalViewBonus: [0, 260],
+  /** Follow rate on Y, relative to X. Tall levels track a fall more tightly. */
+  verticalFollow: [0.85, 1.15],
 } as const;
 
 export const CRUMBLE = {
@@ -171,9 +183,9 @@ export interface ThemeProfile {
   /**
    * The longest run of route platforms the level may ask the player to hold in
    * one go. Where the delivered checkpoints leave a bigger gap than this, the
-   * engine adds relief checkpoints on real route platforms in between. Sweep
-   * asks for 50 platforms with two saves, which is a much longer hold than any
-   * other level, so it gets a tighter spacing.
+   * engine adds relief checkpoints on real route platforms in between. The
+   * long missions (Sweep, Relay, Quarantine, Root) ship only two to four saves
+   * across 19-30 platforms, so they get a tighter spacing than the short ones.
    */
   checkpointSpacing: number;
   /** Background/accent tint, used by the renderer only. */
@@ -182,7 +194,8 @@ export interface ThemeProfile {
 }
 
 export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
-  tutorial: {
+  // Ghostline teaches: walk, hop, then grapple. Slow ramp, generous cap.
+  tutorial_horizontal: {
     scanner: 0.62,
     firewall: 0.7,
     watchdog: 0,
@@ -192,7 +205,8 @@ export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
     accent: "#4ee0a1",
     tagline: "Learn the line. Nothing here is in a hurry.",
   },
-  vertical_chambers: {
+  // Firewall climbs and drops through gated tiers; the gates are the level.
+  gated_mixed: {
     scanner: 0,
     firewall: 1.0,
     watchdog: 0,
@@ -200,9 +214,10 @@ export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
     objectiveDwell: 1.2,
     checkpointSpacing: 8,
     accent: "#ff9f4a",
-    tagline: "Climb the chambers. Every tier is gated.",
+    tagline: "Every tier is gated. Read the cycle before you commit.",
   },
-  scanner_chambers: {
+  // Sweep is rhythmic zig-zag: beams are the only threat, so they run full pace.
+  scanner_zigzag: {
     scanner: 1.0,
     firewall: 0,
     watchdog: 0,
@@ -212,7 +227,8 @@ export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
     accent: "#59c8ff",
     tagline: "Sweeping detection. Move on the beat.",
   },
-  forward_pressure: {
+  // Watchdog wants momentum: the wall punishes anyone who stops to look.
+  pressure_momentum: {
     scanner: 0.5,
     firewall: 0,
     watchdog: 1.0,
@@ -222,7 +238,8 @@ export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
     accent: "#ff5f6d",
     tagline: "Something is following the trace. Do not stall.",
   },
-  finale: {
+  // Blackout runs every countermeasure at once, with no strings to read by.
+  mixed_first_finale: {
     scanner: 0.95,
     firewall: 1.05,
     watchdog: 0.85,
@@ -232,12 +249,50 @@ export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
     accent: "#c08cff",
     tagline: "Every countermeasure at once, and no strings to read by.",
   },
+  // Relay is long and full of forks. Its difficulty is route choice and
+  // stamina, so gates give it structure without stacking hazards on top.
+  fork_reconvergence: {
+    scanner: 0,
+    firewall: 1.0,
+    watchdog: 0,
+    authGates: true,
+    objectiveDwell: 1.6,
+    checkpointSpacing: 7,
+    accent: "#7ce0c8",
+    tagline: "Four paths leave here. They do not all come back.",
+  },
+  // Quarantine is a climb through sweeping containment. Beams run a little
+  // slower than Sweep's because a shaft gives you fewer places to wait.
+  vertical_containment: {
+    scanner: 0.85,
+    firewall: 1.0,
+    watchdog: 0,
+    authGates: false,
+    objectiveDwell: 1.6,
+    checkpointSpacing: 6,
+    accent: "#6fd0ff",
+    tagline: "Straight up through containment. The only way out is the top.",
+  },
+  // Root is the long one: five phases, every mechanic, longest execution.
+  multiphase_finale: {
+    scanner: 1.0,
+    firewall: 1.05,
+    watchdog: 1.0,
+    authGates: false,
+    objectiveDwell: 3.0,
+    checkpointSpacing: 7,
+    accent: "#ff7bd1",
+    tagline: "Access, sweep, pursuit, routing, ascent. Then root.",
+  },
 };
 
-export const MISSION_BRIEFS: Record<string, string> = {
-  tutorial: "Follow the trace to the exit block.",
-  vertical_chambers: "Breach every firewall tier and reach the top of the trace.",
-  scanner_chambers: "Cross the scanner chambers without tripping a sweep.",
-  forward_pressure: "Outrun the watchdog to the end of the trace.",
-  finale: "Run the blackout operation blind. No plaintext, no second pass.",
+export const MISSION_BRIEFS: Record<LevelTheme, string> = {
+  tutorial_horizontal: "Follow the trace to the exit block.",
+  gated_mixed: "Breach every firewall tier and reach the end of the trace.",
+  scanner_zigzag: "Cross the scanner chambers without tripping a sweep.",
+  pressure_momentum: "Outrun the watchdog to the end of the trace.",
+  mixed_first_finale: "Run the blackout operation blind. No plaintext, no second pass.",
+  fork_reconvergence: "Follow the relay through every fork to the reconvergence.",
+  vertical_containment: "Climb out of containment. Lower deck to quarantine core.",
+  multiphase_finale: "Take root. Five phases, no plaintext, no second pass.",
 };

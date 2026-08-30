@@ -24,7 +24,7 @@
         <button type="button" data-opens-modal="howto">How to play</button>
         <button type="button" data-opens-modal="about">About the data</button>
       </nav>
-      <p class="topbar-note">Hikari-obfuscated x86-64 · five real traces</p>
+      <p class="topbar-note">Hikari-obfuscated x86-64 · eight real traces</p>
     </header>
 
     <main id="app">
@@ -122,10 +122,10 @@
 
         <p class="sheet-lede">
           Every code block you swing between is a real fragment of a compiled, Hikari-obfuscated
-          x86-64 program. An offline analysis pipeline produced five datasets — one per level — and
-          the game loads them in the browser from <code>web_game_data/index.json</code>. Nothing in
-          the page parses a PE file, an LLVM module, a control-flow graph or an emulator trace; that
-          work happened before the game existed, and the game only reads its result.
+          x86-64 program. An offline analysis pipeline produced eight datasets — one per level —
+          and the game loads them in the browser from <code>web_game_data/index.json</code>. Nothing
+          in the page parses a PE file, an LLVM module, a control-flow graph or an emulator trace;
+          that work happened before the game existed, and the game only reads its result.
         </p>
 
         <h3>What is real</h3>
@@ -134,7 +134,12 @@
           <li>The raw basic blocks each visible block stands for.</li>
           <li>String references, where the binary has any in plaintext.</li>
           <li>
-            Semantic call sites — authentication, firewall, scanner, watchdog, transfer, cleanup.
+            Semantic call sites — authentication, firewall, scanner, watchdog, transfer,
+            navigation, reconvergence, cleanup.
+          </li>
+          <li>
+            The chronological trace occurrences behind each block, and the real machine CFG edges
+            out of each bogus one.
           </li>
           <li>
             Hikari provenance on the unstable blocks: each retains a strongly proven
@@ -154,26 +159,48 @@
         <h3>Which blocks crumble</h3>
         <p>
           Only blocks the dataset classifies as Hikari bogus control flow can collapse under you.
-          Legitimate code that simply was not executed on the traced run is not fake, and the game
-          never treats it as fake. Every level's successful route is completable without ever
-          touching a crumbling block — checked by a test that drives the game's own physics.
+          Each one maps to a single machine block whose <code>alteredBB</code> label survived into
+          the assembled object file. Legitimate code that simply was not executed on the traced run
+          is not fake, and the game never treats it as fake. Every level's successful route is
+          completable without ever touching a crumbling block — checked by a test that drives the
+          game's own physics, and by a second that proves no step is left with a collapsing block as
+          its only way across.
+        </p>
+        <p>
+          They are meant to tempt you. A bogus block is placed as an apparent shortcut, a stepping
+          stone in a gap, an inviting anchor overhead or a recovery ledge under a drop, and it
+          shows the same real disassembly as everything else. The only thing that gives it away is
+          standing on it.
         </p>
 
-        <h3>Blackout has no strings</h3>
+        <h3>Two kinds of line</h3>
         <p>
-          The fifth program was built with string encryption, so its exported blocks carry no
-          plaintext strings at all. The game does not restore them, and does not substitute guesses
-          drawn from the semantic event metadata. The mission is deliberately harder to read.
+          The analysis overlay draws two relationships that the dataset keeps strictly apart.
+          Grapple links are <em>physical gameplay</em> reachability — where you can get to from
+          where. Machine CFG edges are what the binary can actually branch to. A grapple link never
+          asserts that a CFG edge exists, and several separately proven bogus blocks can be
+          physically reachable in sequence without forming any connected chain in the program.
+        </p>
+
+        <h3>Blackout and Root have no strings</h3>
+        <p>
+          The fifth and eighth programs were built with string encryption, so their exported blocks
+          carry no plaintext strings at all. The game does not restore them, and does not substitute
+          guesses drawn from the semantic event metadata. Both missions are deliberately harder to
+          read.
         </p>
 
         <h3>Layout is tuned; mappings are not</h3>
         <p>
           The delivered <code>x</code>/<code>y</code> coordinates passed an abstract reachability
-          check that was explicitly not a rope-physics simulation, and at their supplied spacing the
-          platforms very nearly form a continuous walkway. The game widens the horizontal gaps
-          between route platforms with a monotone, deterministic transform before play, and leaves
-          every <code>y</code>, every width, every id and every binary fact untouched. The analysis
-          overlay reports the tuned and delivered link distances side by side.
+          check that was explicitly not a rope-physics simulation, and at their supplied spacing
+          several levels very nearly form a continuous walkway. The game widens the spacing between
+          consecutive route platforms with a deterministic transform before play, in proportion to
+          how horizontal each step already is — so the shaft in Quarantine stays a shaft and the
+          climbs in Root stay climbs — and leaves every <code>y</code>, every width, every id and
+          every binary fact untouched. Each decoy rides along on the pair of route blocks it was
+          authored against. The analysis overlay reports the tuned and delivered coordinates side by
+          side.
         </p>
       </div>
     </dialog>

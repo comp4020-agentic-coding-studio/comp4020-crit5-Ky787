@@ -8,7 +8,7 @@
  */
 
 import { HAZARD } from "./constants.ts";
-import type { Box } from "./geometry.ts";
+import type { Box, Vec2 } from "./geometry.ts";
 import type { PlatformSpec, SemanticEventSpec, SemanticEventType } from "../data/types.ts";
 
 export interface FirewallGate {
@@ -97,10 +97,12 @@ export interface HazardBuildContext {
   profile: { scanner: number; firewall: number; watchdog: number; authGates: boolean };
   /**
    * Where a hazard anchored to `platformId` should sit. Gates and beams guard
-   * the *gap after* their call site, never the foothold itself, so a hazard
-   * can never make its own platform unstandable.
+   * the *crossing after* their call site, never the foothold itself, so a
+   * hazard can never make its own platform unstandable. It is a point rather
+   * than an x, because in a level that climbs — Quarantine's shaft, Root's
+   * access phase — the crossing is above the call site, not beside it.
    */
-  anchorX: (platformId: string) => number;
+  anchor: (platformId: string) => Vec2;
 }
 
 export function buildHazards(ctx: HazardBuildContext): HazardSet {
@@ -114,9 +116,12 @@ export function buildHazards(ctx: HazardBuildContext): HazardSet {
   for (const event of ctx.events) {
     const platform = ctx.platformsById.get(event.platform);
     if (!platform) continue;
-    const cx = ctx.anchorX(event.platform);
-    const cy = platform.y;
+    const guard = ctx.anchor(event.platform);
+    const cx = guard.x;
+    const cy = guard.y;
+    // A beacon marks the call site itself, so it stays on its own platform.
     const beaconX = platform.x + platform.width / 2;
+    const beaconY = platform.y;
 
     const asGate = (identity: boolean): void => {
       const speed = ctx.profile.firewall || 1;
@@ -181,7 +186,7 @@ export function buildHazards(ctx: HazardBuildContext): HazardSet {
       eventId: event.id,
       type: event.type,
       x: beaconX,
-      y: cy,
+      y: beaconY,
       triggered: false,
       label: label + stage,
       detail: String(event.params.intent ?? event.type),

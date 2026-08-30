@@ -8,6 +8,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { HAZARD, PLAYER, THEME_PROFILES } from "../src/engine/constants.ts";
 import { boxesOverlap } from "../src/engine/geometry.ts";
+import { beamBox, gateBox, stepBeam, stepGate } from "../src/engine/hazards.ts";
 import { LevelRuntime } from "../src/engine/level-runtime.ts";
 import type { RuntimeEvent } from "../src/engine/level-runtime.ts";
 import { emptyInput, playerBox } from "../src/engine/physics.ts";
@@ -60,6 +61,55 @@ describe.each(levels)("engine: $entry.id builds", ({ tuned }) => {
         runtime.drainEvents();
       }
       expect(runtime.deaths, `a hazard reaches a respawn point at ${spot.x}`).toBe(0);
+    }
+  });
+});
+
+describe("engine: hazards never seal the route", () => {
+  it.each(levels)("$entry.id leaves a safe window on every route platform", ({ tuned }) => {
+    // A beam or a gate is a timing problem, not a wall. Standing on any block
+    // the route asks you to stand on has to be safe for long enough to read
+    // the next crossing — otherwise the level is unfinishable by anyone, not
+    // just by a bot that cannot see a beam coming.
+    const runtime = new LevelRuntime(tuned);
+    if (runtime.hazards.beams.length + runtime.hazards.gates.length === 0) return;
+    const dt = 1 / 30;
+    const window = 30;
+
+    for (const platform of runtime.routePlatforms()) {
+      const box = {
+        x: platform.solid.x + platform.solid.w / 2 - PLAYER.width / 2,
+        y: platform.solid.y - PLAYER.height,
+        w: PLAYER.width,
+        h: PLAYER.height,
+      };
+      // Safe harbours are safe by construction; they have their own test.
+      if (runtime.inSanctuary(box)) continue;
+
+      const gates = runtime.hazards.gates.map((g) => ({ ...g }));
+      let run = 0;
+      let longest = 0;
+      for (let t = 0; t < window; t += dt) {
+        let safe = true;
+        for (const gate of gates) {
+          stepGate(gate, dt);
+          if (gate.lethal && boxesOverlap(box, gateBox(gate))) safe = false;
+        }
+        for (const beam of runtime.hazards.beams) {
+          stepBeam(beam, t);
+          if (boxesOverlap(box, beamBox(beam))) safe = false;
+        }
+        if (safe) {
+          run += dt;
+          longest = Math.max(longest, run);
+        } else {
+          run = 0;
+        }
+      }
+      expect(
+        longest,
+        `${platform.spec.id} is never safe to stand on for long`,
+      ).toBeGreaterThanOrEqual(1.2);
     }
   });
 });
@@ -224,6 +274,59 @@ describe("engine: semantic events drive mechanics by type", () => {
     expect(runtime.hazards.watchdogTriggers.length).toBeGreaterThan(0);
   });
 
+  it("Relay turns its firewall and authentication call sites into gates, and runs no beams", () => {
+    const { tuned } = level("level06");
+    const runtime = new LevelRuntime(tuned);
+    const gated =
+      tuned.events.filter((e) => e.type === "firewall").length +
+      tuned.events.filter((e) => e.type === "authentication").length;
+    expect(runtime.hazards.gates.length).toBe(gated);
+    expect(runtime.hazards.beams.length).toBe(0);
+    expect(runtime.hazards.watchdogTriggers.length).toBe(0);
+  });
+
+  it("Quarantine sweeps the shaft with a beam per scanner call site", () => {
+    const { tuned } = level("level07");
+    const runtime = new LevelRuntime(tuned);
+    const scanners = tuned.events.filter((e) => e.type === "scanner").length;
+    expect(scanners).toBeGreaterThan(5);
+    expect(runtime.hazards.beams.length).toBe(scanners);
+    // Its one firewall call site is the midpoint gate the shaft is built around.
+    expect(runtime.hazards.gates.length).toBe(1);
+  });
+
+  it("Root runs every countermeasure, like Blackout but longer", () => {
+    const { tuned } = level("level08");
+    const runtime = new LevelRuntime(tuned);
+    expect(runtime.hazards.gates.length).toBeGreaterThan(0);
+    expect(runtime.hazards.beams.length).toBeGreaterThan(0);
+    expect(runtime.hazards.watchdogTriggers.length).toBeGreaterThan(0);
+    expect(tuned.route.platform_ids.length).toBeGreaterThan(
+      level("level05").tuned.route.platform_ids.length,
+    );
+  });
+
+  it("anchors a hazard in the crossing after its call site, in both axes", () => {
+    // On a climb the gap the player has to get through is overhead, not off to
+    // one side, so a hazard anchored only in x would guard nothing.
+    const { tuned } = level("level07");
+    const runtime = new LevelRuntime(tuned);
+    const byId = new Map(tuned.platforms.map((p) => [p.id, p]));
+    const route = tuned.route.platform_ids;
+    for (const beam of runtime.hazards.beams) {
+      const event = tuned.events.find((e) => e.id === beam.eventId)!;
+      const at = route.indexOf(event.platform);
+      const here = byId.get(event.platform)!;
+      const next = byId.get(route[at + 1]);
+      if (!next) continue;
+      const midY = (here.y + next.y) / 2;
+      // The beam's own line sits between the two blocks, not on either.
+      const centreY = (beam.top + beam.bottom) / 2;
+      expect(Math.abs(centreY - midY)).toBeLessThan(Math.abs(here.y - next.y));
+      expect(midY).toBeLessThan(here.y);
+    }
+  });
+
   it("makes transfer and checkpoint call sites into respawn points", () => {
     const { tuned } = level("level05");
     const runtime = new LevelRuntime(tuned);
@@ -282,14 +385,16 @@ describe("engine: semantic events drive mechanics by type", () => {
     const runtime = new LevelRuntime(tuned);
     // A route platform clear of every safe harbour, so this measures the wall
     // and not the sanctuary rule.
+    const past = tuned.route.platform_ids.length * 0.6;
     const perch = runtime
       .routePlatforms()
       .find(
         (p) =>
           !runtime.checkpoints.some((c) => c.platformId === p.spec.id) &&
           p.spec.route_index !== null &&
-          p.spec.route_index > 20,
+          p.spec.route_index > past,
       )!;
+    expect(perch, "a route platform clear of every safe harbour").toBeTruthy();
     runtime.player.x = perch.solid.x + perch.solid.w / 2;
     runtime.player.y = perch.solid.y - 40;
     run(runtime, 0.6);
@@ -382,14 +487,29 @@ describe("engine: checkpoint spacing", () => {
     }
   });
 
-  it("breaks Sweep's long unbroken run into several saves", () => {
-    const { tuned, source } = level("level03");
-    const runtime = new LevelRuntime(tuned);
-    expect(source.checkpoints.length).toBe(2);
-    expect(runtime.checkpoints.length).toBeGreaterThanOrEqual(6);
-    expect(runtime.profile.checkpointSpacing).toBeLessThan(
-      THEME_PROFILES.tutorial.checkpointSpacing,
-    );
+  it("adds relief saves where the delivered checkpoints leave too long a run", () => {
+    // Watchdog and Quarantine each ship two saves across 19 and 28 blocks.
+    // The engine fills the gaps in, on real route platforms, so no theme ever
+    // asks for a longer unbroken hold than its own profile allows.
+    for (const id of ["level04", "level07"]) {
+      const { tuned, source } = level(id);
+      const runtime = new LevelRuntime(tuned);
+      expect(source.checkpoints.length).toBe(2);
+      expect(
+        runtime.checkpoints.length,
+        `${id} should gain relief saves`,
+      ).toBeGreaterThan(source.checkpoints.length);
+    }
+  });
+
+  it("gives the beam-heavy levels the tightest save spacing", () => {
+    // Sweep and Quarantine are the two levels where a mistimed crossing is the
+    // main way to die, so they hold the player to the shortest runs.
+    for (const id of ["level03", "level07"]) {
+      expect(new LevelRuntime(level(id).tuned).profile.checkpointSpacing).toBeLessThan(
+        THEME_PROFILES.tutorial_horizontal.checkpointSpacing,
+      );
+    }
   });
 
   it("numbers the plain checkpoints in the order the player meets them", () => {
@@ -418,10 +538,14 @@ describe("engine: objective", () => {
     expect(events.some((e) => e.kind === "complete")).toBe(true);
   });
 
-  it("gives the finale the longest execution", () => {
-    expect(THEME_PROFILES.finale.objectiveDwell).toBeGreaterThan(
-      THEME_PROFILES.tutorial.objectiveDwell,
+  it("gives the finales the longest execution", () => {
+    expect(THEME_PROFILES.mixed_first_finale.objectiveDwell).toBeGreaterThan(
+      THEME_PROFILES.tutorial_horizontal.objectiveDwell,
     );
+    expect(
+      THEME_PROFILES.multiphase_finale.objectiveDwell,
+      "Root is the true finale, so it takes the longest to execute",
+    ).toBeGreaterThanOrEqual(THEME_PROFILES.mixed_first_finale.objectiveDwell);
   });
 
   it("keeps the objective region reachable from the objective platform", () => {

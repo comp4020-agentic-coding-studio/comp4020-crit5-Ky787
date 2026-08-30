@@ -189,7 +189,9 @@ export class Game {
 
     this.levelIndex = index;
     this.loaded = level;
-    this.runtime = new LevelRuntime(level.tuned);
+    // The delivered dataset rides along so the analysis overlay can show
+    // supplied coordinates beside tuned ones. The simulation never reads it.
+    this.runtime = new LevelRuntime(level.tuned, { delivered: level.source });
     this.runtime.drainEvents();
     this.hintStage = 0;
     this.renderer.particles.clear();
@@ -409,7 +411,7 @@ export class Game {
   private updateHints(): void {
     const runtime = this.runtime;
     if (!runtime) return;
-    if (runtime.data.level.theme !== "tutorial") {
+    if (runtime.data.level.theme !== "tutorial_horizontal") {
       this.hud.setHints(
         this.time < 9 && runtime.elapsed < 9
           ? ["<kbd>A</kbd><kbd>D</kbd> move · <kbd>Space</kbd> jump · <kbd>Hold left click</kbd> grapple"]

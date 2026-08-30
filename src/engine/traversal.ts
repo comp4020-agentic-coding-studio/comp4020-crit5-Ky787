@@ -43,6 +43,12 @@ const BACK_UPS = [0, 0.28, 0.6];
 /** How far inside a block's edges a landing must come to rest to count. */
 const LANDING_MARGIN = 16;
 const ROPE_HOLDS = [0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05, 1.2, 1.4, 1.6, 1.9, 2.3, 2.8];
+/**
+ * Seconds of free fall after walking off the ledge, before the hook is fired.
+ * This is the move a person makes when the obvious anchor overhead is a lie:
+ * step off, drop under it, and shoot the line from below.
+ */
+const FALL_DELAYS = [0.06, 0.14, 0.24, 0.36, 0.5];
 
 export function clearInput(input: InputState): void {
   input.left = false;
@@ -103,6 +109,8 @@ function trySim(
   deathY: number,
   script: InputScript,
   maxTime: number,
+  /** Blocks the plan may pass, but may not stand on or hang from. */
+  untrusted?: ReadonlySet<string>,
 ): SimOutcome {
   const p: PlayerState = structuredClone(start);
   const input = emptyInput();
@@ -118,6 +126,16 @@ function trySim(
     t += FIXED_DT;
     best = Math.min(best, Math.hypot(p.x - goalX, p.y - goalY));
     if (p.y > deathY) return { landed: false, time: t, bestDistance: best };
+    if (untrusted && untrusted.size > 0) {
+      // Resting on a bogus block, or swinging from one, is not a plan: the
+      // fuse would have lit the moment the player touched it.
+      if (p.grounded && p.groundId !== null && untrusted.has(p.groundId)) {
+        return { landed: false, time: t, bestDistance: best };
+      }
+      if (p.rope.phase === "attached" && p.rope.anchorId !== null && untrusted.has(p.rope.anchorId)) {
+        return { landed: false, time: t, bestDistance: best };
+      }
+    }
     if (p.grounded && p.groundId === target.id && stuckOn(p, target)) {
       return { landed: true, time: t, bestDistance: 0 };
     }
@@ -136,6 +154,8 @@ export function planHopFrom(
   start: PlayerState,
   to: Solid,
   deathY: number,
+  /** Crumble blocks: the plan may fly past them, never rest on them. */
+  untrusted?: ReadonlySet<string>,
 ): HopResult {
   if (!start.grounded) return { ok: false, plan: null, bestDistance: Infinity };
   const forward = to.x + to.w / 2 >= start.x ? 1 : -1;
@@ -168,7 +188,7 @@ export function planHopFrom(
     describe: () => Omit<HopPlan, "duration" | "script">,
     replay: () => InputScript,
   ): HopResult | null => {
-    const outcome = trySim(solids, start, to, deathY, script, maxTime);
+    const outcome = trySim(solids, start, to, deathY, script, maxTime, untrusted);
     best = Math.min(best, outcome.bestDistance);
     if (!outcome.landed) return null;
     return {
@@ -206,11 +226,16 @@ export function planHopFrom(
     for (let a = 0; a < points.length; a += 1) {
       const aim = points[a];
       for (const runUp of RUN_UPS) {
+        // `still` holds position until the line is on. Running while the hook
+        // is in the air sweeps the rope sideways, and where a decoy sits just
+        // off the honest line that sweep is exactly what catches it — so the
+        // patient version of the shot has to be in the search too.
+        for (const still of [false, true]) {
         for (const jumpOff of [false, true]) {
           const build = (): InputScript => {
             let released = -1;
             return withBackUp(backUp, (t, sp, input) => {
-              hold(input);
+              if (!still || sp.rope.phase === "attached" || released >= 0) hold(input);
               input.aim = aim;
               if (t < runUp) return;
               const clear =
@@ -229,6 +254,54 @@ export function planHopFrom(
             build(),
             5.0 + backUp,
             () => ({ kind: "grapple", runUp, aimPoint: a, jumpOff }),
+            build,
+          );
+          if (hit) return hit;
+        }
+        }
+      }
+    }
+  }
+
+  // Step off the ledge, fall clear of whatever is overhead, then fire. Without
+  // this the planner can only shoot from a standing position, and a decoy
+  // parked between two route blocks would read as a wall rather than a lie.
+  for (const backUp of BACK_UPS) {
+    for (let a = 0; a < points.length; a += 1) {
+      const aim = points[a];
+      for (const fallDelay of FALL_DELAYS) {
+        for (const jumpOff of [false, true]) {
+          const build = (): InputScript => {
+            let leftGround = -1;
+            let released = -1;
+            let fired = false;
+            return withBackUp(backUp, (t, sp, input) => {
+              hold(input);
+              input.aim = aim;
+              if (leftGround < 0) {
+                if (sp.grounded) return;
+                leftGround = t;
+              }
+              if (t < leftGround + fallDelay) return;
+              const clear =
+                sp.y + PLAYER.height / 2 < to.y - 2 && sp.x > to.x - 70 && sp.x < to.x + to.w + 70;
+              if (released < 0 && clear && sp.rope.phase === "attached") released = t;
+              if (released < 0) {
+                input.grappleHeld = true;
+                if (!fired) {
+                  input.grapplePressed = true;
+                  fired = true;
+                }
+              } else if (jumpOff && t < released + FIXED_DT * 1.5) {
+                input.jumpPressed = true;
+                input.jumpHeld = true;
+              }
+            });
+          };
+          const hit = attempt(
+            build(),
+            5.0 + backUp,
+            () => ({ kind: "grapple", runUp: fallDelay, aimPoint: a, jumpOff }),
             build,
           );
           if (hit) return hit;
@@ -280,9 +353,16 @@ export function planHop(
   from: Solid,
   to: Solid,
   deathY: number,
+  untrusted?: ReadonlySet<string>,
 ): HopResult {
   const forward = to.x + to.w / 2 >= from.x + from.w / 2 ? 1 : -1;
-  return planHopFrom(solids, standOn(solids, from, forward > 0 ? 0.12 : 0.88), to, deathY);
+  return planHopFrom(
+    solids,
+    standOn(solids, from, forward > 0 ? 0.12 : 0.88),
+    to,
+    deathY,
+    untrusted,
+  );
 }
 
 export interface RouteReport {
@@ -317,6 +397,48 @@ export function analyseRoute(
   return { levelId, hops, failures, grappleRequired };
 }
 
+export interface StepOptions {
+  from: string;
+  to: string;
+  /** Standing positions tried on the source block. */
+  tried: number;
+  /** Of those, how many have a plan that never rests on a bogus block. */
+  honest: number;
+}
+
+/**
+ * How much honest choice each required step leaves.
+ *
+ * A decoy is supposed to be tempting: an apparent shortcut, a stepping stone
+ * in the gap, an inviting anchor overhead. What it must never be is the *only*
+ * way across. For every consecutive pair on the route this stands the player
+ * at several spots along the block they are leaving and asks whether a plan
+ * exists that never stands on, or hangs from, a crumble block. A step that
+ * returns zero is one the decoys have sealed, and the layout is wrong.
+ */
+export function honestOptions(
+  runtime: LevelRuntime,
+  ratios: readonly number[] = [0.1, 0.3, 0.5, 0.7, 0.9],
+): StepOptions[] {
+  const untrusted = new Set(
+    runtime.platforms.filter((p) => p.spec.kind === "crumble").map((p) => p.spec.id),
+  );
+  const route = runtime.data.route.platform_ids;
+  const out: StepOptions[] = [];
+  for (let i = 1; i < route.length; i += 1) {
+    const from = runtime.platformsById.get(route[i - 1])?.solid;
+    const to = runtime.platformsById.get(route[i])?.solid;
+    if (!from || !to) continue;
+    let honest = 0;
+    for (const ratio of ratios) {
+      const start = standOn(runtime.solids, from, ratio);
+      if (planHopFrom(runtime.solids, start, to, runtime.deathY, untrusted).ok) honest += 1;
+    }
+    out.push({ from: from.id, to: to.id, tried: ratios.length, honest });
+  }
+  return out;
+}
+
 export interface PlaythroughResult {
   completed: boolean;
   seconds: number;
@@ -347,6 +469,16 @@ export function playThrough(
   const route = runtime.data.route.platform_ids;
   const routeIndex = new Map(route.map((id, i) => [id, i]));
   const solidById = new Map(runtime.solids.map((s) => [s.id, s]));
+  /**
+   * The bot plans in the real world — a decoy is a solid the rope can catch,
+   * and pretending otherwise would not be a test of the level as it ships —
+   * but it refuses any plan that *relies* on one, the way a player who has
+   * learned the crumble rule does. Clipping a bogus block on the way past is
+   * allowed; standing on one or hanging from one is not.
+   */
+  const untrusted = new Set(
+    runtime.platforms.filter((p) => p.spec.kind === "crumble").map((p) => p.spec.id),
+  );
   let clock = 0;
   let furthest = 0;
   let stalledAt: string | null = null;
@@ -392,6 +524,14 @@ export function playThrough(
         runtime.dead ||
         (Math.abs(runtime.player.x - targetX) < 6 && Math.abs(runtime.player.vx) < 20),
     );
+    // Come to a genuine stop. Every plan is searched from a standing start, so
+    // replaying one from a player still drifting sideways is a different hop
+    // from the one that was proved.
+    advance(
+      () => {},
+      0.4,
+      () => !runtime.player.grounded || runtime.dead || Math.abs(runtime.player.vx) < 1,
+    );
   };
 
   /** Waits for the ground, then coasts to a stop. */
@@ -428,13 +568,11 @@ export function playThrough(
     const standing = runtime.player.groundId;
     let index = standing ? (routeIndex.get(standing) ?? -1) : -1;
     if (index < 0) {
-      // Landed somewhere off-route (a decoy). Aim at the next route platform
-      // ahead of us and carry on.
-      index = route.findIndex((id) => (solidById.get(id)?.x ?? -Infinity) > runtime.player.x) - 1;
-      if (index < 0) {
-        stalledAt = standing;
-        break;
-      }
+      // Landed somewhere off the route — on a decoy, or on a block caught by
+      // accident mid-swing. Pick up from the furthest route platform the run
+      // has actually stood on, which reads the same whether the level runs
+      // sideways, straight up, or doubles back.
+      index = Math.min(runtime.progress, route.length - 1);
     }
     furthest = Math.max(furthest, index);
 
@@ -455,17 +593,19 @@ export function playThrough(
     const block = ground();
     let plan: HopResult = { ok: false, plan: null, bestDistance: Infinity };
     const forward = to.x + to.w / 2 >= runtime.player.x ? 1 : -1;
+    // ...including the very lip of the block, which is where a person stands
+    // when the obvious line is blocked and they need every unit of run-up.
     const spots = block
       ? (forward > 0
-          ? [block.x + 26, block.x + block.w * 0.42, block.x + block.w - 34]
-          : [block.x + block.w - 26, block.x + block.w * 0.58, block.x + 34])
+          ? [block.x + 26, block.x + block.w * 0.42, block.x + block.w - 34, block.x + block.w - 16]
+          : [block.x + block.w - 26, block.x + block.w * 0.58, block.x + 34, block.x + 16])
       : [runtime.player.x];
     for (const spot of spots) {
       if (block) {
         walkTo(spot);
         if (!runtime.player.grounded || runtime.dead) break;
       }
-      plan = planHopFrom(runtime.solids, runtime.player, to, runtime.deathY);
+      plan = planHopFrom(runtime.solids, runtime.player, to, runtime.deathY, untrusted);
       if (plan.ok) break;
     }
     if (!runtime.player.grounded || runtime.dead) {

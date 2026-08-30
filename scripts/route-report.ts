@@ -9,9 +9,9 @@ import { join } from "node:path";
 import { parseIndex, parseLevel } from "../src/data/levels.ts";
 import { tuneLayout } from "../src/data/tuning.ts";
 import { LevelRuntime } from "../src/engine/level-runtime.ts";
-import { analyseRoute, playThrough } from "../src/engine/traversal.ts";
+import { analyseRoute, honestOptions, playThrough } from "../src/engine/traversal.ts";
 
-const ROOT = "physical_level_delivery/web_game_data";
+const ROOT = "physical_level_delivery_v2/web_game_data";
 const raw = process.argv.includes("--raw");
 const read = (p: string): unknown => JSON.parse(readFileSync(join(ROOT, p), "utf8"));
 
@@ -40,6 +40,17 @@ for (const entry of index.levels) {
     `   end-to-end without crumble: ${run.completed ? "COMPLETED" : `STALLED at ${run.stalledAt}`}` +
       ` in ${run.seconds.toFixed(0)}s`,
   );
+  // How much honest choice each step leaves: a decoy has to be tempting, never
+  // the only way across.
+  const options = honestOptions(new LevelRuntime(level, { withoutHazards: true }));
+  const worst = options.reduce((m, o) => Math.min(m, o.honest), Infinity);
+  const mean = options.reduce((n, o) => n + o.honest / o.tried, 0) / options.length;
+  const sealed = options.filter((o) => o.honest === 0).map((o) => `${o.from}->${o.to}`);
+  console.log(
+    `   decoy-free options per step: worst ${worst}/${options[0]?.tried ?? 0}, ` +
+      `mean ${(mean * 100).toFixed(0)}%${sealed.length > 0 ? ` | SEALED ${sealed.join(", ")}` : ""}`,
+  );
+
   const collapsed = new LevelRuntime(level, { withoutHazards: true });
   const withCrumble = playThrough(collapsed);
   console.log(

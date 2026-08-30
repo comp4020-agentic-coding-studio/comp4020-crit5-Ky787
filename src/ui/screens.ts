@@ -71,7 +71,7 @@ export class Screens {
       para("screen-eyebrow", "MISSION SELECT"),
       para(
         "screen-lede",
-        "Five programs, five traces. Every block below is a real chunk of an obfuscated x86-64 binary. Some of it is a lie.",
+        "Eight programs, eight traces. Every block below is a real chunk of an obfuscated x86-64 binary. Some of it is a lie.",
       ),
     );
 
@@ -95,6 +95,7 @@ export class Screens {
           } on the trace · ${facts.get(entry.id)?.crumble ?? 0} bogus decoys${
             facts.get(entry.id)?.encrypted ? " · strings encrypted" : ""
           }</span>
+          <span class="mission-shape">${entry.spatial_identity}</span>
         </span>
         <span class="mission-status">${
           record.completed

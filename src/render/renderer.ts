@@ -161,6 +161,14 @@ export class Renderer {
     return box.x < b.x1 && box.x + box.w > b.x0 && box.y < b.y1 && box.y + box.h > b.y0;
   }
 
+  /**
+   * Code blocks, in two passes: every panel, then every solid slab.
+   *
+   * A panel hangs 130-plus units below its own slab, and in Quarantine's shaft
+   * the next block up is only 235 above — so drawn block by block, a
+   * neighbour's listing paints straight over the ledge you are aiming at. The
+   * thing the player has to see is always the slab, so the slabs go last.
+   */
   private drawPlatforms(
     ctx: CanvasRenderingContext2D,
     state: RenderState,
@@ -169,12 +177,19 @@ export class Renderer {
     const { runtime } = state;
     const accent = runtime.accent;
 
+    const drawn: {
+      p: PlatformRuntime;
+      panel: PanelSprite | undefined;
+      jitterX: number;
+      jitterY: number;
+      alpha: number;
+    }[] = [];
+
     for (const p of runtime.platforms) {
       const s = p.solid;
       const panel = this.panels.get(p.spec.id);
       const box: Box = { x: s.x, y: s.y, w: s.w, h: s.h + (panel?.h ?? WORLD.codePanelHeight) };
       if (!this.visible(box, bounds)) continue;
-
       if (p.crumble === "collapsed") continue;
 
       let jitterX = 0;
@@ -191,14 +206,25 @@ export class Renderer {
         const flicker = Math.sin(state.time * 1.7 + s.x * 0.01);
         if (flicker > 0.985) jitterX = 1.5;
       }
+      drawn.push({ p, panel, jitterX, jitterY, alpha });
+    }
 
+    for (const { p, panel, jitterX, jitterY, alpha } of drawn) {
+      if (!panel) continue;
+      const s = p.solid;
       ctx.save();
       ctx.translate(jitterX, jitterY);
       ctx.globalAlpha = alpha;
+      ctx.drawImage(panel.canvas, s.x + panel.dx, s.y + s.h, panel.w, panel.h);
+      ctx.restore();
+      ctx.globalAlpha = 1;
+    }
 
-      if (panel) {
-        ctx.drawImage(panel.canvas, s.x + panel.dx, s.y + s.h, panel.w, panel.h);
-      }
+    for (const { p, jitterX, jitterY, alpha } of drawn) {
+      const s = p.solid;
+      ctx.save();
+      ctx.translate(jitterX, jitterY);
+      ctx.globalAlpha = alpha;
 
       // The solid slab reads as the code window's title bar.
       const grad = ctx.createLinearGradient(0, s.y, 0, s.y + s.h);
@@ -364,6 +390,7 @@ export class Renderer {
   ): void {
     for (const c of state.runtime.checkpoints) {
       if (c.x < bounds.x0 - 200 || c.x > bounds.x1 + 200) continue;
+      if (c.y < bounds.y0 - 260 || c.y > bounds.y1 + 260) continue;
       const pulse = 0.5 + 0.5 * Math.sin(state.time * 2.4 + c.sequence);
       const colour = c.claimed ? "120,255,190" : "150,190,220";
       const alpha = c.claimed ? 0.5 + 0.35 * pulse : 0.22;
@@ -408,6 +435,7 @@ export class Renderer {
   ): void {
     for (const b of state.runtime.hazards.beacons) {
       if (b.x < bounds.x0 || b.x > bounds.x1) continue;
+      if (b.y < bounds.y0 - 120 || b.y > bounds.y1 + 120) continue;
       const pulse = 0.5 + 0.5 * Math.sin(state.time * 2 + b.x * 0.01);
       const alpha = b.triggered ? 0.16 : 0.34 + 0.2 * pulse;
       ctx.strokeStyle = hexToRgba(state.runtime.accent, alpha);
@@ -422,6 +450,15 @@ export class Renderer {
     }
   }
 
+  /**
+   * F1 overlay. It draws two relationship layers that the dataset keeps
+   * strictly apart, and keeps them apart here too:
+   *
+   * - `grapple_links` — physical gameplay reachability. A link never claims a
+   *   machine-CFG edge exists, and the fake-choice links deliberately do not.
+   * - `machine_truth` — the control flow the binary actually has, drawn from a
+   *   bogus block to whichever platform carries its real CFG neighbour.
+   */
   private drawAnalysis(
     ctx: CanvasRenderingContext2D,
     state: RenderState,
@@ -429,49 +466,93 @@ export class Renderer {
   ): void {
     const { runtime } = state;
     const byId = new Map(runtime.platforms.map((p) => [p.spec.id, p]));
+    const top = (p: PlatformRuntime): Vec2 => ({
+      x: p.solid.x + p.solid.w / 2,
+      y: p.solid.y,
+    });
+    const onScreen = (a: Vec2, b: Vec2): boolean =>
+      Math.max(a.x, b.x) >= bounds.x0 &&
+      Math.min(a.x, b.x) <= bounds.x1 &&
+      Math.max(a.y, b.y) >= bounds.y0 &&
+      Math.min(a.y, b.y) <= bounds.y1;
 
+    // Layer 1: physical gameplay links.
     for (const link of runtime.data.grapple_links) {
       const a = byId.get(link.from);
       const b = byId.get(link.to);
       if (!a || !b) continue;
-      const ax = a.solid.x + a.solid.w / 2;
-      const ay = a.solid.y;
-      const bx = b.solid.x + b.solid.w / 2;
-      const by = b.solid.y;
-      if (Math.max(ax, bx) < bounds.x0 || Math.min(ax, bx) > bounds.x1) continue;
+      const pa = top(a);
+      const pb = top(b);
+      if (!onScreen(pa, pb)) continue;
       ctx.strokeStyle =
         link.kind === "required_progression"
           ? "rgba(90,240,170,0.55)"
-          : link.kind === "optional_decoy"
+          : link.kind === "optional_fake_choice"
             ? "rgba(255,90,120,0.45)"
             : "rgba(140,170,255,0.40)";
       ctx.setLineDash(link.required ? [] : [5, 6]);
       ctx.lineWidth = 1.4;
       ctx.beginPath();
-      ctx.moveTo(ax, ay);
-      ctx.lineTo(bx, by);
+      ctx.moveTo(pa.x, pa.y);
+      ctx.lineTo(pb.x, pb.y);
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.font = "9px ui-monospace, Menlo, monospace";
       ctx.fillStyle = "rgba(190,215,235,0.55)";
-      ctx.fillText(`${link.distance}u`, (ax + bx) / 2 - 12, (ay + by) / 2 - 5);
+      ctx.fillText(`${link.distance}u`, (pa.x + pb.x) / 2 - 12, (pa.y + pb.y) / 2 - 5);
+    }
+
+    // Layer 2: real machine CFG edges out of the bogus blocks. Amber and
+    // dotted, so it can never be read as a route the player could take.
+    for (const edge of runtime.machineCfgEdges) {
+      const a = byId.get(edge.from);
+      const b = byId.get(edge.to);
+      if (!a || !b) continue;
+      const pa = top(a);
+      const pb = top(b);
+      if (!onScreen(pa, pb)) continue;
+      ctx.strokeStyle = "rgba(255,196,90,0.55)";
+      ctx.setLineDash([2, 7]);
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(pa.x, pa.y - 14);
+      ctx.quadraticCurveTo((pa.x + pb.x) / 2, Math.min(pa.y, pb.y) - 78, pb.x, pb.y - 14);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font = "8.5px ui-monospace, Menlo, monospace";
+      ctx.fillStyle = "rgba(255,206,120,0.7)";
+      ctx.fillText(
+        `cfg ${edge.kind} ${edge.rawBlock}`,
+        (pa.x + pb.x) / 2 - 40,
+        Math.min(pa.y, pb.y) - 46,
+      );
     }
 
     for (const p of runtime.platforms) {
       const s = p.solid;
       if (s.x + s.w < bounds.x0 || s.x > bounds.x1) continue;
+      if (s.y + s.h < bounds.y0 || s.y > bounds.y1) continue;
       ctx.strokeStyle = p.spec.kind === "crumble" ? "rgba(255,90,120,0.85)" : "rgba(90,240,170,0.7)";
       ctx.lineWidth = 1;
       ctx.strokeRect(s.x + 0.5, s.y + 0.5, s.w - 1, s.h - 1);
       ctx.font = "9.5px ui-monospace, Menlo, monospace";
       ctx.fillStyle = "rgba(220,240,255,0.85)";
-      const label = `${p.spec.id} · ${p.spec.kind}${p.spec.logical_node ? ` · ${p.spec.logical_node}#${p.spec.occurrence}` : ""}`;
-      ctx.fillText(label, s.x, s.y - 6);
+      const chronology =
+        p.spec.route_index !== null
+          ? ` · #${p.spec.route_index} · ${p.spec.trace_occurrences.length} occ`
+          : p.spec.physical_role
+            ? ` · ${p.spec.physical_role}`
+            : "";
+      ctx.fillText(`${p.spec.id} · ${p.spec.kind}${chronology}`, s.x, s.y - 6);
+      const nodes = p.spec.logical_nodes.length > 0 ? p.spec.logical_nodes.join(",") : "—";
+      ctx.fillStyle = "rgba(160,195,225,0.65)";
+      ctx.fillText(`${nodes} · ${p.spec.raw_blocks.length} bb`, s.x, s.y - 18);
       const events = runtime.eventTypesOn(p.spec.id);
       if (events.length > 0) {
         ctx.fillStyle = "rgba(255,220,140,0.9)";
-        ctx.fillText(events.join(","), s.x, s.y - 18);
+        ctx.fillText(events.join(","), s.x, s.y - 30);
       }
+      const shift = runtime.layoutShift(p.spec.id);
       if (p.spec.provenance) {
         ctx.fillStyle = "rgba(255,120,150,0.8)";
         ctx.fillText(
@@ -479,6 +560,10 @@ export class Renderer {
           s.x,
           s.y + s.h + 12,
         );
+      }
+      if (Math.abs(shift) >= 1) {
+        ctx.fillStyle = "rgba(150,185,215,0.6)";
+        ctx.fillText(`x ${(s.x - shift).toFixed(0)} → ${s.x.toFixed(0)} (tuned)`, s.x, s.y + s.h + 24);
       }
     }
 

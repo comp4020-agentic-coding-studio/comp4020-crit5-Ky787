@@ -1,6 +1,10 @@
 /**
  * Dataset loading. The browser entry point is `web_game_data/index.json`; the
  * frontend never touches PE files, LLVM output, CFGs or Unicorn traces.
+ *
+ * There is one loader and one schema. The superseded schema-1 delivery is not
+ * supported: it is a different set of levels with different mappings, and a
+ * loader that quietly accepted either would be a way for the two to drift.
  */
 
 import type { LevelData, LevelIndex, LevelIndexEntry, PlatformKind } from "./types.ts";
@@ -17,6 +21,9 @@ const PLATFORM_KINDS: readonly PlatformKind[] = [
   "crumble",
 ];
 
+/** The only schema this game reads. */
+export const SCHEMA_VERSION = 2;
+
 export class DatasetError extends Error {}
 
 function need<T>(value: T | undefined | null, what: string): T {
@@ -29,6 +36,11 @@ export function parseIndex(raw: unknown): LevelIndex {
   const data = raw as LevelIndex;
   if (!data || !Array.isArray(data.levels) || data.levels.length === 0) {
     throw new DatasetError("index.json has no levels");
+  }
+  if (data.schema_version !== SCHEMA_VERSION) {
+    throw new DatasetError(
+      `index.json is schema ${data.schema_version}, this game reads schema ${SCHEMA_VERSION}`,
+    );
   }
   for (const entry of data.levels) {
     need(entry.id, "a level id");
@@ -45,6 +57,11 @@ export function parseLevel(raw: unknown, expectedId?: string): LevelData {
     throw new DatasetError(`level file declares ${data.level.id}, index says ${expectedId}`);
   }
   const where = data.level.id;
+  if (data.schema_version !== SCHEMA_VERSION) {
+    throw new DatasetError(
+      `${where} is schema ${data.schema_version}, this game reads schema ${SCHEMA_VERSION}`,
+    );
+  }
   if (!Array.isArray(data.platforms) || data.platforms.length === 0) {
     throw new DatasetError(`${where} has no platforms`);
   }

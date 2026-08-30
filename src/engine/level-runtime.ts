@@ -68,6 +68,26 @@ export interface RuntimeOptions {
   withoutCrumble?: boolean;
   /** Disable hazards, for geometry-only reachability tests. */
   withoutHazards?: boolean;
+  /**
+   * The dataset exactly as delivered, before layout tuning. Optional, and used
+   * only by the developer overlay, so it can show supplied coordinates beside
+   * tuned ones. Nothing in the simulation reads it.
+   */
+  delivered?: LevelData;
+}
+
+/**
+ * One real machine control-flow edge out of a bogus block, resolved to the
+ * platforms that carry the two raw blocks. This is binary truth and is kept
+ * strictly separate from `grapple_links`, which are gameplay reachability and
+ * never claim a CFG edge.
+ */
+export interface MachineCfgEdge {
+  from: string;
+  to: string;
+  kind: string;
+  rawBlock: string;
+  direction: "successor" | "predecessor";
 }
 
 export class LevelRuntime {
@@ -86,6 +106,8 @@ export class LevelRuntime {
    */
   readonly sanctuaries: Box[] = [];
   readonly deathY: number;
+  /** Real CFG edges out of the bogus blocks, for the analysis overlay only. */
+  readonly machineCfgEdges: MachineCfgEdge[] = [];
 
   player: PlayerState;
   elapsed = 0;
@@ -107,7 +129,7 @@ export class LevelRuntime {
   constructor(data: LevelData, options: RuntimeOptions = {}) {
     this.data = data;
     this.options = options;
-    this.profile = THEME_PROFILES[data.level.theme] ?? THEME_PROFILES.tutorial;
+    this.profile = THEME_PROFILES[data.level.theme] ?? THEME_PROFILES.tutorial_horizontal;
     this.deathY = data.world.death_y + WORLD.deathMargin;
 
     for (const spec of data.platforms) {
@@ -136,23 +158,36 @@ export class LevelRuntime {
 
     const specsById = new Map(data.platforms.map((p) => [p.id, p]));
 
-    // Midpoint of the gap that follows each route platform. Hazards guard the
-    // crossing, not the landing.
-    const gapCentre = new Map<string, number>();
+    // Middle of the crossing that follows each route platform. Hazards guard
+    // the crossing, not the landing, in both axes: on a climb the gap the
+    // player has to get through is overhead, not off to one side.
+    const crossing = new Map<string, { x: number; y: number }>();
     const routeSpecs = data.route.platform_ids
       .map((id) => specsById.get(id))
       .filter((p): p is PlatformSpec => p !== undefined);
     for (let i = 0; i < routeSpecs.length; i += 1) {
       const here = routeSpecs[i];
       const next = routeSpecs[i + 1];
-      const rightEdge = here.x + here.width;
-      gapCentre.set(here.id, next ? (rightEdge + next.x) / 2 : rightEdge + 120);
+      if (!next) {
+        crossing.set(here.id, { x: here.x + here.width + 120, y: here.y });
+        continue;
+      }
+      // Prefer the middle of the clear horizontal gap; where the two slabs
+      // overlap in x — which is what a climb looks like — fall back to the
+      // midpoint of their centres.
+      const innerLeft = Math.min(here.x + here.width, next.x + next.width);
+      const innerRight = Math.max(here.x, next.x);
+      const centres = (here.x + here.width / 2 + next.x + next.width / 2) / 2;
+      crossing.set(here.id, {
+        x: innerRight > innerLeft ? (innerLeft + innerRight) / 2 : centres,
+        y: (here.y + next.y) / 2,
+      });
     }
-    const anchorX = (id: string): number => {
-      const known = gapCentre.get(id);
+    const anchor = (id: string): { x: number; y: number } => {
+      const known = crossing.get(id);
       if (known !== undefined) return known;
       const spec = specsById.get(id);
-      return spec ? spec.x + spec.width / 2 : 0;
+      return spec ? { x: spec.x + spec.width / 2, y: spec.y } : { x: 0, y: 0 };
     };
 
     this.hazards = options.withoutHazards
@@ -160,13 +195,13 @@ export class LevelRuntime {
           events: [],
           platformsById: specsById,
           profile: { scanner: 0, firewall: 0, watchdog: 0, authGates: false },
-          anchorX,
+          anchor,
         })
       : buildHazards({
           events: data.events,
           platformsById: specsById,
           profile: this.profile,
-          anchorX,
+          anchor,
         });
 
     for (const c of data.checkpoints) {
@@ -242,6 +277,8 @@ export class LevelRuntime {
       w: data.objective.region.width,
       h: data.objective.region.height,
     };
+
+    this.machineCfgEdges = buildMachineCfgEdges(data);
 
     this.spawn = { x: data.player.spawn.x, y: data.player.spawn.y };
     this.player = createPlayer(this.spawn.x, this.spawn.y);
@@ -527,8 +564,52 @@ export class LevelRuntime {
     return this.data.events.filter((e) => e.platform === platformId).map((e) => e.type);
   }
 
+  /**
+   * How far layout tuning moved a platform horizontally from the coordinate
+   * the exporter delivered. Zero when the runtime was built without the
+   * delivered dataset to compare against. Developer overlay only.
+   */
+  layoutShift(platformId: string): number {
+    const delivered = this.options.delivered;
+    if (!delivered) return 0;
+    const before = delivered.platforms.find((p) => p.id === platformId);
+    const after = this.platformsById.get(platformId);
+    return before && after ? after.solid.x - before.x : 0;
+  }
+
   /** Ignored options accessor, kept so tests can assert how a runtime was built. */
   get builtWithoutCrumble(): boolean {
     return this.options.withoutCrumble === true;
   }
+}
+
+/**
+ * Resolves each bogus block's real CFG neighbours to the platforms that carry
+ * them. A raw block belongs to exactly one platform, so this is a lookup, not
+ * an inference: no edge is invented, and an edge whose neighbour is not on any
+ * platform is simply not drawn.
+ */
+function buildMachineCfgEdges(data: LevelData): MachineCfgEdge[] {
+  const platformOfRawBlock = new Map<string, string>();
+  for (const p of data.platforms) {
+    for (const block of p.raw_blocks) platformOfRawBlock.set(block, p.id);
+  }
+  const edges: MachineCfgEdge[] = [];
+  for (const p of data.platforms) {
+    const truth = p.machine_truth;
+    if (!truth) continue;
+    for (const edge of truth.actual_cfg_successors) {
+      const to = edge.target ? platformOfRawBlock.get(edge.target) : undefined;
+      if (to && to !== p.id) {
+        edges.push({ from: p.id, to, kind: edge.kind, rawBlock: truth.raw_block, direction: "successor" });
+      }
+    }
+    for (const edge of truth.actual_cfg_predecessors) {
+      const from = edge.source ? platformOfRawBlock.get(edge.source) : undefined;
+      if (from && from !== p.id) {
+        edges.push({ from, to: p.id, kind: edge.kind, rawBlock: truth.raw_block, direction: "predecessor" });
+      }
+    }
+  }
+  return edges;
 }

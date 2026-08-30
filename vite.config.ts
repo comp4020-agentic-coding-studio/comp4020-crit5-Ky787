@@ -1,6 +1,8 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve, sep } from "node:path";
-import { defineConfig } from "vite";
+// `vitest/config` re-exports Vite's own `defineConfig` with the `test`
+// block typed, so the dev server, the build and the spec share one config.
+import { defineConfig } from "vitest/config";
 import type { Plugin } from "vite";
 
 // Every .html file in the repo is a page and a build entry, so a multi-page
@@ -16,6 +18,7 @@ const SKIP = new Set([
   "src",
   "public",
   "physical_level_delivery",
+  "physical_level_delivery_v2",
 ]);
 
 function htmlEntries(dir = "."): string[] {
@@ -27,7 +30,7 @@ function htmlEntries(dir = "."): string[] {
   });
 }
 
-const DATASET_ROOT = resolve("physical_level_delivery/web_game_data");
+const DATASET_ROOT = resolve("physical_level_delivery_v2/web_game_data");
 const DATASET_URL = "/web_game_data/";
 
 function datasetFiles(dir = DATASET_ROOT): string[] {
@@ -39,8 +42,8 @@ function datasetFiles(dir = DATASET_ROOT): string[] {
 
 /**
  * Serves and ships the delivered browser dataset from its one home in
- * `physical_level_delivery/`, so the authoritative handoff is never duplicated
- * into `public/` where the two copies could drift.
+ * `physical_level_delivery_v2/`, so the authoritative handoff is never
+ * duplicated into `public/` where the two copies could drift.
  */
 function deliveredDataset(): Plugin {
   return {
@@ -78,6 +81,13 @@ function deliveredDataset(): Plugin {
 export default defineConfig({
   base: "./",
   plugins: [deliveredDataset()],
+  // The traversal spec drives the real fixed-step physics over eight routes,
+  // searching a plan for every hop. That is seconds of simulation per level,
+  // not milliseconds, so the default 5s per test is far too tight.
+  test: {
+    testTimeout: 180_000,
+    hookTimeout: 60_000,
+  },
   build: {
     rollupOptions: {
       input: htmlEntries(),

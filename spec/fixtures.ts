@@ -6,7 +6,7 @@ import { parseIndex, parseLevel } from "../src/data/levels.ts";
 import { tuneLayout } from "../src/data/tuning.ts";
 import type { LevelData, LevelIndexEntry } from "../src/data/types.ts";
 
-export const DATASET_DIR = "physical_level_delivery/web_game_data";
+export const DATASET_DIR = "physical_level_delivery_v2/web_game_data";
 
 export function readJson(path: string): unknown {
   return JSON.parse(readFileSync(join(DATASET_DIR, path), "utf8")) as unknown;

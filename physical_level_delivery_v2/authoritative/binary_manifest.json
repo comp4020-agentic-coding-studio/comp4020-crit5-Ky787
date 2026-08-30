@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "levels": [
+    {
+      "level": "level01",
+      "name": "Ghostline",
+      "candidate": "level01_ghostline_house",
+      "file": "binaries/level01.exe",
+      "sha256": "DAD1B10756545AD04708DDAEB5D17161D5AECC95245CCF7979658176F0F6E022",
+      "source_sha256": "1696435A0ABCFAD5F378DF9E1E019C7644094C97A753C3594F5614200388715F",
+      "string_encryption": false,
+      "validation_ok": true
+    },
+    {
+      "level": "level02",
+      "name": "Firewall",
+      "candidate": "level02_firewall_house",
+      "file": "binaries/level02.exe",
+      "sha256": "BC0C0E4F94A67DEF3B877E943373AA032180029824DFBBCACBEC0C72B484C8FE",
+      "source_sha256": "AC32BDE07113E47EC1B7D759FFC67F6C79F18A0D07BFE6FB39C3123953573C27",
+      "string_encryption": false,
+      "validation_ok": true
+    },
+    {
+      "level": "level03",
+      "name": "Sweep",
+      "candidate": "level03_sweep_house",
+      "file": "binaries/level03.exe",
+      "sha256": "322A80E9953A84D976E89CA56AEF28A581731F0D7FEB2121460605A16435E795",
+      "source_sha256": "F213B826DF9D15B6BCBF9FFE435195DCBA2E8B35A1F50FAB7A4564BDE5F0A75F",
+      "string_encryption": false,
+      "validation_ok": true
+    },
+    {
+      "level": "level04",
+      "name": "Watchdog",
+      "candidate": "level04_watchdog_house",
+      "file": "binaries/level04.exe",
+      "sha256": "E15C862B583C3C95EACB7465DC8BFCC7D440926E9BAC3834E474E5E28BC06BA0",
+      "source_sha256": "3D4C9F9EEBFA97EE0226A7FE6B672A7BCD57F274707DE0AC2620F93D0A20FC97",
+      "string_encryption": false,
+      "validation_ok": true
+    },
+    {
+      "level": "level05",
+      "name": "Blackout",
+      "candidate": "level05_blackout_house_str",
+      "file": "binaries/level05.exe",
+      "sha256": "E0FD1B1E3668F4118F74661018AFF42CBA1C77B60B5AFA4BC464B07D687B77A3",
+      "source_sha256": "B617737DB46CE1E90D9FEF3E28029FD64F31BE106221144265034D13E779B2CC",
+      "string_encryption": true,
+      "validation_ok": true
+    },
+    {
+      "level": "level06",
+      "name": "Relay",
+      "candidate": "level06_relay_split2_bcf1",
+      "file": "binaries/level06.exe",
+      "sha256": "5CF213F1DA9E43B048D5D9EA4C02265FAC1F3D22237053A10CA336BE03256BB7",
+      "source_sha256": "AB6BD90814D080778F05B5B5FEB838CF6699B7B8C4AE032394FAECB29D877E28",
+      "string_encryption": false,
+      "validation_ok": true
+    },
+    {
+      "level": "level07",
+      "name": "Quarantine",
+      "candidate": "level07_quarantine_split2_bcf1",
+      "file": "binaries/level07.exe",
+      "sha256": "8195414C3D687DEDA1E633BD036D72441C55B51DFDE7ADBACB316604275D983B",
+      "source_sha256": "241DE5E745CD70932D1CA2F962D9B90D438C3284F2C1D92728499B58950E14B9",
+      "string_encryption": false,
+      "validation_ok": true
+    },
+    {
+      "level": "level08",
+      "name": "Root",
+      "candidate": "level08_root_split2_bcf1_str",
+      "file": "binaries/level08.exe",
+      "sha256": "340263A69FE1ACE144C7E9154FAEDE4A05DCA260FBB461123117CB2BCA4F86EA",
+      "source_sha256": "3AF01651B28DDBD00119FE73F5298DD3526820FEAA7FFE65ED4F346053877876",
+      "string_encryption": true,
+      "validation_ok": true
+    }
+  ]
+}

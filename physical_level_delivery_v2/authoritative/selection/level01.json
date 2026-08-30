@@ -1,0 +1,3517 @@
+{
+  "schema_version": 1,
+  "level": "level01",
+  "candidate": "level01_ghostline_house",
+  "heuristic": {
+    "purpose": "Gameplay-selection heuristic for visual substance; not a scientific classifier.",
+    "positive_terms": "0.45×instructions (capped at 10), 1.35×arithmetic/boolean, 1.0×memory, 1.0×CMP/TEST, 0.8×conditional branches, 0.65×unique mnemonics, 0.6×calls",
+    "penalties": "-4 jump-only, -1.8 for <=2 instructions, -1.4 control-flow-only, -1 trivial glue; score clamped to zero",
+    "memory_note": "Memory counts are derived from x86 operand text; LEA is excluded. Load/store direction is an estimate, while combined memory count is the comparison metric.",
+    "overlap_note": "Histogram intersection of real and bogus richness scores in width-2 bins; 1.0 means fully overlapping distributions and 0.0 means none."
+  },
+  "strong_bogus_total": 76,
+  "direct_strong_candidates": 43,
+  "selected_count": 11,
+  "selected_ids": [
+    "bb_00009AA1",
+    "bb_00009A7C",
+    "bb_00009BE6",
+    "bb_00009C1C",
+    "bb_00009CF6",
+    "bb_00009C88",
+    "bb_00009D76",
+    "bb_00009DD6",
+    "bb_00009E73",
+    "bb_00009E23",
+    "bb_00009DBD"
+  ],
+  "candidates": [
+    {
+      "block_id": "bb_00009A03",
+      "start_rva": 39427,
+      "start_rva_hex": "0x9A03",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368748547,
+          "address_hex": "0x0000000140009A03",
+          "mnemonic": "jmp",
+          "op_str": "0x14000604e",
+          "text": "jmp 0x14000604e"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        0
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00006010",
+          "target": "bb_00009A03",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368733768
+        },
+        {
+          "source": "bb_0000604E",
+          "target": "bb_00009A03",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368733897
+        },
+        {
+          "source": "bb_00009A03",
+          "target": "bb_0000604E",
+          "kind": "jump",
+          "evidence_instruction": 5368748547
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009A08",
+      "start_rva": 39432,
+      "start_rva_hex": "0x9A08",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 7,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.2857,
+      "memory_load_store_count": 2,
+      "estimated_memory_load_count": 1,
+      "estimated_memory_store_count": 1,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 6,
+      "mnemonics": [
+        "mov",
+        "mov",
+        "lea",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": false,
+      "trivial_glue": false,
+      "visual_richness_score": 12.35,
+      "instructions": [
+        {
+          "address": 5368748552,
+          "address_hex": "0x0000000140009A08",
+          "mnemonic": "mov",
+          "op_str": "rax, qword ptr [rbp + 0x78]",
+          "text": "mov rax, qword ptr [rbp + 0x78]"
+        },
+        {
+          "address": 5368748556,
+          "address_hex": "0x0000000140009A0C",
+          "mnemonic": "mov",
+          "op_str": "dword ptr [rax], 0",
+          "text": "mov dword ptr [rax], 0"
+        },
+        {
+          "address": 5368748562,
+          "address_hex": "0x0000000140009A12",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0xf8e7]",
+          "text": "lea rcx, [rip + 0xf8e7]"
+        },
+        {
+          "address": 5368748569,
+          "address_hex": "0x0000000140009A19",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368748573,
+          "address_hex": "0x0000000140009A1D",
+          "mnemonic": "call",
+          "op_str": "0x140001000",
+          "text": "call 0x140001000"
+        },
+        {
+          "address": 5368748578,
+          "address_hex": "0x0000000140009A22",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368748582,
+          "address_hex": "0x0000000140009A26",
+          "mnemonic": "jmp",
+          "op_str": "0x1400060f7",
+          "text": "jmp 0x1400060f7"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        0
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000060D1",
+          "target": "bb_00009A08",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368733937
+        },
+        {
+          "source": "bb_000060F7",
+          "target": "bb_00009A08",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368734063
+        },
+        {
+          "source": "bb_00009A08",
+          "target": "bb_000060F7",
+          "kind": "jump",
+          "evidence_instruction": 5368748582
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009A2B",
+      "start_rva": 39467,
+      "start_rva_hex": "0x9A2B",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 2,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 1,
+      "estimated_memory_load_count": 1,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 2,
+      "mnemonics": [
+        "mov",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": false,
+      "trivial_glue": false,
+      "visual_richness_score": 1.4,
+      "instructions": [
+        {
+          "address": 5368748587,
+          "address_hex": "0x0000000140009A2B",
+          "mnemonic": "mov",
+          "op_str": "al, byte ptr [rip + 0x1a5d3]",
+          "text": "mov al, byte ptr [rip + 0x1a5d3]"
+        },
+        {
+          "address": 5368748593,
+          "address_hex": "0x0000000140009A31",
+          "mnemonic": "jmp",
+          "op_str": "0x140006201",
+          "text": "jmp 0x140006201"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        0,
+        1
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00006177",
+          "target": "bb_00009A2B",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368734203
+        },
+        {
+          "source": "bb_00006201",
+          "target": "bb_00009A2B",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368734291
+        },
+        {
+          "source": "bb_00009A2B",
+          "target": "bb_00006201",
+          "kind": "jump",
+          "evidence_instruction": 5368748593
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009A63",
+      "start_rva": 39523,
+      "start_rva_hex": "0x9A63",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 5,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.4,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "lea",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": true,
+      "trivial_glue": false,
+      "visual_richness_score": 8.8,
+      "instructions": [
+        {
+          "address": 5368748643,
+          "address_hex": "0x0000000140009A63",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0x1a59a]",
+          "text": "lea rcx, [rip + 0x1a59a]"
+        },
+        {
+          "address": 5368748650,
+          "address_hex": "0x0000000140009A6A",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368748654,
+          "address_hex": "0x0000000140009A6E",
+          "mnemonic": "call",
+          "op_str": "0x140002120",
+          "text": "call 0x140002120"
+        },
+        {
+          "address": 5368748659,
+          "address_hex": "0x0000000140009A73",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368748663,
+          "address_hex": "0x0000000140009A77",
+          "mnemonic": "jmp",
+          "op_str": "0x14000652b",
+          "text": "jmp 0x14000652b"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        1
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000064C4",
+          "target": "bb_00009A63",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368735013
+        },
+        {
+          "source": "bb_0000652B",
+          "target": "bb_00009A63",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368735166
+        },
+        {
+          "source": "bb_00009A63",
+          "target": "bb_0000652B",
+          "kind": "jump",
+          "evidence_instruction": 5368748663
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009A7C",
+      "start_rva": 39548,
+      "start_rva_hex": "0x9A7C",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 8,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.25,
+      "memory_load_store_count": 3,
+      "estimated_memory_load_count": 2,
+      "estimated_memory_store_count": 1,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 6,
+      "mnemonics": [
+        "mov",
+        "mov",
+        "mov",
+        "lea",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": false,
+      "trivial_glue": false,
+      "visual_richness_score": 13.8,
+      "instructions": [
+        {
+          "address": 5368748668,
+          "address_hex": "0x0000000140009A7C",
+          "mnemonic": "mov",
+          "op_str": "rax, qword ptr [rbp + 0x88]",
+          "text": "mov rax, qword ptr [rbp + 0x88]"
+        },
+        {
+          "address": 5368748675,
+          "address_hex": "0x0000000140009A83",
+          "mnemonic": "mov",
+          "op_str": "ecx, dword ptr [rbp + 0x4c]",
+          "text": "mov ecx, dword ptr [rbp + 0x4c]"
+        },
+        {
+          "address": 5368748678,
+          "address_hex": "0x0000000140009A86",
+          "mnemonic": "mov",
+          "op_str": "dword ptr [rax], ecx",
+          "text": "mov dword ptr [rax], ecx"
+        },
+        {
+          "address": 5368748680,
+          "address_hex": "0x0000000140009A88",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0xf89b]",
+          "text": "lea rcx, [rip + 0xf89b]"
+        },
+        {
+          "address": 5368748687,
+          "address_hex": "0x0000000140009A8F",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368748691,
+          "address_hex": "0x0000000140009A93",
+          "mnemonic": "call",
+          "op_str": "0x140001000",
+          "text": "call 0x140001000"
+        },
+        {
+          "address": 5368748696,
+          "address_hex": "0x0000000140009A98",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368748700,
+          "address_hex": "0x0000000140009A9C",
+          "mnemonic": "jmp",
+          "op_str": "0x14000660d",
+          "text": "jmp 0x14000660d"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        1,
+        2
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000065C6",
+          "target": "bb_00009A7C",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368735239
+        },
+        {
+          "source": "bb_00009A7C",
+          "target": "bb_0000660D",
+          "kind": "jump",
+          "evidence_instruction": 5368748700
+        }
+      ],
+      "selected": true
+    },
+    {
+      "block_id": "bb_00009AA1",
+      "start_rva": 39585,
+      "start_rva_hex": "0x9AA1",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 9,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.2222,
+      "memory_load_store_count": 4,
+      "estimated_memory_load_count": 3,
+      "estimated_memory_store_count": 1,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "mov",
+        "mov",
+        "sub",
+        "call",
+        "add",
+        "mov",
+        "mov",
+        "mov",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": false,
+      "trivial_glue": false,
+      "visual_richness_score": 14.6,
+      "instructions": [
+        {
+          "address": 5368748705,
+          "address_hex": "0x0000000140009AA1",
+          "mnemonic": "mov",
+          "op_str": "rax, qword ptr [rbp + 0x88]",
+          "text": "mov rax, qword ptr [rbp + 0x88]"
+        },
+        {
+          "address": 5368748712,
+          "address_hex": "0x0000000140009AA8",
+          "mnemonic": "mov",
+          "op_str": "ecx, dword ptr [rax]",
+          "text": "mov ecx, dword ptr [rax]"
+        },
+        {
+          "address": 5368748714,
+          "address_hex": "0x0000000140009AAA",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368748718,
+          "address_hex": "0x0000000140009AAE",
+          "mnemonic": "call",
+          "op_str": "0x1400034a0",
+          "text": "call 0x1400034a0"
+        },
+        {
+          "address": 5368748723,
+          "address_hex": "0x0000000140009AB3",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368748727,
+          "address_hex": "0x0000000140009AB7",
+          "mnemonic": "mov",
+          "op_str": "ecx, eax",
+          "text": "mov ecx, eax"
+        },
+        {
+          "address": 5368748729,
+          "address_hex": "0x0000000140009AB9",
+          "mnemonic": "mov",
+          "op_str": "rax, qword ptr [rbp + 0x98]",
+          "text": "mov rax, qword ptr [rbp + 0x98]"
+        },
+        {
+          "address": 5368748736,
+          "address_hex": "0x0000000140009AC0",
+          "mnemonic": "mov",
+          "op_str": "dword ptr [rax], ecx",
+          "text": "mov dword ptr [rax], ecx"
+        },
+        {
+          "address": 5368748738,
+          "address_hex": "0x0000000140009AC2",
+          "mnemonic": "jmp",
+          "op_str": "0x1400066af",
+          "text": "jmp 0x1400066af"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        2
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_0000667B",
+          "target": "bb_00009AA1",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368735401
+        },
+        {
+          "source": "bb_00009AA1",
+          "target": "bb_000066AF",
+          "kind": "jump",
+          "evidence_instruction": 5368748738
+        }
+      ],
+      "selected": true
+    },
+    {
+      "block_id": "bb_00009AC7",
+      "start_rva": 39623,
+      "start_rva_hex": "0x9AC7",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 5,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.4,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "lea",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": true,
+      "trivial_glue": false,
+      "visual_richness_score": 8.8,
+      "instructions": [
+        {
+          "address": 5368748743,
+          "address_hex": "0x0000000140009AC7",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0xf870]",
+          "text": "lea rcx, [rip + 0xf870]"
+        },
+        {
+          "address": 5368748750,
+          "address_hex": "0x0000000140009ACE",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368748754,
+          "address_hex": "0x0000000140009AD2",
+          "mnemonic": "call",
+          "op_str": "0x140001000",
+          "text": "call 0x140001000"
+        },
+        {
+          "address": 5368748759,
+          "address_hex": "0x0000000140009AD7",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368748763,
+          "address_hex": "0x0000000140009ADB",
+          "mnemonic": "jmp",
+          "op_str": "0x1400067a5",
+          "text": "jmp 0x1400067a5"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        2
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00006735",
+          "target": "bb_00009AC7",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368735647
+        },
+        {
+          "source": "bb_00009AC7",
+          "target": "bb_000067A5",
+          "kind": "jump",
+          "evidence_instruction": 5368748763
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009AE0",
+      "start_rva": 39648,
+      "start_rva_hex": "0x9AE0",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368748768,
+          "address_hex": "0x0000000140009AE0",
+          "mnemonic": "jmp",
+          "op_str": "0x140006845",
+          "text": "jmp 0x140006845"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        3
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00006810",
+          "target": "bb_00009AE0",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368735807
+        },
+        {
+          "source": "bb_00009AE0",
+          "target": "bb_00006845",
+          "kind": "jump",
+          "evidence_instruction": 5368748768
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009B1A",
+      "start_rva": 39706,
+      "start_rva_hex": "0x9B1A",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368748826,
+          "address_hex": "0x0000000140009B1A",
+          "mnemonic": "jmp",
+          "op_str": "0x140006b96",
+          "text": "jmp 0x140006b96"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        3
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00006B57",
+          "target": "bb_00009B1A",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368736656
+        },
+        {
+          "source": "bb_00006B96",
+          "target": "bb_00009B1A",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368736813
+        },
+        {
+          "source": "bb_00009B1A",
+          "target": "bb_00006B96",
+          "kind": "jump",
+          "evidence_instruction": 5368748826
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009B1F",
+      "start_rva": 39711,
+      "start_rva_hex": "0x9B1F",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 8,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.25,
+      "memory_load_store_count": 3,
+      "estimated_memory_load_count": 2,
+      "estimated_memory_store_count": 1,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "mov",
+        "sub",
+        "call",
+        "add",
+        "mov",
+        "mov",
+        "mov",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": false,
+      "trivial_glue": false,
+      "visual_richness_score": 13.15,
+      "instructions": [
+        {
+          "address": 5368748831,
+          "address_hex": "0x0000000140009B1F",
+          "mnemonic": "mov",
+          "op_str": "ecx, dword ptr [rbp + 0x2c]",
+          "text": "mov ecx, dword ptr [rbp + 0x2c]"
+        },
+        {
+          "address": 5368748834,
+          "address_hex": "0x0000000140009B22",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368748838,
+          "address_hex": "0x0000000140009B26",
+          "mnemonic": "call",
+          "op_str": "0x140003b60",
+          "text": "call 0x140003b60"
+        },
+        {
+          "address": 5368748843,
+          "address_hex": "0x0000000140009B2B",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368748847,
+          "address_hex": "0x0000000140009B2F",
+          "mnemonic": "mov",
+          "op_str": "ecx, eax",
+          "text": "mov ecx, eax"
+        },
+        {
+          "address": 5368748849,
+          "address_hex": "0x0000000140009B31",
+          "mnemonic": "mov",
+          "op_str": "rax, qword ptr [rbp + 0x60]",
+          "text": "mov rax, qword ptr [rbp + 0x60]"
+        },
+        {
+          "address": 5368748853,
+          "address_hex": "0x0000000140009B35",
+          "mnemonic": "mov",
+          "op_str": "dword ptr [rax], ecx",
+          "text": "mov dword ptr [rax], ecx"
+        },
+        {
+          "address": 5368748855,
+          "address_hex": "0x0000000140009B37",
+          "mnemonic": "jmp",
+          "op_str": "0x140006d01",
+          "text": "jmp 0x140006d01"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        4
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00006C35",
+          "target": "bb_00009B1F",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368737019
+        },
+        {
+          "source": "bb_00006D01",
+          "target": "bb_00009B1F",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368737157
+        },
+        {
+          "source": "bb_00009B1F",
+          "target": "bb_00006D01",
+          "kind": "jump",
+          "evidence_instruction": 5368748855
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009B3C",
+      "start_rva": 39740,
+      "start_rva_hex": "0x9B3C",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368748860,
+          "address_hex": "0x0000000140009B3C",
+          "mnemonic": "jmp",
+          "op_str": "0x140006dbb",
+          "text": "jmp 0x140006dbb"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        4
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00006D8D",
+          "target": "bb_00009B3C",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368737205
+        },
+        {
+          "source": "bb_00009B3C",
+          "target": "bb_00006DBB",
+          "kind": "jump",
+          "evidence_instruction": 5368748860
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009B41",
+      "start_rva": 39745,
+      "start_rva_hex": "0x9B41",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 5,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.4,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "lea",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": true,
+      "trivial_glue": false,
+      "visual_richness_score": 8.8,
+      "instructions": [
+        {
+          "address": 5368748865,
+          "address_hex": "0x0000000140009B41",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0xf826]",
+          "text": "lea rcx, [rip + 0xf826]"
+        },
+        {
+          "address": 5368748872,
+          "address_hex": "0x0000000140009B48",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368748876,
+          "address_hex": "0x0000000140009B4C",
+          "mnemonic": "call",
+          "op_str": "0x140001000",
+          "text": "call 0x140001000"
+        },
+        {
+          "address": 5368748881,
+          "address_hex": "0x0000000140009B51",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368748885,
+          "address_hex": "0x0000000140009B55",
+          "mnemonic": "jmp",
+          "op_str": "0x140006e38",
+          "text": "jmp 0x140006e38"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        4,
+        5
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00006DE9",
+          "target": "bb_00009B41",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368737330
+        },
+        {
+          "source": "bb_00009B41",
+          "target": "bb_00006E38",
+          "kind": "jump",
+          "evidence_instruction": 5368748885
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009B5A",
+      "start_rva": 39770,
+      "start_rva_hex": "0x9B5A",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 7,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.2857,
+      "memory_load_store_count": 3,
+      "estimated_memory_load_count": 3,
+      "estimated_memory_store_count": 0,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "mov",
+        "mov",
+        "mov",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": false,
+      "trivial_glue": false,
+      "visual_richness_score": 12.7,
+      "instructions": [
+        {
+          "address": 5368748890,
+          "address_hex": "0x0000000140009B5A",
+          "mnemonic": "mov",
+          "op_str": "edx, dword ptr [rbp + 0x20]",
+          "text": "mov edx, dword ptr [rbp + 0x20]"
+        },
+        {
+          "address": 5368748893,
+          "address_hex": "0x0000000140009B5D",
+          "mnemonic": "mov",
+          "op_str": "rax, qword ptr [rbp + 0x88]",
+          "text": "mov rax, qword ptr [rbp + 0x88]"
+        },
+        {
+          "address": 5368748900,
+          "address_hex": "0x0000000140009B64",
+          "mnemonic": "mov",
+          "op_str": "ecx, dword ptr [rax]",
+          "text": "mov ecx, dword ptr [rax]"
+        },
+        {
+          "address": 5368748902,
+          "address_hex": "0x0000000140009B66",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368748906,
+          "address_hex": "0x0000000140009B6A",
+          "mnemonic": "call",
+          "op_str": "0x140003e70",
+          "text": "call 0x140003e70"
+        },
+        {
+          "address": 5368748911,
+          "address_hex": "0x0000000140009B6F",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368748915,
+          "address_hex": "0x0000000140009B73",
+          "mnemonic": "jmp",
+          "op_str": "0x140006f5a",
+          "text": "jmp 0x140006f5a"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        5
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00006F28",
+          "target": "bb_00009B5A",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368737620
+        },
+        {
+          "source": "bb_00006F5A",
+          "target": "bb_00009B5A",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368737816
+        },
+        {
+          "source": "bb_00009B5A",
+          "target": "bb_00006F5A",
+          "kind": "jump",
+          "evidence_instruction": 5368748915
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009B78",
+      "start_rva": 39800,
+      "start_rva_hex": "0x9B78",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368748920,
+          "address_hex": "0x0000000140009B78",
+          "mnemonic": "jmp",
+          "op_str": "0x1400070e2",
+          "text": "jmp 0x1400070e2"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        5
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00007020",
+          "target": "bb_00009B78",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368738012
+        },
+        {
+          "source": "bb_00009B78",
+          "target": "bb_000070E2",
+          "kind": "jump",
+          "evidence_instruction": 5368748920
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009BAA",
+      "start_rva": 39850,
+      "start_rva_hex": "0x9BAA",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 5,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.4,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "lea",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": true,
+      "trivial_glue": false,
+      "visual_richness_score": 8.8,
+      "instructions": [
+        {
+          "address": 5368748970,
+          "address_hex": "0x0000000140009BAA",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0xf7de]",
+          "text": "lea rcx, [rip + 0xf7de]"
+        },
+        {
+          "address": 5368748977,
+          "address_hex": "0x0000000140009BB1",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368748981,
+          "address_hex": "0x0000000140009BB5",
+          "mnemonic": "call",
+          "op_str": "0x140001000",
+          "text": "call 0x140001000"
+        },
+        {
+          "address": 5368748986,
+          "address_hex": "0x0000000140009BBA",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368748990,
+          "address_hex": "0x0000000140009BBE",
+          "mnemonic": "jmp",
+          "op_str": "0x14000740c",
+          "text": "jmp 0x14000740c"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        6
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000073D3",
+          "target": "bb_00009BAA",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368738822
+        },
+        {
+          "source": "bb_00009BAA",
+          "target": "bb_0000740C",
+          "kind": "jump",
+          "evidence_instruction": 5368748990
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009BC3",
+      "start_rva": 39875,
+      "start_rva_hex": "0x9BC3",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368748995,
+          "address_hex": "0x0000000140009BC3",
+          "mnemonic": "jmp",
+          "op_str": "0x1400074d4",
+          "text": "jmp 0x1400074d4"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        6
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000074A4",
+          "target": "bb_00009BC3",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368739022
+        },
+        {
+          "source": "bb_00009BC3",
+          "target": "bb_000074D4",
+          "kind": "jump",
+          "evidence_instruction": 5368748995
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009BE6",
+      "start_rva": 39910,
+      "start_rva_hex": "0x9BE6",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 11,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.1818,
+      "memory_load_store_count": 6,
+      "estimated_memory_load_count": 5,
+      "estimated_memory_store_count": 1,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "mov",
+        "mov",
+        "mov",
+        "mov",
+        "sub",
+        "call",
+        "add",
+        "mov",
+        "mov",
+        "mov",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": false,
+      "trivial_glue": false,
+      "visual_richness_score": 17.05,
+      "instructions": [
+        {
+          "address": 5368749030,
+          "address_hex": "0x0000000140009BE6",
+          "mnemonic": "mov",
+          "op_str": "rax, qword ptr [rbp + 0x88]",
+          "text": "mov rax, qword ptr [rbp + 0x88]"
+        },
+        {
+          "address": 5368749037,
+          "address_hex": "0x0000000140009BED",
+          "mnemonic": "mov",
+          "op_str": "rcx, qword ptr [rbp + 0x98]",
+          "text": "mov rcx, qword ptr [rbp + 0x98]"
+        },
+        {
+          "address": 5368749044,
+          "address_hex": "0x0000000140009BF4",
+          "mnemonic": "mov",
+          "op_str": "edx, dword ptr [rcx]",
+          "text": "mov edx, dword ptr [rcx]"
+        },
+        {
+          "address": 5368749046,
+          "address_hex": "0x0000000140009BF6",
+          "mnemonic": "mov",
+          "op_str": "ecx, dword ptr [rax]",
+          "text": "mov ecx, dword ptr [rax]"
+        },
+        {
+          "address": 5368749048,
+          "address_hex": "0x0000000140009BF8",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749052,
+          "address_hex": "0x0000000140009BFC",
+          "mnemonic": "call",
+          "op_str": "0x140004150",
+          "text": "call 0x140004150"
+        },
+        {
+          "address": 5368749057,
+          "address_hex": "0x0000000140009C01",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749061,
+          "address_hex": "0x0000000140009C05",
+          "mnemonic": "mov",
+          "op_str": "ecx, eax",
+          "text": "mov ecx, eax"
+        },
+        {
+          "address": 5368749063,
+          "address_hex": "0x0000000140009C07",
+          "mnemonic": "mov",
+          "op_str": "rax, qword ptr [rbp + 0x68]",
+          "text": "mov rax, qword ptr [rbp + 0x68]"
+        },
+        {
+          "address": 5368749067,
+          "address_hex": "0x0000000140009C0B",
+          "mnemonic": "mov",
+          "op_str": "dword ptr [rax], ecx",
+          "text": "mov dword ptr [rax], ecx"
+        },
+        {
+          "address": 5368749069,
+          "address_hex": "0x0000000140009C0D",
+          "mnemonic": "jmp",
+          "op_str": "0x14000766c",
+          "text": "jmp 0x14000766c"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        7
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_0000761E",
+          "target": "bb_00009BE6",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368739430
+        },
+        {
+          "source": "bb_0000766C",
+          "target": "bb_00009BE6",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368739605
+        },
+        {
+          "source": "bb_00009BE6",
+          "target": "bb_0000766C",
+          "kind": "jump",
+          "evidence_instruction": 5368749069
+        }
+      ],
+      "selected": true
+    },
+    {
+      "block_id": "bb_00009C12",
+      "start_rva": 39954,
+      "start_rva_hex": "0x9C12",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749074,
+          "address_hex": "0x0000000140009C12",
+          "mnemonic": "jmp",
+          "op_str": "0x14000774d",
+          "text": "jmp 0x14000774d"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        7
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_0000771D",
+          "target": "bb_00009C12",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368739655
+        },
+        {
+          "source": "bb_00009C12",
+          "target": "bb_0000774D",
+          "kind": "jump",
+          "evidence_instruction": 5368749074
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009C17",
+      "start_rva": 39959,
+      "start_rva_hex": "0x9C17",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749079,
+          "address_hex": "0x0000000140009C17",
+          "mnemonic": "jmp",
+          "op_str": "0x140007807",
+          "text": "jmp 0x140007807"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        7,
+        8
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00007782",
+          "target": "bb_00009C17",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368739841
+        },
+        {
+          "source": "bb_00009C17",
+          "target": "bb_00007807",
+          "kind": "jump",
+          "evidence_instruction": 5368749079
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009C1C",
+      "start_rva": 39964,
+      "start_rva_hex": "0x9C1C",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 12,
+      "control_flow_instruction_count": 3,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 4,
+      "arithmetic_density": 0.3333,
+      "memory_load_store_count": 4,
+      "estimated_memory_load_count": 4,
+      "estimated_memory_store_count": 0,
+      "call_count": 2,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 6,
+      "mnemonics": [
+        "lea",
+        "sub",
+        "call",
+        "mov",
+        "mov",
+        "add",
+        "mov",
+        "mov",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": false,
+      "trivial_glue": false,
+      "visual_richness_score": 19.0,
+      "instructions": [
+        {
+          "address": 5368749084,
+          "address_hex": "0x0000000140009C1C",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0xf791]",
+          "text": "lea rcx, [rip + 0xf791]"
+        },
+        {
+          "address": 5368749091,
+          "address_hex": "0x0000000140009C23",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749095,
+          "address_hex": "0x0000000140009C27",
+          "mnemonic": "call",
+          "op_str": "0x140001000",
+          "text": "call 0x140001000"
+        },
+        {
+          "address": 5368749100,
+          "address_hex": "0x0000000140009C2C",
+          "mnemonic": "mov",
+          "op_str": "rcx, qword ptr [rbp + 0x68]",
+          "text": "mov rcx, qword ptr [rbp + 0x68]"
+        },
+        {
+          "address": 5368749104,
+          "address_hex": "0x0000000140009C30",
+          "mnemonic": "mov",
+          "op_str": "rax, qword ptr [rbp + 0x88]",
+          "text": "mov rax, qword ptr [rbp + 0x88]"
+        },
+        {
+          "address": 5368749111,
+          "address_hex": "0x0000000140009C37",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749115,
+          "address_hex": "0x0000000140009C3B",
+          "mnemonic": "mov",
+          "op_str": "edx, dword ptr [rcx]",
+          "text": "mov edx, dword ptr [rcx]"
+        },
+        {
+          "address": 5368749117,
+          "address_hex": "0x0000000140009C3D",
+          "mnemonic": "mov",
+          "op_str": "ecx, dword ptr [rax]",
+          "text": "mov ecx, dword ptr [rax]"
+        },
+        {
+          "address": 5368749119,
+          "address_hex": "0x0000000140009C3F",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749123,
+          "address_hex": "0x0000000140009C43",
+          "mnemonic": "call",
+          "op_str": "0x1400048f0",
+          "text": "call 0x1400048f0"
+        },
+        {
+          "address": 5368749128,
+          "address_hex": "0x0000000140009C48",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749132,
+          "address_hex": "0x0000000140009C4C",
+          "mnemonic": "jmp",
+          "op_str": "0x1400078ba",
+          "text": "jmp 0x1400078ba"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        8
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_0000788B",
+          "target": "bb_00009C1C",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368740020
+        },
+        {
+          "source": "bb_00009C1C",
+          "target": "bb_000078BA",
+          "kind": "jump",
+          "evidence_instruction": 5368749132
+        }
+      ],
+      "selected": true
+    },
+    {
+      "block_id": "bb_00009C51",
+      "start_rva": 40017,
+      "start_rva_hex": "0x9C51",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749137,
+          "address_hex": "0x0000000140009C51",
+          "mnemonic": "jmp",
+          "op_str": "0x1400079bc",
+          "text": "jmp 0x1400079bc"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        8
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00007957",
+          "target": "bb_00009C51",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368740278
+        },
+        {
+          "source": "bb_000079BC",
+          "target": "bb_00009C51",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368740410
+        },
+        {
+          "source": "bb_00009C51",
+          "target": "bb_000079BC",
+          "kind": "jump",
+          "evidence_instruction": 5368749137
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009C56",
+      "start_rva": 40022,
+      "start_rva_hex": "0x9C56",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749142,
+          "address_hex": "0x0000000140009C56",
+          "mnemonic": "jmp",
+          "op_str": "0x140007a82",
+          "text": "jmp 0x140007a82"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        9
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00007A42",
+          "target": "bb_00009C56",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368740476
+        },
+        {
+          "source": "bb_00007A82",
+          "target": "bb_00009C56",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368740526
+        },
+        {
+          "source": "bb_00009C56",
+          "target": "bb_00007A82",
+          "kind": "jump",
+          "evidence_instruction": 5368749142
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009C88",
+      "start_rva": 40072,
+      "start_rva_hex": "0x9C88",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 5,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.4,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "lea",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": true,
+      "trivial_glue": false,
+      "visual_richness_score": 8.8,
+      "instructions": [
+        {
+          "address": 5368749192,
+          "address_hex": "0x0000000140009C88",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0xf74f]",
+          "text": "lea rcx, [rip + 0xf74f]"
+        },
+        {
+          "address": 5368749199,
+          "address_hex": "0x0000000140009C8F",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749203,
+          "address_hex": "0x0000000140009C93",
+          "mnemonic": "call",
+          "op_str": "0x140001000",
+          "text": "call 0x140001000"
+        },
+        {
+          "address": 5368749208,
+          "address_hex": "0x0000000140009C98",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749212,
+          "address_hex": "0x0000000140009C9C",
+          "mnemonic": "jmp",
+          "op_str": "0x140007d39",
+          "text": "jmp 0x140007d39"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        9
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00007C74",
+          "target": "bb_00009C88",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368741171
+        },
+        {
+          "source": "bb_00007D39",
+          "target": "bb_00009C88",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368741319
+        },
+        {
+          "source": "bb_00009C88",
+          "target": "bb_00007D39",
+          "kind": "jump",
+          "evidence_instruction": 5368749212
+        }
+      ],
+      "selected": true
+    },
+    {
+      "block_id": "bb_00009CA1",
+      "start_rva": 40097,
+      "start_rva_hex": "0x9CA1",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749217,
+          "address_hex": "0x0000000140009CA1",
+          "mnemonic": "jmp",
+          "op_str": "0x140007e01",
+          "text": "jmp 0x140007e01"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        10
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00007DCF",
+          "target": "bb_00009CA1",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368741371
+        },
+        {
+          "source": "bb_00009CA1",
+          "target": "bb_00007E01",
+          "kind": "jump",
+          "evidence_instruction": 5368749217
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009CF6",
+      "start_rva": 40182,
+      "start_rva_hex": "0x9CF6",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 11,
+      "control_flow_instruction_count": 3,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 4,
+      "arithmetic_density": 0.3636,
+      "memory_load_store_count": 3,
+      "estimated_memory_load_count": 3,
+      "estimated_memory_store_count": 0,
+      "call_count": 2,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 6,
+      "mnemonics": [
+        "mov",
+        "mov",
+        "sub",
+        "call",
+        "add",
+        "lea",
+        "sub",
+        "call",
+        "add",
+        "mov",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": false,
+      "trivial_glue": false,
+      "visual_richness_score": 18.0,
+      "instructions": [
+        {
+          "address": 5368749302,
+          "address_hex": "0x0000000140009CF6",
+          "mnemonic": "mov",
+          "op_str": "rax, qword ptr [rbp + 0x88]",
+          "text": "mov rax, qword ptr [rbp + 0x88]"
+        },
+        {
+          "address": 5368749309,
+          "address_hex": "0x0000000140009CFD",
+          "mnemonic": "mov",
+          "op_str": "ecx, dword ptr [rax]",
+          "text": "mov ecx, dword ptr [rax]"
+        },
+        {
+          "address": 5368749311,
+          "address_hex": "0x0000000140009CFF",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749315,
+          "address_hex": "0x0000000140009D03",
+          "mnemonic": "call",
+          "op_str": "0x140004c30",
+          "text": "call 0x140004c30"
+        },
+        {
+          "address": 5368749320,
+          "address_hex": "0x0000000140009D08",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749324,
+          "address_hex": "0x0000000140009D0C",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0xf701]",
+          "text": "lea rcx, [rip + 0xf701]"
+        },
+        {
+          "address": 5368749331,
+          "address_hex": "0x0000000140009D13",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749335,
+          "address_hex": "0x0000000140009D17",
+          "mnemonic": "call",
+          "op_str": "0x140001000",
+          "text": "call 0x140001000"
+        },
+        {
+          "address": 5368749340,
+          "address_hex": "0x0000000140009D1C",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749344,
+          "address_hex": "0x0000000140009D20",
+          "mnemonic": "mov",
+          "op_str": "eax, dword ptr [rip + 0x1b82e]",
+          "text": "mov eax, dword ptr [rip + 0x1b82e]"
+        },
+        {
+          "address": 5368749350,
+          "address_hex": "0x0000000140009D26",
+          "mnemonic": "jmp",
+          "op_str": "0x140008441",
+          "text": "jmp 0x140008441"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        10
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000083F6",
+          "target": "bb_00009CF6",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368742971
+        },
+        {
+          "source": "bb_00009CF6",
+          "target": "bb_00008441",
+          "kind": "jump",
+          "evidence_instruction": 5368749350
+        }
+      ],
+      "selected": true
+    },
+    {
+      "block_id": "bb_00009D2B",
+      "start_rva": 40235,
+      "start_rva_hex": "0x9D2B",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749355,
+          "address_hex": "0x0000000140009D2B",
+          "mnemonic": "jmp",
+          "op_str": "0x140008541",
+          "text": "jmp 0x140008541"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        10,
+        11
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000084C8",
+          "target": "bb_00009D2B",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368743227
+        },
+        {
+          "source": "bb_00009D2B",
+          "target": "bb_00008541",
+          "kind": "jump",
+          "evidence_instruction": 5368749355
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009D30",
+      "start_rva": 40240,
+      "start_rva_hex": "0x9D30",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749360,
+          "address_hex": "0x0000000140009D30",
+          "mnemonic": "jmp",
+          "op_str": "0x1400085b5",
+          "text": "jmp 0x1400085b5"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        11
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_0000857E",
+          "target": "bb_00009D30",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368743343
+        },
+        {
+          "source": "bb_000085B5",
+          "target": "bb_00009D30",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368743381
+        },
+        {
+          "source": "bb_00009D30",
+          "target": "bb_000085B5",
+          "kind": "jump",
+          "evidence_instruction": 5368749360
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009D35",
+      "start_rva": 40245,
+      "start_rva_hex": "0x9D35",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 5,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.4,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "lea",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": true,
+      "trivial_glue": false,
+      "visual_richness_score": 8.8,
+      "instructions": [
+        {
+          "address": 5368749365,
+          "address_hex": "0x0000000140009D35",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0xf6e7]",
+          "text": "lea rcx, [rip + 0xf6e7]"
+        },
+        {
+          "address": 5368749372,
+          "address_hex": "0x0000000140009D3C",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749376,
+          "address_hex": "0x0000000140009D40",
+          "mnemonic": "call",
+          "op_str": "0x140001000",
+          "text": "call 0x140001000"
+        },
+        {
+          "address": 5368749381,
+          "address_hex": "0x0000000140009D45",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749385,
+          "address_hex": "0x0000000140009D49",
+          "mnemonic": "jmp",
+          "op_str": "0x14000860d",
+          "text": "jmp 0x14000860d"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        11
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000085E7",
+          "target": "bb_00009D35",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368743431
+        },
+        {
+          "source": "bb_00009D35",
+          "target": "bb_0000860D",
+          "kind": "jump",
+          "evidence_instruction": 5368749385
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009D4E",
+      "start_rva": 40270,
+      "start_rva_hex": "0x9D4E",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749390,
+          "address_hex": "0x0000000140009D4E",
+          "mnemonic": "jmp",
+          "op_str": "0x1400086b9",
+          "text": "jmp 0x1400086b9"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        12
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_0000867A",
+          "target": "bb_00009D4E",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368743603
+        },
+        {
+          "source": "bb_00009D4E",
+          "target": "bb_000086B9",
+          "kind": "jump",
+          "evidence_instruction": 5368749390
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009D71",
+      "start_rva": 40305,
+      "start_rva_hex": "0x9D71",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749425,
+          "address_hex": "0x0000000140009D71",
+          "mnemonic": "jmp",
+          "op_str": "0x1400088ea",
+          "text": "jmp 0x1400088ea"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        12
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000088AB",
+          "target": "bb_00009D71",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368744164
+        },
+        {
+          "source": "bb_00009D71",
+          "target": "bb_000088EA",
+          "kind": "jump",
+          "evidence_instruction": 5368749425
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009D76",
+      "start_rva": 40310,
+      "start_rva_hex": "0x9D76",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 5,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.4,
+      "memory_load_store_count": 1,
+      "estimated_memory_load_count": 1,
+      "estimated_memory_store_count": 0,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "mov",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": false,
+      "trivial_glue": false,
+      "visual_richness_score": 9.8,
+      "instructions": [
+        {
+          "address": 5368749430,
+          "address_hex": "0x0000000140009D76",
+          "mnemonic": "mov",
+          "op_str": "ecx, dword ptr [rbp - 0x44]",
+          "text": "mov ecx, dword ptr [rbp - 0x44]"
+        },
+        {
+          "address": 5368749433,
+          "address_hex": "0x0000000140009D79",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749437,
+          "address_hex": "0x0000000140009D7D",
+          "mnemonic": "call",
+          "op_str": "0x140004f50",
+          "text": "call 0x140004f50"
+        },
+        {
+          "address": 5368749442,
+          "address_hex": "0x0000000140009D82",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749446,
+          "address_hex": "0x0000000140009D86",
+          "mnemonic": "jmp",
+          "op_str": "0x140008a27",
+          "text": "jmp 0x140008a27"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        13
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_0000898E",
+          "target": "bb_00009D76",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368744481
+        },
+        {
+          "source": "bb_00009D76",
+          "target": "bb_00008A27",
+          "kind": "jump",
+          "evidence_instruction": 5368749446
+        }
+      ],
+      "selected": true
+    },
+    {
+      "block_id": "bb_00009D8B",
+      "start_rva": 40331,
+      "start_rva_hex": "0x9D8B",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749451,
+          "address_hex": "0x0000000140009D8B",
+          "mnemonic": "jmp",
+          "op_str": "0x140008b28",
+          "text": "jmp 0x140008b28"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        13
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00008ACB",
+          "target": "bb_00009D8B",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368744738
+        },
+        {
+          "source": "bb_00008B28",
+          "target": "bb_00009D8B",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368744804
+        },
+        {
+          "source": "bb_00009D8B",
+          "target": "bb_00008B28",
+          "kind": "jump",
+          "evidence_instruction": 5368749451
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009DBD",
+      "start_rva": 40381,
+      "start_rva_hex": "0x9DBD",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 5,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.4,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "lea",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": true,
+      "trivial_glue": false,
+      "visual_richness_score": 8.8,
+      "instructions": [
+        {
+          "address": 5368749501,
+          "address_hex": "0x0000000140009DBD",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0xf69e]",
+          "text": "lea rcx, [rip + 0xf69e]"
+        },
+        {
+          "address": 5368749508,
+          "address_hex": "0x0000000140009DC4",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749512,
+          "address_hex": "0x0000000140009DC8",
+          "mnemonic": "call",
+          "op_str": "0x140001000",
+          "text": "call 0x140001000"
+        },
+        {
+          "address": 5368749517,
+          "address_hex": "0x0000000140009DCD",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749521,
+          "address_hex": "0x0000000140009DD1",
+          "mnemonic": "jmp",
+          "op_str": "0x140008d3b",
+          "text": "jmp 0x140008d3b"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        13,
+        14
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00008D15",
+          "target": "bb_00009DBD",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368745269
+        },
+        {
+          "source": "bb_00009DBD",
+          "target": "bb_00008D3B",
+          "kind": "jump",
+          "evidence_instruction": 5368749521
+        }
+      ],
+      "selected": true
+    },
+    {
+      "block_id": "bb_00009DD6",
+      "start_rva": 40406,
+      "start_rva_hex": "0x9DD6",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 6,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.3333,
+      "memory_load_store_count": 2,
+      "estimated_memory_load_count": 2,
+      "estimated_memory_store_count": 0,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "mov",
+        "mov",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": false,
+      "trivial_glue": false,
+      "visual_richness_score": 11.25,
+      "instructions": [
+        {
+          "address": 5368749526,
+          "address_hex": "0x0000000140009DD6",
+          "mnemonic": "mov",
+          "op_str": "rax, qword ptr [rbp + 0x88]",
+          "text": "mov rax, qword ptr [rbp + 0x88]"
+        },
+        {
+          "address": 5368749533,
+          "address_hex": "0x0000000140009DDD",
+          "mnemonic": "mov",
+          "op_str": "ecx, dword ptr [rax]",
+          "text": "mov ecx, dword ptr [rax]"
+        },
+        {
+          "address": 5368749535,
+          "address_hex": "0x0000000140009DDF",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749539,
+          "address_hex": "0x0000000140009DE3",
+          "mnemonic": "call",
+          "op_str": "0x140005270",
+          "text": "call 0x140005270"
+        },
+        {
+          "address": 5368749544,
+          "address_hex": "0x0000000140009DE8",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749548,
+          "address_hex": "0x0000000140009DEC",
+          "mnemonic": "jmp",
+          "op_str": "0x140008dd7",
+          "text": "jmp 0x140008dd7"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        14
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00008D9B",
+          "target": "bb_00009DD6",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368745425
+        },
+        {
+          "source": "bb_00008DD7",
+          "target": "bb_00009DD6",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368745531
+        },
+        {
+          "source": "bb_00009DD6",
+          "target": "bb_00008DD7",
+          "kind": "jump",
+          "evidence_instruction": 5368749548
+        }
+      ],
+      "selected": true
+    },
+    {
+      "block_id": "bb_00009DF1",
+      "start_rva": 40433,
+      "start_rva_hex": "0x9DF1",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749553,
+          "address_hex": "0x0000000140009DF1",
+          "mnemonic": "jmp",
+          "op_str": "0x140008e69",
+          "text": "jmp 0x140008e69"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        14
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00008E43",
+          "target": "bb_00009DF1",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368745571
+        },
+        {
+          "source": "bb_00009DF1",
+          "target": "bb_00008E69",
+          "kind": "jump",
+          "evidence_instruction": 5368749553
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009E23",
+      "start_rva": 40483,
+      "start_rva_hex": "0x9E23",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 5,
+      "control_flow_instruction_count": 2,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 2,
+      "arithmetic_density": 0.4,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 1,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "lea",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": true,
+      "trivial_glue": false,
+      "visual_richness_score": 8.8,
+      "instructions": [
+        {
+          "address": 5368749603,
+          "address_hex": "0x0000000140009E23",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0xf65c]",
+          "text": "lea rcx, [rip + 0xf65c]"
+        },
+        {
+          "address": 5368749610,
+          "address_hex": "0x0000000140009E2A",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749614,
+          "address_hex": "0x0000000140009E2E",
+          "mnemonic": "call",
+          "op_str": "0x140001000",
+          "text": "call 0x140001000"
+        },
+        {
+          "address": 5368749619,
+          "address_hex": "0x0000000140009E33",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749623,
+          "address_hex": "0x0000000140009E37",
+          "mnemonic": "jmp",
+          "op_str": "0x140009184",
+          "text": "jmp 0x140009184"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        15
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_0000910A",
+          "target": "bb_00009E23",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368746366
+        },
+        {
+          "source": "bb_00009E23",
+          "target": "bb_00009184",
+          "kind": "jump",
+          "evidence_instruction": 5368749623
+        }
+      ],
+      "selected": true
+    },
+    {
+      "block_id": "bb_00009E3C",
+      "start_rva": 40508,
+      "start_rva_hex": "0x9E3C",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749628,
+          "address_hex": "0x0000000140009E3C",
+          "mnemonic": "jmp",
+          "op_str": "0x140009224",
+          "text": "jmp 0x140009224"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        15
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000091DF",
+          "target": "bb_00009E3C",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368746526
+        },
+        {
+          "source": "bb_00009E3C",
+          "target": "bb_00009224",
+          "kind": "jump",
+          "evidence_instruction": 5368749628
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009E41",
+      "start_rva": 40513,
+      "start_rva_hex": "0x9E41",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749633,
+          "address_hex": "0x0000000140009E41",
+          "mnemonic": "jmp",
+          "op_str": "0x140009381",
+          "text": "jmp 0x140009381"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        16
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000092FD",
+          "target": "bb_00009E41",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368746875
+        },
+        {
+          "source": "bb_00009E41",
+          "target": "bb_00009381",
+          "kind": "jump",
+          "evidence_instruction": 5368749633
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009E73",
+      "start_rva": 40563,
+      "start_rva_hex": "0x9E73",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 8,
+      "control_flow_instruction_count": 3,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 4,
+      "arithmetic_density": 0.5,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 2,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 5,
+      "mnemonics": [
+        "sub",
+        "call",
+        "add",
+        "lea",
+        "sub",
+        "call",
+        "add",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": false,
+      "no_memory_operations": true,
+      "trivial_glue": false,
+      "visual_richness_score": 13.45,
+      "instructions": [
+        {
+          "address": 5368749683,
+          "address_hex": "0x0000000140009E73",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749687,
+          "address_hex": "0x0000000140009E77",
+          "mnemonic": "call",
+          "op_str": "0x140005df0",
+          "text": "call 0x140005df0"
+        },
+        {
+          "address": 5368749692,
+          "address_hex": "0x0000000140009E7C",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749696,
+          "address_hex": "0x0000000140009E80",
+          "mnemonic": "lea",
+          "op_str": "rcx, [rip + 0xf632]",
+          "text": "lea rcx, [rip + 0xf632]"
+        },
+        {
+          "address": 5368749703,
+          "address_hex": "0x0000000140009E87",
+          "mnemonic": "sub",
+          "op_str": "rsp, 0x20",
+          "text": "sub rsp, 0x20"
+        },
+        {
+          "address": 5368749707,
+          "address_hex": "0x0000000140009E8B",
+          "mnemonic": "call",
+          "op_str": "0x140001000",
+          "text": "call 0x140001000"
+        },
+        {
+          "address": 5368749712,
+          "address_hex": "0x0000000140009E90",
+          "mnemonic": "add",
+          "op_str": "rsp, 0x20",
+          "text": "add rsp, 0x20"
+        },
+        {
+          "address": 5368749716,
+          "address_hex": "0x0000000140009E94",
+          "mnemonic": "jmp",
+          "op_str": "0x1400096d5",
+          "text": "jmp 0x1400096d5"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        16
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00009668",
+          "target": "bb_00009E73",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368747727
+        },
+        {
+          "source": "bb_000096D5",
+          "target": "bb_00009E73",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368747804
+        },
+        {
+          "source": "bb_00009E73",
+          "target": "bb_000096D5",
+          "kind": "jump",
+          "evidence_instruction": 5368749716
+        }
+      ],
+      "selected": true
+    },
+    {
+      "block_id": "bb_00009E99",
+      "start_rva": 40601,
+      "start_rva_hex": "0x9E99",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 3,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 2,
+      "estimated_memory_load_count": 1,
+      "estimated_memory_store_count": 1,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 2,
+      "mnemonics": [
+        "mov",
+        "mov",
+        "jmp"
+      ],
+      "one_instruction_only": false,
+      "two_or_fewer_instructions": false,
+      "unconditional_jump_only": false,
+      "branch_control_flow_only": false,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": false,
+      "trivial_glue": false,
+      "visual_richness_score": 4.65,
+      "instructions": [
+        {
+          "address": 5368749721,
+          "address_hex": "0x0000000140009E99",
+          "mnemonic": "mov",
+          "op_str": "rax, qword ptr [rbp + 0x78]",
+          "text": "mov rax, qword ptr [rbp + 0x78]"
+        },
+        {
+          "address": 5368749725,
+          "address_hex": "0x0000000140009E9D",
+          "mnemonic": "mov",
+          "op_str": "dword ptr [rax], 0",
+          "text": "mov dword ptr [rax], 0"
+        },
+        {
+          "address": 5368749731,
+          "address_hex": "0x0000000140009EA3",
+          "mnemonic": "jmp",
+          "op_str": "0x1400097a1",
+          "text": "jmp 0x1400097a1"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        17
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00009724",
+          "target": "bb_00009E99",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368747931
+        },
+        {
+          "source": "bb_000097A1",
+          "target": "bb_00009E99",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368747990
+        },
+        {
+          "source": "bb_00009E99",
+          "target": "bb_000097A1",
+          "kind": "jump",
+          "evidence_instruction": 5368749731
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009EA8",
+      "start_rva": 40616,
+      "start_rva_hex": "0x9EA8",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749736,
+          "address_hex": "0x0000000140009EA8",
+          "mnemonic": "jmp",
+          "op_str": "0x1400098ab",
+          "text": "jmp 0x1400098ab"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        17
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000097DE",
+          "target": "bb_00009EA8",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368748197
+        },
+        {
+          "source": "bb_00009EA8",
+          "target": "bb_000098AB",
+          "kind": "jump",
+          "evidence_instruction": 5368749736
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009EAD",
+      "start_rva": 40621,
+      "start_rva_hex": "0x9EAD",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749741,
+          "address_hex": "0x0000000140009EAD",
+          "mnemonic": "jmp",
+          "op_str": "0x14000991d",
+          "text": "jmp 0x14000991d"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        18
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_000098ED",
+          "target": "bb_00009EAD",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368748311
+        },
+        {
+          "source": "bb_00009EAD",
+          "target": "bb_0000991D",
+          "kind": "jump",
+          "evidence_instruction": 5368749741
+        }
+      ],
+      "selected": false
+    },
+    {
+      "block_id": "bb_00009EB2",
+      "start_rva": 40626,
+      "start_rva_hex": "0x9EB2",
+      "trace_status": "obfuscator_bogus",
+      "provenance_strength": "strong",
+      "instruction_count": 1,
+      "control_flow_instruction_count": 1,
+      "conditional_branch_count": 0,
+      "unconditional_branch_count": 1,
+      "arithmetic_boolean_instruction_count": 0,
+      "arithmetic_density": 0.0,
+      "memory_load_store_count": 0,
+      "estimated_memory_load_count": 0,
+      "estimated_memory_store_count": 0,
+      "call_count": 0,
+      "comparison_test_count": 0,
+      "unique_mnemonic_count": 1,
+      "mnemonics": [
+        "jmp"
+      ],
+      "one_instruction_only": true,
+      "two_or_fewer_instructions": true,
+      "unconditional_jump_only": true,
+      "branch_control_flow_only": true,
+      "no_arithmetic_boolean": true,
+      "no_memory_operations": true,
+      "trivial_glue": true,
+      "visual_richness_score": 0.0,
+      "instructions": [
+        {
+          "address": 5368749746,
+          "address_hex": "0x0000000140009EB2",
+          "mnemonic": "jmp",
+          "op_str": "0x140009985",
+          "text": "jmp 0x140009985"
+        }
+      ],
+      "machine_adjacent_route_indices": [
+        18
+      ],
+      "machine_cfg_adjacent_edges": [
+        {
+          "source": "bb_00009954",
+          "target": "bb_00009EB2",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368748415
+        },
+        {
+          "source": "bb_00009985",
+          "target": "bb_00009EB2",
+          "kind": "branch_taken",
+          "evidence_instruction": 5368748527
+        },
+        {
+          "source": "bb_00009EB2",
+          "target": "bb_00009985",
+          "kind": "jump",
+          "evidence_instruction": 5368749746
+        }
+      ],
+      "selected": false
+    }
+  ]
+}

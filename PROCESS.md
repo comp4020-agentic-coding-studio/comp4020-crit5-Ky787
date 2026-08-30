@@ -2,14 +2,19 @@
 
 ## What I built
 
-**Binary Ninja** — a browser grappling platformer whose five levels are five
+**Binary Ninja** — a browser grappling platformer whose eight levels are eight
 real, Hikari-obfuscated x86-64 programs. The player swings between floating
 blocks of actual disassembly, following each program's execution trace from its
 entry block to the end of the run, while the obfuscator's invented control flow
 crumbles under anyone who trusts it. The whole game is one data-driven engine
-reading the delivered `web_game_data/index.json`; the five levels differ because
-their semantic call sites and theme profiles differ, not because any of them has
-its own code.
+reading the delivered `web_game_data/index.json`; the eight levels differ
+because their semantic call sites and theme profiles differ, not because any of
+them has its own code.
+
+The moments below were written against the first five-level delivery. The
+schema-2 delivery that superseded it added Relay, Quarantine and Root, and the
+notes in `README.md` describe how the loader, the layout tuning and the
+traversal solver changed to take them.
 
 ## The moments that mattered
 
