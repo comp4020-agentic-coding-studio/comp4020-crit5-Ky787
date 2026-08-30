@@ -172,7 +172,7 @@ export class Renderer {
     for (const p of runtime.platforms) {
       const s = p.solid;
       const panel = this.panels.get(p.spec.id);
-      const box: Box = { x: s.x, y: s.y, w: s.w, h: s.h + WORLD.codePanelHeight };
+      const box: Box = { x: s.x, y: s.y, w: s.w, h: s.h + (panel?.h ?? WORLD.codePanelHeight) };
       if (!this.visible(box, bounds)) continue;
 
       if (p.crumble === "collapsed") continue;

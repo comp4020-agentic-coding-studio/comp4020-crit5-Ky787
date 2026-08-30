@@ -5,9 +5,10 @@
  * each frame, so a level with 58 code blocks costs 58 `drawImage` calls instead
  * of several hundred `fillText` calls per frame.
  *
- * The text comes straight from the dataset's `display` payload. Instructions
- * are truncated to fit, never reworded; strings are shown only when the
- * dataset supplies them (level 5's are encrypted, so it supplies none).
+ * The text comes straight from the dataset's `display` payload, in full:
+ * every instruction the dataset supplies is drawn, never reworded or cut, and
+ * the panel grows to fit. Strings are shown only when the dataset supplies
+ * them (level 5's are encrypted, so it supplies none).
  */
 
 import { WORLD } from "../engine/constants.ts";
@@ -35,7 +36,12 @@ function fit(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): str
 
 export function buildPanel(spec: PlatformSpec, accent: string): PanelSprite {
   const w = Math.max(spec.width, WORLD.codePanelMinWidth);
-  const h = WORLD.codePanelHeight;
+  const pad = 11;
+  const headerH = pad + 10 + 8 + LINE_H;
+  const bodyH = spec.display.instructions.length * LINE_H;
+  const stringsH = spec.display.strings.length > 0 ? LINE_H : 0;
+  const footerH = 20;
+  const h = Math.max(WORLD.codePanelHeight, Math.ceil(headerH + bodyH + stringsH + footerH));
   const canvas = document.createElement("canvas");
   canvas.width = Math.ceil(w * SUPERSAMPLE);
   canvas.height = Math.ceil(h * SUPERSAMPLE);
@@ -56,7 +62,6 @@ export function buildPanel(spec: PlatformSpec, accent: string): PanelSprite {
   ctx.fillStyle = "rgba(120,160,200,0.07)";
   ctx.fillRect(0, 0, 5, h);
 
-  const pad = 11;
   let y = pad + 10;
 
   ctx.font = `500 10px ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, monospace`;
@@ -70,23 +75,13 @@ export function buildPanel(spec: PlatformSpec, accent: string): PanelSprite {
   y += LINE_H;
 
   ctx.font = `${BODY_FONT}px ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, monospace`;
-  const room = Math.floor((h - y - pad - (spec.display.strings.length > 0 ? LINE_H : 0)) / LINE_H);
-  const shown = spec.display.instructions.slice(0, Math.max(1, Math.min(room, 5)));
-  for (const line of shown) {
+  for (const line of spec.display.instructions) {
     const [mnemonic, ...rest] = line.split(" ");
     ctx.fillStyle = "rgba(214,232,248,0.90)";
     ctx.fillText(mnemonic, pad, y);
     const mw = ctx.measureText(`${mnemonic} `).width;
     ctx.fillStyle = "rgba(150,178,204,0.72)";
     ctx.fillText(fit(ctx, rest.join(" "), w - pad * 2 - mw), pad + mw, y);
-    y += LINE_H;
-  }
-
-  const hidden = spec.display.instructions.length - shown.length;
-  if (hidden > 0) {
-    ctx.fillStyle = "rgba(130,155,178,0.42)";
-    ctx.font = `10px ui-monospace, SFMono-Regular, Menlo, monospace`;
-    ctx.fillText(`+${hidden} more`, pad, y);
     y += LINE_H;
   }
 
