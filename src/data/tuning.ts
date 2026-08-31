@@ -57,14 +57,14 @@ export const GAP_PROFILES: Record<LevelTheme, GapProfile> = {
   // needs the most widening of any level — and it ramps, so the first hops stay
   // jumpable and the rope is introduced rather than demanded.
   tutorial_horizontal: {
-    gapScale: [1.1, 3.0],
-    gapBonus: [55, 200],
-    maxLinkDistance: 520,
-    minGap: 85,
+    gapScale: [1.05, 1.7],
+    gapBonus: [60, 120],
+    maxLinkDistance: 480,
+    minGap: 75,
   },
   // Firewall's tiers already supply vertical difficulty; widen mostly to open
   // the gates' guarded crossings into real decisions.
-  gated_mixed: { gapScale: [1.3, 2.4], gapBonus: [80, 165], maxLinkDistance: 530, minGap: 100 },
+  gated_mixed: { gapScale: [1.1, 1.6], gapBonus: [45, 90], maxLinkDistance: 450, minGap: 75 },
   // Sweep: mid-length gaps so the beams stay the threat, not the geometry.
   scanner_zigzag: { gapScale: [1.2, 2.1], gapBonus: [75, 150], maxLinkDistance: 525, minGap: 100 },
   // Watchdog arrives already spaced for the rope: its delivered gaps are as
@@ -78,7 +78,7 @@ export const GAP_PROFILES: Record<LevelTheme, GapProfile> = {
   mixed_first_finale: {
     gapScale: [1.1, 1.7],
     gapBonus: [50, 125],
-    maxLinkDistance: 545,
+    maxLinkDistance: 500,
     minGap: 120,
   },
   // Relay is long. Keep the gaps generous but not exhausting, so its length
@@ -86,7 +86,7 @@ export const GAP_PROFILES: Record<LevelTheme, GapProfile> = {
   fork_reconvergence: {
     gapScale: [1.2, 2.0],
     gapBonus: [70, 150],
-    maxLinkDistance: 540,
+    maxLinkDistance: 490,
     minGap: 110,
   },
   // Quarantine is a shaft. Its steps are already 235 units of climb and every
@@ -103,7 +103,7 @@ export const GAP_PROFILES: Record<LevelTheme, GapProfile> = {
   multiphase_finale: {
     gapScale: [1.15, 1.85],
     gapBonus: [55, 145],
-    maxLinkDistance: 550,
+    maxLinkDistance: 500,
     minGap: 110,
   },
 };

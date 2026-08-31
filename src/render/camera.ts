@@ -25,9 +25,12 @@ export class Camera {
   private world = { width: 1000, height: 1000 };
   /** 0 for a level that fits one screen vertically, 1 for a tall shaft. */
   private verticality = 0;
+  /** Raw rope velocity changes direction sharply at the top of a swing. */
+  private leadVelocityY = 0;
 
   setWorld(width: number, height: number): void {
     this.world = { width, height };
+    this.leadVelocityY = 0;
     this.verticality = clamp(
       (height - CAMERA.viewHeight) / (CAMERA.viewHeight * 2.5),
       0,
@@ -43,6 +46,7 @@ export class Camera {
   snapTo(x: number, y: number): void {
     this.x = x;
     this.y = y;
+    this.leadVelocityY = 0;
     this.clampToWorld();
   }
 
@@ -79,14 +83,32 @@ export class Camera {
       CAMERA.maxZoom,
     );
 
+    // A grapple arc can reverse vertical velocity in a handful of frames. If
+    // raw velocity drives the view, that reversal throws a tall-level camera
+    // from one side of the player to the other. Filter only the look-ahead;
+    // the camera still follows the player's actual position every frame.
+    this.leadVelocityY = damp(
+      this.leadVelocityY,
+      velocity.y,
+      CAMERA.velocityResponse,
+      dt,
+    );
     const yLead = CAMERA.velocityLead * lerp(...CAMERA.verticalLead, v);
-    const yMaxLead = CAMERA.maxLead * lerp(1, 1.45, v);
+    const yMaxLead = CAMERA.maxLead * lerp(1, 1.15, v);
     let wantX = target.x + clamp(velocity.x * CAMERA.velocityLead, -CAMERA.maxLead, CAMERA.maxLead);
-    let wantY = target.y + clamp(velocity.y * yLead, -yMaxLead, yMaxLead);
+    let wantY = target.y + clamp(this.leadVelocityY * yLead, -yMaxLead, yMaxLead);
     if (aim) {
       wantX += clamp((aim.x - target.x) * CAMERA.aimLead, -220, 220);
-      wantY += clamp((aim.y - target.y) * CAMERA.aimLead, -160, 160 + 120 * v);
+      // Negative Y is up. Tall worlds give extra room to look toward the next
+      // ledge overhead, rather than below the player.
+      wantY += clamp((aim.y - target.y) * CAMERA.aimLead, -(160 + 120 * v), 160);
     }
+
+    // Velocity lead and pointer lead used to be capped separately, so their
+    // sum could put the player at (or beyond) the edge of Quarantine's view.
+    const halfVisibleHeight = viewH / 2 / this.zoom;
+    const safeVerticalLead = Math.max(0, halfVisibleHeight - CAMERA.verticalMargin);
+    wantY = target.y + clamp(wantY - target.y, -safeVerticalLead, safeVerticalLead);
 
     this.x = damp(this.x, wantX, CAMERA.followRate, dt);
     this.y = damp(this.y, wantY, CAMERA.followRate * lerp(...CAMERA.verticalFollow, v), dt);

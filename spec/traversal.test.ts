@@ -48,6 +48,20 @@ describe.each(levels)("traversal: $entry.id", ({ tuned }) => {
     expect(failed, "hops no scripted input could clear").toEqual([]);
   });
 
+  it("does not hide a near-timeout manoeuvre inside a technically reachable route", () => {
+    const slow = report.hops
+      .filter((h) => (h.result.plan?.duration ?? Infinity) >= 4.5)
+      .map((h) => `${h.from}->${h.to} (${h.result.plan?.duration.toFixed(2)}s)`);
+    expect(slow, "route hops consuming almost the full five-second search window").toEqual([]);
+  });
+
+  it("keeps reserve in the hook range on every required link", () => {
+    const overlong = tuned.grapple_links
+      .filter((link) => link.required && link.distance > 500)
+      .map((link) => `${link.from}->${link.to} (${link.distance}u)`);
+    expect(overlong, "required links leave less than 120u of aim/run-up reserve").toEqual([]);
+  });
+
   it("needs the grapple: not every gap is jumpable", () => {
     expect(report.grappleRequired).toBeGreaterThan(0);
   });

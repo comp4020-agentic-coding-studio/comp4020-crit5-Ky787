@@ -79,6 +79,8 @@ export const CAMERA = {
   followRate: 9.5,
   /** How far the camera leads the player's velocity. */
   velocityLead: 0.30,
+  /** Response rate for the velocity used by look-ahead (filters grapple reversals). */
+  velocityResponse: 3.2,
   maxLead: 320,
   /** Aim influence: the camera drifts toward where the pointer is looking. */
   aimLead: 0.16,
@@ -90,11 +92,13 @@ export const CAMERA = {
    * player arrives at a platform they have not seen yet. The blend comes from
    * the level's own world aspect, so no level id appears here.
    */
-  verticalLead: [0.6, 1.5],
+  verticalLead: [0.6, 1.1],
   /** Extra world height kept in view, lerped by the same verticality blend. */
   verticalViewBonus: [0, 260],
-  /** Follow rate on Y, relative to X. Tall levels track a fall more tightly. */
-  verticalFollow: [0.85, 1.15],
+  /** Follow rate on Y, relative to X. */
+  verticalFollow: [0.85, 1.0],
+  /** World-space margin kept between the player and the top/bottom of view. */
+  verticalMargin: 180,
 } as const;
 
 export const CRUMBLE = {
