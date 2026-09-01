@@ -94,7 +94,13 @@ const BEACON_LABELS: Partial<Record<SemanticEventType, string>> = {
 export interface HazardBuildContext {
   events: readonly SemanticEventSpec[];
   platformsById: ReadonlyMap<string, PlatformSpec>;
-  profile: { scanner: number; firewall: number; watchdog: number; authGates: boolean };
+  profile: {
+    scanner: number;
+    scannerStride?: number;
+    firewall: number;
+    watchdog: number;
+    authGates: boolean;
+  };
   /**
    * Where a hazard anchored to `platformId` should sit. Gates and beams guard
    * the *crossing after* their call site, never the foothold itself, so a
@@ -111,6 +117,7 @@ export function buildHazards(ctx: HazardBuildContext): HazardSet {
   const beacons: Beacon[] = [];
   const watchdogTriggers: { eventId: string; x: number; fired: boolean }[] = [];
   let beamIndex = 0;
+  let scannerSiteIndex = 0;
   let watchdogCount = 0;
 
   for (const event of ctx.events) {
@@ -150,7 +157,11 @@ export function buildHazards(ctx: HazardBuildContext): HazardSet {
         break;
       case "scanner":
       case "network_scan":
-        if (ctx.profile.scanner > 0 && event.type === "scanner") {
+        if (
+          ctx.profile.scanner > 0 &&
+          event.type === "scanner" &&
+          scannerSiteIndex % (ctx.profile.scannerStride ?? 1) === 0
+        ) {
           beams.push({
             id: `beam_${event.id}`,
             eventId: event.id,
@@ -168,6 +179,7 @@ export function buildHazards(ctx: HazardBuildContext): HazardSet {
           });
           beamIndex += 1;
         }
+        if (event.type === "scanner") scannerSiteIndex += 1;
         break;
       case "watchdog":
         watchdogCount += 1;

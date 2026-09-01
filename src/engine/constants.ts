@@ -176,6 +176,8 @@ export const WORLD = {
 export interface ThemeProfile {
   /** Multiplier on scanner beam speed; 0 disables scanners on this level. */
   scanner: number;
+  /** Keep every nth scanner call site as a physical beam; omitted means every site. */
+  scannerStride?: number;
   /** Multiplier on firewall cycle speed; 0 disables firewall gates. */
   firewall: number;
   /** Watchdog pursuit strength; 0 leaves watchdog call sites presentational. */
@@ -198,9 +200,9 @@ export interface ThemeProfile {
 }
 
 export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
-  // Ghostline teaches: walk, hop, then grapple. Slow ramp, generous cap.
+  // Ghostline teaches movement and grappling with no moving sweepers.
   tutorial_horizontal: {
-    scanner: 0.62,
+    scanner: 0,
     firewall: 0.7,
     watchdog: 0,
     authGates: false,
@@ -223,6 +225,7 @@ export const THEME_PROFILES: Record<LevelTheme, ThemeProfile> = {
   // Sweep is rhythmic zig-zag: beams are the only threat, so they run full pace.
   scanner_zigzag: {
     scanner: 1.0,
+    scannerStride: 2,
     firewall: 0,
     watchdog: 0,
     authGates: false,

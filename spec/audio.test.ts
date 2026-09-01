@@ -63,6 +63,9 @@ const frame = {
   firewallClosed: [] as boolean[],
   watchdogPressure: 0,
   tension: 0,
+  objectiveCharging: false,
+  objectiveProgress: 0,
+  objectiveDuration: 1,
 };
 
 describe("AudioManager", () => {
@@ -99,6 +102,27 @@ describe("AudioManager", () => {
     expect(reel[0].paused).toBe(true);
     expect(scanner[0].paused).toBe(true);
     expect(manager.snapshot()).toMatchObject({ reelPlaying: false, scannerPlaying: false });
+  });
+
+  it("syncs the objective charge bed to the final hold duration and stops on exit", () => {
+    const { manager, media } = harness();
+    manager.startLevel("level01");
+    manager.unlock();
+    manager.update(1 / 60, {
+      ...frame,
+      objectiveCharging: true,
+      objectiveProgress: 0.25,
+      objectiveDuration: 1,
+    });
+
+    const charge = media.find((audio) => audio.src.includes("objective-charge.ogg"))!;
+    expect(charge.paused).toBe(false);
+    expect(charge.currentTime).toBeCloseTo(0.75);
+    expect(charge.playbackRate).toBeCloseTo(3);
+
+    manager.update(1 / 60, frame);
+    expect(charge.paused).toBe(true);
+    expect(charge.currentTime).toBe(0);
   });
 
   it("uses update-driven watchdog pulses and increases their frequency with pressure", () => {

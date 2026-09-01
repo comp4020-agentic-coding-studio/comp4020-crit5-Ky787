@@ -20,6 +20,9 @@ export interface AudioFrameState {
   firewallClosed: readonly (boolean | null)[];
   watchdogPressure: number;
   tension: number;
+  objectiveCharging: boolean;
+  objectiveProgress: number;
+  objectiveDuration: number;
 }
 
 export type SfxName =
@@ -93,7 +96,8 @@ export const DEFAULT_AUDIO_PREFERENCES: AudioPreferences = {
 const STORAGE_KEY = "binary-ninja/audio/v1";
 // Public audio keeps descriptive stable filenames; this revision prevents a
 // browser cache from retaining an earlier audition mix after assets change.
-const AUDIO_REVISION = "3";
+const AUDIO_REVISION = "4";
+const OBJECTIVE_CHARGE_SECONDS = 3;
 
 export interface AudioHandle {
   src: string;
@@ -182,6 +186,8 @@ export class AudioManager {
   private previousGates: (boolean | null)[] | null = null;
   private readonly reel: LoopChannel;
   private readonly scanner: LoopChannel;
+  private readonly objectiveCharge: AudioHandle | null;
+  private wasObjectiveCharging = false;
 
   constructor(options: AudioManagerOptions = {}) {
     this.factory = options.factory ?? browserFactory;
@@ -190,6 +196,12 @@ export class AudioManager {
     this.preferences = this.loadPreferences();
     this.reel = this.makeLoop("sfx/grapple-reel.ogg", 0.18);
     this.scanner = this.makeLoop("sfx/scanner-loop.ogg", 0.22);
+    this.objectiveCharge = this.create("sfx/objective-charge.ogg");
+    if (this.objectiveCharge) {
+      this.objectiveCharge.preload = "auto";
+      this.objectiveCharge.loop = false;
+      this.objectiveCharge.volume = 0;
+    }
 
     // One cached voice per effect is enough to preload common sounds. Pools
     // grow only when an effect overlaps, and never beyond its declared cap.
@@ -268,6 +280,8 @@ export class AudioManager {
   resetTransient(): void {
     this.setLoop(this.reel, 0, true);
     this.setLoop(this.scanner, 0, true);
+    stop(this.objectiveCharge);
+    this.wasObjectiveCharging = false;
     this.watchdogCountdown = 0;
     this.previousGates = null;
   }
@@ -304,6 +318,8 @@ export class AudioManager {
   complete(): void {
     this.setLoop(this.reel, 0, true);
     this.setLoop(this.scanner, 0, true);
+    stop(this.objectiveCharge);
+    this.wasObjectiveCharging = false;
     stop(this.normalMusic);
     stop(this.tensionMusic);
     this.normalMusic = null;
@@ -324,6 +340,7 @@ export class AudioManager {
     this.scanner.target = audible ? this.scanner.gain * clamp01(state.scannerProximity) : 0;
     this.updateLoop(this.reel, dt);
     this.updateLoop(this.scanner, dt);
+    this.updateObjectiveCharge(dt, audible, state);
 
     if (state.active && state.alive) {
       if (this.previousGates) {
@@ -351,6 +368,7 @@ export class AudioManager {
       level: this.activeLevel,
       reelPlaying: this.reel.media ? !this.reel.media.paused : false,
       scannerPlaying: this.scanner.media ? !this.scanner.media.paused : false,
+      objectiveChargePlaying: this.objectiveCharge ? !this.objectiveCharge.paused : false,
       watchdogCountdown: this.watchdogCountdown,
       preferences: this.getPreferences(),
     };
@@ -439,6 +457,30 @@ export class AudioManager {
     this.watchdogCountdown = 3.6 + (1.05 - 3.6) * pressure;
   }
 
+  private updateObjectiveCharge(dt: number, audible: boolean, state: AudioFrameState): void {
+    const media = this.objectiveCharge;
+    if (!media) return;
+    const progress = clamp01(state.objectiveProgress);
+    const charging = audible && state.objectiveCharging && progress < 1;
+    if (!charging) {
+      if (this.wasObjectiveCharging || !media.paused) stop(media);
+      this.wasObjectiveCharging = false;
+      return;
+    }
+
+    if (!this.wasObjectiveCharging) {
+      media.currentTime = progress * OBJECTIVE_CHARGE_SECONDS;
+      media.playbackRate = OBJECTIVE_CHARGE_SECONDS / Math.max(0.1, state.objectiveDuration);
+      media.volume = 0;
+      safePlay(media);
+    } else if (media.paused) {
+      safePlay(media);
+    }
+    const target = (0.13 + progress * 0.22) * this.preferences.sfx;
+    media.volume += (target - media.volume) * Math.min(1, dt * 10);
+    this.wasObjectiveCharging = true;
+  }
+
   private updateMusic(dt: number, tension: number): void {
     if (!this.normalMusic) return;
     const targetMix = this.tensionMusic ? tension : 0;
@@ -465,6 +507,7 @@ export class AudioManager {
     stop(this.completeSting, false);
     stop(this.reel.media, false);
     stop(this.scanner.media, false);
+    stop(this.objectiveCharge, false);
     for (const voices of this.pools.values()) for (const voice of voices) stop(voice.media);
   }
 

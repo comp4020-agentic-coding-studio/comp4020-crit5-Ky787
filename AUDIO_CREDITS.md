@@ -31,9 +31,10 @@ required, but original names and provenance are retained here so every sound rem
 | `public/audio/sfx/crumble-break.ogg` | `explosionCrunch_000.ogg` + `forceField_004.ogg` | Sci-Fi Sounds / Kenney | [Kenney](https://kenney.nl/assets/sci-fi-sounds) | Mixed with the force-field layer dominant, then loudness-normalised; reused pitch-shifted at runtime for death. |
 | `public/audio/sfx/firewall-open.ogg` | `forceField_001.ogg` | Sci-Fi Sounds / Kenney | [Kenney](https://kenney.nl/assets/sci-fi-sounds) | Loudness-normalised and re-encoded as a short electric discharge. |
 | `public/audio/sfx/notification.ogg` | `hover.ogg` | Dark Sci-Fi Audio Pack / SRG774 | [OpenGameArt](https://opengameart.org/content/dark-sci-fi-audio-pack) | Trimmed to 1.3 s, low-pass filtered, lowered 5 dB, and faded for a softer routine notification. |
+| `public/audio/sfx/objective-charge.ogg` | `computerNoise_001.ogg` | Sci-Fi Sounds / Kenney | [Kenney](https://kenney.nl/assets/sci-fi-sounds) | Trimmed to 3 s, band-limited, lightly tremolo-processed, given a rising gain envelope, and faded. Runtime playback speed is matched to each level's objective dwell time. |
 | `public/audio/sfx/confirm.ogg` | `beep_message.ogg` | Platformer Sounds / yd | [OpenGameArt](https://opengameart.org/content/platformer-sounds-terminal-interaction-door-shots-bang-and-footsteps) | Trimmed to 0.85 s, faded, loudness-normalised, and encoded as Vorbis. Reused at different gains/rates for objectives, checkpoints and respawn. |
 | `public/audio/sfx/scanner-loop.ogg` | `laserbeam.flac` | Laser Beam / frosty ham | [OpenGameArt](https://opengameart.org/content/laser-beam) | Converted FLAC to Vorbis; used as a low-volume, distance-mixed loop. |
 | `public/audio/sfx/watchdog-warning.ogg` | `alarm.ogg` | Short Alarm / yd | [OpenGameArt](https://opengameart.org/content/short-alarm) | Remuxed from the supplied OGG and renamed; audio content unchanged. |
 
-No audio from the optional Static pack is included. Seven source sounds from the Kenney fallback
-pack are used across six runtime files; the rest of that pack is not shipped with the game.
+No audio from the optional Static pack is included. Eight source sounds from the Kenney fallback
+pack are used across seven runtime files; the rest of that pack is not shipped with the game.

@@ -243,11 +243,12 @@ describe("engine: death and checkpoints", () => {
 });
 
 describe("engine: semantic events drive mechanics by type", () => {
-  it("Ghostline stays gentle: no watchdog pursuit, slow gates", () => {
+  it("Ghostline stays gentle: no watchdog pursuit or moving sweepers", () => {
     const { tuned } = level("level01");
     const runtime = new LevelRuntime(tuned);
     expect(runtime.profile.watchdog).toBe(0);
     expect(runtime.hazards.watchdogTriggers).toEqual([]);
+    expect(runtime.hazards.beams).toEqual([]);
     expect(runtime.hazards.gates.length).toBeGreaterThan(0);
   });
 
@@ -261,12 +262,12 @@ describe("engine: semantic events drive mechanics by type", () => {
     expect(runtime.hazards.beams.length).toBe(0);
   });
 
-  it("Sweep turns every scanner call site into a beam", () => {
+  it("Sweep keeps every second scanner call site as a beam", () => {
     const { tuned } = level("level03");
     const runtime = new LevelRuntime(tuned);
     const scanners = tuned.events.filter((e) => e.type === "scanner").length;
     expect(scanners).toBeGreaterThan(5);
-    expect(runtime.hazards.beams.length).toBe(scanners);
+    expect(runtime.hazards.beams.length).toBe(Math.ceil(scanners / 2));
     expect(runtime.hazards.gates.length).toBe(0);
   });
 

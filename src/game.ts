@@ -442,6 +442,9 @@ export class Game {
       ),
       watchdogPressure,
       tension: Math.max(watchdogPressure, rootPressure),
+      objectiveCharging: runtime.objectiveCharging,
+      objectiveProgress: runtime.objectiveHold / runtime.profile.objectiveDwell,
+      objectiveDuration: runtime.profile.objectiveDwell,
     });
   }
 

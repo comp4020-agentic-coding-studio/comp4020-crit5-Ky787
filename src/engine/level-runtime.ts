@@ -115,6 +115,7 @@ export class LevelRuntime {
   /** Furthest `route_index` the player has actually stood on. */
   progress = 0;
   objectiveHold = 0;
+  objectiveCharging = false;
   completed = false;
   dead = false;
   deathTimer = 0;
@@ -370,6 +371,7 @@ export class LevelRuntime {
     this.dead = false;
     this.deathTimer = 0;
     this.objectiveHold = 0;
+    this.objectiveCharging = false;
     this.respawnGrace = HAZARD.scanner.armDelay;
 
     if (CRUMBLE.respawnOnCheckpoint) {
@@ -539,7 +541,8 @@ export class LevelRuntime {
 
   private stepObjective(dt: number): void {
     const box = playerBox(this.player);
-    if (boxesOverlap(box, this.objectiveBox)) {
+    this.objectiveCharging = boxesOverlap(box, this.objectiveBox);
+    if (this.objectiveCharging) {
       this.objectiveHold += dt;
       if (this.objectiveHold >= this.profile.objectiveDwell) {
         this.completed = true;
