@@ -2,103 +2,27 @@
 
 ## What I built
 
-**Binary Ninja** — a browser grappling platformer whose eight levels are eight
-real, Hikari-obfuscated x86-64 programs. The player swings between floating
-blocks of actual disassembly, following each program's execution trace from its
-entry block to the end of the run, while the obfuscator's invented control flow
-crumbles under anyone who trusts it. The whole game is one data-driven engine
-reading the delivered `web_game_data/index.json`; the eight levels differ
-because their semantic call sites and theme profiles differ, not because any of
-them has its own code.
-
-The moments below were written against the first five-level delivery. The
-schema-2 delivery that superseded it added Relay, Quarantine and Root, and the
-notes in `README.md` describe how the loader, the layout tuning and the
-traversal solver changed to take them.
+**Binary Ninja** — a browser grappling platformer whose levels are real compiled x86 Intel assembly obfuscated with O-LLVM. The binaries are compiled with clang and then traced with unicorn (python emulator) to get the assembly from main that was actually executed. The python script then knows the other blocks are fake O-LLVM inserted blocks and marks them as such. Finally these blocks are assembled by another python script to produce a 2d platformer. The aim of the main is to trace through main without falling down or getting hit by the firewalls or other obstacles while also avoiding fake O-LLVM blocks.
 
 ## The moments that mattered
 
-### 1. The handoff told me what it hadn't checked, so I checked it
+### 1. Tested all gameplay and decided on new O-LLVM obfuscation and new levels which were then integrated into the game
 
-The delivery report classified all five levels **READY FOR FRONTEND**, and also
-said, in one line, that its validator was "intentionally not a rope-physics
-engine". Measuring the geometry made the gap concrete: consecutive route
-platforms sit 15–260 units apart while being 112–240 units wide. Reachable, yes
-— and effectively a continuous walkway, with nothing for a grappling hook to do.
+After some testing with the original 5 levels I played through, I got some friends to test levels and provide feedback. Most notable was the levels themselves were lacking in form of interesting environment placements of code. I got my separate agent to work through generating new C programs which I then performed experiments on to find which combination of O-LLVM would produce the best code. After settling on new C binaries and O-LLVM switches in the form of stricter instruction substitution I eventually arrived at the current 8 levels which claude populated and implemented.
 
-The obvious move was to pick a side: ship the coordinates and accept a
-platformer where the hook is decoration, or redraw the layouts and quietly lose
-the provenance. I did neither. Binary facts and physical layout are different
-kinds of claim, and the handoff says so itself — mappings are authoritative,
-coordinates are a first-pass layout. So the coordinates became a tunable layer
-with a deterministic monotone transform, and the *tests* hold the line: every
-id, occurrence, raw-block mapping, code payload, provenance record and `y` value
-is asserted unchanged through it, and required links are asserted to stay under
-the dataset's own 600-unit design limit.
+- [`c15d983`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/c15d983) — added the fixed-step physics, grappling, hazards and shared level runtime.
+- [`080983a`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/080983a) — built the renderer, HUD, inspector and mission flow around the code data.
+- [`e30f1c9`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/e30f1c9) — added physics-based route checks and real-browser gameplay checks.
+- [`3c9c809`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/3c9c809) — integrated the final eight-level v2 dataset into the production game.
 
-I knew it was right because `pnpm route-report` went from *every gap jumpable*
-to a measured mix — Ghostline 5 hops and 13 swings, Blackout 1 and 38 — with no
-unreachable hop anywhere, and because `spec/dataset.test.ts` fails loudly if the
-transform ever touches a binary fact.
+### 2. I played the game and suggested gameplay adjustments
 
-[`0beb921`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/0beb921)
+I did various playthroughs and after getting real life experience playing the game where I asked claude to edit checkpoint, sweeper and code block changes. I suggested changing hikari code blocks to be closer to the real code blocks to blend in better and after various playthroughs I was satisfied, especially so when my friends testing the game found it to be an easier experience. This also included adding sound to the game which I got the agent to explore and choose sounds which I thought were pleasing to hear.
 
-### 2. I built the thing that plays the game before I tuned the game
-
-I could not tell whether a grapple felt good by looking at a screenshot, and I
-could not tell whether a level was completable by reading coordinates. So
-`src/engine/traversal.ts` drives the *real* fixed-step physics with scripted
-input, searching a small space of jump and grapple plans for one that lands each
-hop, then plays whole levels end to end — planning from the player's actual
-state, replaying against a live `LevelRuntime`, dying and retrying from
-checkpoints like a person would.
-
-That instrument found three things no screenshot would have: the jump was strong
-enough to clear every gap and make the hook pointless; the reel-in repositioned
-the player without imparting velocity, so letting go dropped you instead of
-launching you; and landings that clipped a block's lip slid straight back off, so
-"landed" had to mean *comes to rest on the block*, not *touched it*. Each fix
-came with the measurement that justified it.
-
-It also turned the strongest claim in the brief into a check rather than a
-promise: all five routes complete with **every crumble block removed from the
-world**.
-
-[`c15d983...e30f1c9`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/compare/c15d983...e30f1c9)
-
-### 3. A hazard that stands on a checkpoint is not a hazard, it's a bug
-
-Writing the fairness test — "no hazard may kill the player at a spawn or
-checkpoint, at any phase of its cycle" — failed immediately on a Sweep beam whose
-600-unit envelope covered a respawn point. The retry-shaped fix was to nudge
-that beam. The harness-shaped fix was to make it structurally impossible: gates
-and beams anchor to the *gap after* their call site rather than the foothold
-itself, and spawn and checkpoint boxes became sanctuaries no hazard can kill
-inside — which is also what the dataset's own `checkpoint` events mean when they
-say "temporary safe location". The test now runs over all five levels and every
-respawn point, holding the player there for longer than any hazard cycle.
-
-[`c15d983`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/c15d983)
-
-### 4. Rendering is not playing
-
-The screenshots looked like a game well before it was one. To close that,
-`scripts/browser-check.ts` drives the *built* site in headless Chrome over the
-DevTools protocol with real key and pointer events, and asserts the things the
-brief actually asks for: move, jump, aim, attach, swing forward, release with
-momentum intact, pause and resume, fall and respawn without a page reload,
-collapse a Hikari decoy, and switch missions from the select screen — with no
-console errors. It caught that the hook was happily grabbing the block under the
-player's own feet, which every headless test had missed because they all aimed
-from a standing start at something far away.
-
-It is a local tool, not a CI gate: it needs a browser on the machine, and I
-would rather have an honest local instrument than a flaky required check.
-
-[`e30f1c9`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/e30f1c9)
-
-## Verification
-
-`pnpm check` — typecheck, production build, 168 spec tests over the built site,
-the dataset contracts, the engine mechanics and all five traversals.
-`pnpm check:browser` — 19/19 in headless Chrome against `dist/`.
+- [`d3ab811`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/d3ab811) — broke up Sweep's long hold and made missed grapple shots behave naturally.
+- [`8b16bc3`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/8b16bc3) — strengthened the watchdog after playtesting showed it was not a meaningful threat.
+- [`cc0315a`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/cc0315a) — stabilised the vertical camera and tuned traversal.
+- [`0bd9f10`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/0bd9f10) — made fake platforms visually match regular platforms and aligned their grapple bounds.
+- [`e7ca178`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/e7ca178) — added the first audio pass and aligned Hikari collision bounds.
+- [`317b8ad`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/317b8ad) — synchronised the objective charge audio and reduced scanner difficulty.
+- [`9a910c2`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit5-Ky787/commit/9a910c2) — made checkpoint regions much easier to identify among moving sweepers.
