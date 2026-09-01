@@ -403,18 +403,70 @@ export class Renderer {
     bounds: { x0: number; y0: number; x1: number; y1: number },
   ): void {
     for (const c of state.runtime.checkpoints) {
-      if (c.x < bounds.x0 - 200 || c.x > bounds.x1 + 200) continue;
-      if (c.y < bounds.y0 - 260 || c.y > bounds.y1 + 260) continue;
+      const box = c.box;
+      if (!this.visible(box, bounds)) continue;
       const pulse = 0.5 + 0.5 * Math.sin(state.time * 2.4 + c.sequence);
-      const colour = c.claimed ? "120,255,190" : "150,190,220";
-      const alpha = c.claimed ? 0.5 + 0.35 * pulse : 0.22;
-      ctx.fillStyle = `rgba(${colour},${alpha * 0.25})`;
-      ctx.fillRect(c.x - 3, c.y - 190, 6, 210);
-      ctx.fillStyle = `rgba(${colour},${alpha})`;
-      ctx.fillRect(c.x - 9, c.y - 12, 18, 4);
-      ctx.font = "9.5px ui-monospace, Menlo, monospace";
-      ctx.fillStyle = `rgba(${colour},${alpha})`;
-      ctx.fillText(c.claimed ? "SAVED" : "SAVE", c.x - 14, c.y - 200);
+      // Amber is deliberately unlike the scanners' cyan. Once claimed, the
+      // same silhouette turns green rather than fading into the background.
+      const colour = c.claimed ? "100,255,175" : "255,208,84";
+      const strong = c.claimed ? 0.68 + 0.2 * pulse : 0.82 + 0.18 * pulse;
+      const corner = 22;
+
+      ctx.save();
+      ctx.fillStyle = `rgba(${colour},${c.claimed ? 0.07 : 0.10 + 0.035 * pulse})`;
+      ctx.fillRect(box.x, box.y, box.w, box.h);
+
+      ctx.shadowColor = `rgba(${colour},0.75)`;
+      ctx.shadowBlur = 14 + pulse * 8;
+      ctx.strokeStyle = `rgba(${colour},${strong})`;
+      ctx.lineWidth = c.claimed ? 2 : 2.6;
+      ctx.setLineDash(c.claimed ? [5, 7] : [13, 6]);
+      ctx.strokeRect(box.x, box.y, box.w, box.h);
+      ctx.setLineDash([]);
+
+      // Solid corner brackets keep the box readable through moving beams and
+      // make its usable width obvious at a glance.
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(box.x, box.y + corner);
+      ctx.lineTo(box.x, box.y);
+      ctx.lineTo(box.x + corner, box.y);
+      ctx.moveTo(box.x + box.w - corner, box.y);
+      ctx.lineTo(box.x + box.w, box.y);
+      ctx.lineTo(box.x + box.w, box.y + corner);
+      ctx.moveTo(box.x + box.w, box.y + box.h - corner);
+      ctx.lineTo(box.x + box.w, box.y + box.h);
+      ctx.lineTo(box.x + box.w - corner, box.y + box.h);
+      ctx.moveTo(box.x + corner, box.y + box.h);
+      ctx.lineTo(box.x, box.y + box.h);
+      ctx.lineTo(box.x, box.y + box.h - corner);
+      ctx.stroke();
+
+      const beam = ctx.createLinearGradient(c.x, box.y + 8, c.x, box.y + box.h - 8);
+      beam.addColorStop(0, `rgba(${colour},0)`);
+      beam.addColorStop(0.55, `rgba(${colour},${0.22 + pulse * 0.12})`);
+      beam.addColorStop(1, `rgba(${colour},0.9)`);
+      ctx.fillStyle = beam;
+      ctx.fillRect(c.x - 5, box.y + 8, 10, box.h - 16);
+
+      ctx.translate(c.x, c.y - 32);
+      ctx.rotate(Math.PI / 4);
+      ctx.fillStyle = `rgba(${colour},${strong})`;
+      ctx.fillRect(-7, -7, 14, 14);
+      ctx.rotate(-Math.PI / 4);
+      ctx.translate(-c.x, -(c.y - 32));
+
+      const label = c.claimed ? "CHECKPOINT SAVED" : "CHECKPOINT";
+      ctx.font = "bold 10px ui-monospace, Menlo, monospace";
+      const labelWidth = ctx.measureText(label).width;
+      const labelX = box.x + (box.w - labelWidth) / 2;
+      const labelY = box.y - 10;
+      ctx.shadowBlur = 8;
+      ctx.fillStyle = "rgba(4,8,12,0.88)";
+      ctx.fillRect(labelX - 7, labelY - 11, labelWidth + 14, 16);
+      ctx.fillStyle = `rgba(${colour},${strong})`;
+      ctx.fillText(label, labelX, labelY);
+      ctx.restore();
     }
   }
 
