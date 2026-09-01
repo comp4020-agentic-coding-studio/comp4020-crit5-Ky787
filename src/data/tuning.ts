@@ -9,10 +9,12 @@
  * with nothing but the jump button.
  *
  * This module widens the *separation between consecutive route platforms*
- * while leaving every binary fact alone. It only ever moves `x`. Platform ids,
- * logical nodes, occurrences, trace occurrences, raw-block mappings, code
- * display payloads, provenance, richness, machine CFG truth, semantic events,
- * `y`, widths and heights are copied through untouched.
+ * while leaving every binary fact alone. It tunes horizontal layout only.
+ * Platform ids, logical nodes, occurrences, trace occurrences, raw-block
+ * mappings, code display payloads, provenance, richness, machine CFG truth,
+ * semantic events, `y` and heights are copied untouched. Crumble decoys widen
+ * to match the genuine route platform they appear to lead toward, while keeping
+ * their authored centre point fixed.
  *
  * Two properties make it safe for all eight levels rather than only the flat
  * ones:
@@ -259,8 +261,8 @@ function linkDistance(a: PlatformSpec, b: PlatformSpec): number {
 }
 
 /**
- * Returns a new `LevelData` with widened route spacing. Binary facts,
- * mappings and every `y` value are preserved exactly.
+ * Returns a new `LevelData` with widened route spacing and visually full-sized
+ * crumble decoys. Binary facts, mappings and every `y` value are preserved.
  */
 export function tuneLayout(level: LevelData, profile?: GapProfile): LevelData {
   const chosen = profile ?? GAP_PROFILES[level.level.theme];
@@ -269,7 +271,22 @@ export function tuneLayout(level: LevelData, profile?: GapProfile): LevelData {
   const shift = (id: string | undefined, x: number): number =>
     x + (id ? (offsets.get(id) ?? 0) : 0);
 
-  const platforms = level.platforms.map((p) => ({ ...p, x: p.x + (offsets.get(p.id) ?? 0) }));
+  const deliveredById = new Map(level.platforms.map((p) => [p.id, p]));
+  const platforms = level.platforms.map((p) => {
+    const movedX = p.x + (offsets.get(p.id) ?? 0);
+    const apparentTarget = p.apparent_target_platform
+      ? deliveredById.get(p.apparent_target_platform)
+      : undefined;
+    const width = p.kind === "crumble" && apparentTarget ? apparentTarget.width : p.width;
+
+    return {
+      ...p,
+      // Grow decoys equally in both directions so their authored position and
+      // relationship to the route do not move.
+      x: movedX - (width - p.width) / 2,
+      width,
+    };
+  });
   const byId = new Map(platforms.map((p) => [p.id, p]));
 
   const right = platforms.reduce((m, p) => Math.max(m, p.x + p.width), 0);

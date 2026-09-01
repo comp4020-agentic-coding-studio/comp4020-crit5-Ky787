@@ -134,17 +134,19 @@ export class LevelRuntime {
 
     for (const spec of data.platforms) {
       if (options.withoutCrumble && spec.kind === "crumble") continue;
+      const collisionWidth = spec.kind === "crumble" ? CRUMBLE.collisionWidth : spec.width;
       const runtime: PlatformRuntime = {
         spec,
         solid: {
           id: spec.id,
-          x: spec.x,
+          x: spec.x + (spec.width - collisionWidth) / 2,
           y: spec.y,
-          w: spec.width,
+          w: collisionWidth,
           h: spec.height,
           oneWay: true,
           enabled: true,
           grappleable: true,
+          grappleWidth: spec.width,
         },
         crumble: "intact",
         fuse: 0,

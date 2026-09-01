@@ -18,6 +18,8 @@ export interface Solid extends Box {
   enabled: boolean;
   /** Excluded from grapple targeting when false (collapsed blocks). */
   grappleable: boolean;
+  /** Centred grapple target width when it differs from the collision box. */
+  grappleWidth?: number;
 }
 
 export type RopePhase = "idle" | "firing" | "attached" | "retracting";
@@ -135,6 +137,17 @@ export interface GrappleTarget {
   distance: number;
 }
 
+/** The actual box a grapple ray can catch, centred on the collision box. */
+export function grappleBox(solid: Solid): Box {
+  const w = solid.grappleWidth ?? solid.w;
+  return {
+    x: solid.x + (solid.w - w) / 2,
+    y: solid.y,
+    w,
+    h: solid.h,
+  };
+}
+
 /**
  * What the rope would catch on, running `maxDistance` from `origin` along
  * `dir`. Used for the targeting reticle, and every step of the hook's flight to
@@ -149,11 +162,12 @@ export function probeRope(
   ignoreId?: string | null,
 ): GrappleTarget | null {
   if (maxDistance <= 0) return null;
+  const grappleBoxes = solids.map(grappleBox);
   const hit = raycastBoxes(
     origin,
     dir,
     maxDistance,
-    solids,
+    grappleBoxes,
     GRAPPLE.aimAssistRadius,
     (i) => solids[i].grappleable && solids[i].id !== ignoreId,
   );

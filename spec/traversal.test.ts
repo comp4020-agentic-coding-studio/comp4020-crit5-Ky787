@@ -21,6 +21,7 @@ import {
   createPlayer,
   emptyInput,
   findGrappleTarget,
+  grappleBox,
   probeRope,
   releaseRope,
   stepPlayer,
@@ -224,6 +225,16 @@ describe("physics: the hook always leaves the gun", () => {
 
     const good = probeRope({ x: 0, y: 0 }, { x: 1, y: 0 }, 600, [block("good", 300, -12, 200)]);
     expect(good?.solid.id).toBe("good");
+  });
+
+  it("uses a platform's wider grapple box outside its collision bounds", () => {
+    const target = { ...block("wide-target", 100, -12, 100), grappleWidth: 200 };
+    const box = grappleBox(target);
+    const hit = probeRope({ x: -100, y: 0 }, { x: 1, y: 0 }, 600, [target]);
+
+    expect(box).toEqual({ x: 50, y: -12, w: 200, h: 24 });
+    expect(hit?.solid.id).toBe(target.id);
+    expect(hit?.point.x).toBe(50);
   });
 });
 

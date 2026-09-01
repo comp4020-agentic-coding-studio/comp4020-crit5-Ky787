@@ -102,6 +102,11 @@ export const CAMERA = {
 } as const;
 
 export const CRUMBLE = {
+  /**
+   * Supplied gameplay footprint of bogus blocks. Their rendered slabs can be
+   * widened without letting the added visual space seal an honest route.
+   */
+  collisionWidth: 112,
   /** Delay between the player touching a bogus block and it giving way. */
   fuse: 0.85,
   /** How long the fragments linger. */

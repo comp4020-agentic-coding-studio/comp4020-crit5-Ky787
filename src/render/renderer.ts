@@ -9,7 +9,7 @@ import type { Box, Vec2 } from "../engine/geometry.ts";
 import { beamBox, gateBox } from "../engine/hazards.ts";
 import type { LevelRuntime, PlatformRuntime } from "../engine/level-runtime.ts";
 import type { GrappleTarget } from "../engine/physics.ts";
-import { playerBox } from "../engine/physics.ts";
+import { grappleBox, playerBox } from "../engine/physics.ts";
 import { Camera } from "./camera.ts";
 import { buildPanel } from "./code-block.ts";
 import type { PanelSprite } from "./code-block.ts";
@@ -188,7 +188,12 @@ export class Renderer {
     for (const p of runtime.platforms) {
       const s = p.solid;
       const panel = this.panels.get(p.spec.id);
-      const box: Box = { x: s.x, y: s.y, w: s.w, h: s.h + (panel?.h ?? WORLD.codePanelHeight) };
+      const box: Box = {
+        x: p.spec.x,
+        y: p.spec.y,
+        w: p.spec.width,
+        h: p.spec.height + (panel?.h ?? WORLD.codePanelHeight),
+      };
       if (!this.visible(box, bounds)) continue;
       if (p.crumble === "collapsed") continue;
 
@@ -211,42 +216,51 @@ export class Renderer {
 
     for (const { p, panel, jitterX, jitterY, alpha } of drawn) {
       if (!panel) continue;
-      const s = p.solid;
       ctx.save();
       ctx.translate(jitterX, jitterY);
       ctx.globalAlpha = alpha;
-      ctx.drawImage(panel.canvas, s.x + panel.dx, s.y + s.h, panel.w, panel.h);
+      ctx.drawImage(
+        panel.canvas,
+        p.spec.x + panel.dx,
+        p.spec.y + p.spec.height,
+        panel.w,
+        panel.h,
+      );
       ctx.restore();
       ctx.globalAlpha = 1;
     }
 
     for (const { p, jitterX, jitterY, alpha } of drawn) {
-      const s = p.solid;
       ctx.save();
       ctx.translate(jitterX, jitterY);
       ctx.globalAlpha = alpha;
+      const slab = p.spec;
 
       // The solid slab reads as the code window's title bar.
-      const grad = ctx.createLinearGradient(0, s.y, 0, s.y + s.h);
+      const grad = ctx.createLinearGradient(0, slab.y, 0, slab.y + slab.height);
       grad.addColorStop(0, "rgba(36,50,68,0.98)");
       grad.addColorStop(1, "rgba(18,26,38,0.98)");
       ctx.fillStyle = grad;
-      ctx.fillRect(s.x, s.y, s.w, s.h);
+      ctx.fillRect(slab.x, slab.y, slab.width, slab.height);
 
       ctx.fillStyle = hexToRgba(accent, p.touched ? 0.85 : 0.5);
-      ctx.fillRect(s.x, s.y, s.w, 2);
+      ctx.fillRect(slab.x, slab.y, slab.width, 2);
 
       ctx.strokeStyle = "rgba(150,190,225,0.22)";
       ctx.lineWidth = 1;
-      ctx.strokeRect(s.x + 0.5, s.y + 0.5, s.w - 1, s.h - 1);
+      ctx.strokeRect(slab.x + 0.5, slab.y + 0.5, slab.width - 1, slab.height - 1);
 
       ctx.font = "10px ui-monospace, SFMono-Regular, Menlo, monospace";
       ctx.fillStyle = "rgba(196,220,240,0.72)";
-      ctx.fillText(p.spec.display.entry_rva, s.x + 7, s.y + 16);
+      ctx.fillText(p.spec.display.entry_rva, slab.x + 7, slab.y + 16);
 
       if (p.spec.kind === "start" || p.spec.kind === "objective") {
         ctx.fillStyle = hexToRgba(accent, 0.9);
-        ctx.fillText(p.spec.kind === "start" ? "ENTRY" : "EXIT", s.x + s.w - 42, s.y + 16);
+        ctx.fillText(
+          p.spec.kind === "start" ? "ENTRY" : "EXIT",
+          slab.x + slab.width - 42,
+          slab.y + 16,
+        );
       }
 
       ctx.restore();
@@ -529,7 +543,7 @@ export class Renderer {
     }
 
     for (const p of runtime.platforms) {
-      const s = p.solid;
+      const s = grappleBox(p.solid);
       if (s.x + s.w < bounds.x0 || s.x > bounds.x1) continue;
       if (s.y + s.h < bounds.y0 || s.y > bounds.y1) continue;
       ctx.strokeStyle = p.spec.kind === "crumble" ? "rgba(255,90,120,0.85)" : "rgba(90,240,170,0.7)";
@@ -681,7 +695,7 @@ export class Renderer {
 
     if (state.target && state.runtime.player.rope.phase === "idle") {
       const t = state.target;
-      const s = t.solid;
+      const s = grappleBox(t.solid);
       ctx.strokeStyle = hexToRgba(accent, 0.75);
       ctx.lineWidth = 1.5;
       ctx.strokeRect(s.x - 3, s.y - 3, s.w + 6, s.h + 6);

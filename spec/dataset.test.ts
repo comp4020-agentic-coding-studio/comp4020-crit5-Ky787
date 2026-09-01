@@ -5,7 +5,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { alongSegment, platformCentre, tuneLayout } from "../src/data/tuning.ts";
+import { alongSegment, layoutOffsets, platformCentre, tuneLayout } from "../src/data/tuning.ts";
 import { parseIndex, parseLevel } from "../src/data/levels.ts";
 import { index, levels, level, readJson } from "./fixtures.ts";
 
@@ -321,9 +321,15 @@ describe("layout tuning preserves every binary fact", () => {
       expect(after.machine_adjacent_route_indices).toEqual(before.machine_adjacent_route_indices);
       expect(after.cfg_distance).toBe(before.cfg_distance);
       expect(after.mapping_note).toBe(before.mapping_note);
-      // Only x may move. Vertical layout, size and mapping are untouched.
+      // Only horizontal layout may change. Route-platform size, vertical
+      // layout and mapping are untouched.
       expect(after.y).toBe(before.y);
-      expect(after.width).toBe(before.width);
+      if (before.kind === "crumble") {
+        const target = source.platforms.find((p) => p.id === before.apparent_target_platform)!;
+        expect(after.width).toBe(target.width);
+      } else {
+        expect(after.width).toBe(before.width);
+      }
       expect(after.height).toBe(before.height);
     }
     expect(tuned.events).toEqual(source.events);
@@ -425,6 +431,23 @@ describe("layout tuning preserves every binary fact", () => {
           `${p.id} changed which side of its anchor it sits on`,
         ).toBe(Math.sign(cx(p) - cx(a0)));
       }
+    }
+  });
+
+  it.each(levels)("$entry.id makes fake Hikari blocks as wide as normal blocks", ({ source, tuned }) => {
+    const tunedById = new Map(tuned.platforms.map((p) => [p.id, p]));
+    const offsets = layoutOffsets(source);
+
+    for (const before of source.platforms.filter((p) => p.kind === "crumble")) {
+      const after = tunedById.get(before.id)!;
+      const target = tunedById.get(before.apparent_target_platform!)!;
+      const expectedCentre = before.x + before.width / 2 + (offsets.get(before.id) ?? 0);
+
+      expect(after.width, `${before.id} does not match its normal target`).toBe(target.width);
+      expect(after.x + after.width / 2, `${before.id} moved while being widened`).toBeCloseTo(
+        expectedCentre,
+        8,
+      );
     }
   });
 

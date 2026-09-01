@@ -11,7 +11,7 @@ import { boxesOverlap } from "../src/engine/geometry.ts";
 import { beamBox, gateBox, stepBeam, stepGate } from "../src/engine/hazards.ts";
 import { LevelRuntime } from "../src/engine/level-runtime.ts";
 import type { RuntimeEvent } from "../src/engine/level-runtime.ts";
-import { emptyInput, playerBox } from "../src/engine/physics.ts";
+import { emptyInput, grappleBox, playerBox } from "../src/engine/physics.ts";
 import { Progress } from "../src/ui/progress.ts";
 import { levels, level } from "./fixtures.ts";
 
@@ -115,6 +115,20 @@ describe("engine: hazards never seal the route", () => {
 });
 
 describe("engine: crumble blocks", () => {
+  it("matches fake-block grapple bounds to their full visual width", () => {
+    const { tuned } = level("level01");
+    const runtime = new LevelRuntime(tuned);
+
+    for (const fake of runtime.platforms.filter((p) => p.spec.kind === "crumble")) {
+      expect(grappleBox(fake.solid)).toEqual({
+        x: fake.spec.x,
+        y: fake.spec.y,
+        w: fake.spec.width,
+        h: fake.spec.height,
+      });
+    }
+  });
+
   it("arms only on dataset-classified bogus blocks, and collapses after a fuse", () => {
     const { tuned } = level("level01");
     const runtime = new LevelRuntime(tuned);
