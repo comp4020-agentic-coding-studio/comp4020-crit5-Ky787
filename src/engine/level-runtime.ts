@@ -134,19 +134,17 @@ export class LevelRuntime {
 
     for (const spec of data.platforms) {
       if (options.withoutCrumble && spec.kind === "crumble") continue;
-      const collisionWidth = spec.kind === "crumble" ? CRUMBLE.collisionWidth : spec.width;
       const runtime: PlatformRuntime = {
         spec,
         solid: {
           id: spec.id,
-          x: spec.x + (spec.width - collisionWidth) / 2,
+          x: spec.x,
           y: spec.y,
-          w: collisionWidth,
+          w: spec.width,
           h: spec.height,
           oneWay: true,
           enabled: true,
           grappleable: true,
-          grappleWidth: spec.width,
         },
         crumble: "intact",
         fuse: 0,
@@ -421,6 +419,7 @@ export class LevelRuntime {
     this.respawnGrace = Math.max(0, this.respawnGrace - dt);
 
     const before = this.player.rope.phase;
+    const impactVelocity = this.player.vy;
     stepPlayer(this.player, input, this.solids, dt);
     if (before !== "attached" && this.player.rope.phase === "attached") {
       const id = this.player.rope.anchorId;
@@ -434,7 +433,9 @@ export class LevelRuntime {
       this.events.push({
         kind: "landed",
         platformId: this.player.groundId,
-        impact: Math.min(1, this.player.vy / 900),
+        // Collision resolution zeroes vertical velocity, so preserve the
+        // pre-step descent speed for physical landing feedback.
+        impact: Math.min(1, Math.max(0, (impactVelocity - 120) / 780)),
       });
     }
     if (this.player.groundId) this.touch(this.player.groundId);

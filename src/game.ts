@@ -6,12 +6,14 @@
 import { browserFetcher, loadIndex, loadLevel } from "./data/levels.ts";
 import type { Fetcher, LoadedLevel } from "./data/levels.ts";
 import type { LevelIndexEntry } from "./data/types.ts";
-import { FIXED_DT, MAX_FRAME_TIME } from "./engine/constants.ts";
+import { AudioManager } from "./audio/audio-manager.ts";
+import { FIXED_DT, HAZARD, MAX_FRAME_TIME } from "./engine/constants.ts";
 import { LevelRuntime } from "./engine/level-runtime.ts";
 import type { RuntimeEvent } from "./engine/level-runtime.ts";
 import { findGrappleTarget } from "./engine/physics.ts";
 import type { GrappleTarget } from "./engine/physics.ts";
 import { Renderer } from "./render/renderer.ts";
+import { AudioSettings } from "./ui/audio-settings.ts";
 import { DebugPanel } from "./ui/debug-panel.ts";
 import { Hud } from "./ui/hud.ts";
 import { InputManager } from "./ui/input.ts";
@@ -32,6 +34,7 @@ export class Game {
   private screens: Screens;
   private modals: Modals;
   private progress = new Progress();
+  private audio = new AudioManager();
 
   private entries: LevelIndexEntry[] = [];
   private cache = new Map<string, LoadedLevel>();
@@ -66,10 +69,12 @@ export class Game {
       resume: () => this.resume(),
       restartCheckpoint: () => {
         this.runtime?.respawnToCheckpoint();
+        this.audio.resetTransient();
         this.resume();
       },
       restartLevel: () => {
         this.runtime?.restartLevel();
+        this.audio.resetTransient();
         this.hintStage = 0;
         this.resume();
       },
@@ -80,7 +85,12 @@ export class Game {
     // so both live in dialogs that suspend the simulation rather than pages
     // that throw it away.
     this.modals = new Modals(document);
-    this.modals.watch(() => this.input.releaseAll());
+    this.modals.watch((open) => {
+      this.input.releaseAll();
+      this.audio.setSuspended(open || this.mode !== "playing");
+    });
+    new AudioSettings(document, this.audio);
+    this.audio.installUnlock(document);
     for (const button of document.querySelectorAll<HTMLElement>('[data-nav="missions"]')) {
       button.addEventListener("click", () => this.showSelect());
     }
@@ -120,6 +130,7 @@ export class Game {
       targetId: this.target?.solid.id ?? null,
       collapsed: runtime.platforms.filter((x) => x.crumble === "collapsed").length,
       watchdog: runtime.hazards.watchdog.active ? runtime.hazards.watchdog.x : null,
+      audio: this.audio.snapshot(),
     };
   }
 
@@ -162,6 +173,7 @@ export class Game {
 
   showSelect(): void {
     this.modals.close();
+    this.audio.stopLevel();
     this.mode = "select";
     this.hud.setVisible(false);
     this.inspector.clear();
@@ -199,6 +211,7 @@ export class Game {
     this.hud.setMission(index, this.runtime);
     this.hud.setVisible(true);
     this.host.style.setProperty("--accent", this.runtime.accent);
+    this.audio.startLevel(this.runtime.data.level.id);
 
     const world = this.runtime.data.world;
     this.renderer.camera.setWorld(world.width, world.height);
@@ -215,6 +228,7 @@ export class Game {
 
   private resume(): void {
     this.mode = "playing";
+    this.audio.setSuspended(this.modals.isOpen);
     this.screens.hide();
     this.input.clearActions();
     this.last = performance.now();
@@ -224,6 +238,7 @@ export class Game {
     if (!this.runtime) return;
     this.modals.close();
     this.mode = "paused";
+    this.audio.setSuspended(true);
     this.input.releaseAll();
     this.screens.pause(this.runtime.data.level.name);
   }
@@ -255,6 +270,7 @@ export class Game {
     }
     if (this.mode === "playing" && this.input.takeAction("restart")) {
       this.runtime.respawnToCheckpoint();
+      this.audio.resetTransient();
       this.renderer.camera.kick(0.3);
     }
     this.input.clearActions();
@@ -264,6 +280,7 @@ export class Game {
 
     const aim = this.resolveAim();
     if (this.mode === "playing" && !this.modals.isOpen) this.simulate(dt, aim);
+    this.updateAudio(dt);
 
     this.renderer.particles.update(dt);
     this.updateCamera(dt, aim);
@@ -302,6 +319,7 @@ export class Game {
       const edges = this.input.takeEdges();
       this.input.state.jumpPressed = edges.jump;
       this.input.state.grapplePressed = edges.grapple;
+      if (edges.grapple && !runtime.dead) this.audio.play("grappleFire");
       runtime.step(this.input.state, FIXED_DT);
       this.input.state.jumpPressed = false;
       this.input.state.grapplePressed = false;
@@ -321,6 +339,7 @@ export class Game {
     for (const event of events) {
       switch (event.kind) {
         case "crumble-armed":
+          this.audio.play("crumbleStart");
           this.hud.toast("BLOCK UNSTABLE", "Hikari bogus control flow", "bad");
           fx.burst(
             (runtime.platformsById.get(event.platformId)?.solid.x ?? 0) + 40,
@@ -331,26 +350,37 @@ export class Game {
           );
           break;
         case "crumble-collapsed":
+          this.audio.play("crumbleBreak");
           fx.shatter(event.box.x, event.box.y, event.box.w, event.box.h + 90, "#ff6f88");
           this.renderer.camera.kick(0.35);
           break;
         case "checkpoint":
+          this.audio.play("confirm", 1, 0.96);
           this.hud.toast(event.label, "Respawn point set", "good");
           fx.burst(event.x, event.y, 26, accent, 220);
           break;
         case "beacon":
+          this.audio.play("notification", event.beacon.softCheckpoint ? 0.78 : 0.62);
           this.hud.toast(event.beacon.label, event.beacon.detail, "info");
           break;
         case "landed":
+          if (event.impact > 0.16) this.audio.play("landing", 0.28 + event.impact * 0.72);
           if (event.impact > 0.5) fx.burst(runtime.player.x, runtime.player.y + 17, 5, "#8fb6d6", 90);
           break;
+        case "grappled":
+          this.audio.play("grappleAttach");
+          break;
         case "death":
+          this.audio.play("death");
+          this.audio.resetTransient();
           this.deathFlash = 1;
           this.renderer.camera.kick(0.8);
           fx.burst(event.x, event.y, 34, "#ff5f7a", 380);
           this.hud.toast(DEATH_TEXT[event.cause][0], DEATH_TEXT[event.cause][1], "bad");
           break;
         case "respawn":
+          this.audio.resetTransient();
+          this.audio.play("respawn");
           fx.burst(event.x, event.y, 18, accent, 180);
           break;
         case "complete":
@@ -366,6 +396,7 @@ export class Game {
     const runtime = this.runtime;
     if (!runtime) return;
     this.mode = "complete";
+    this.audio.complete();
     this.completeFlash = 1;
     this.renderer.camera.kick(0.5);
     this.renderer.particles.burst(runtime.player.x, runtime.player.y, 60, runtime.accent, 420);
@@ -378,6 +409,40 @@ export class Game {
       record,
       this.levelIndex + 1 < this.entries.length,
     );
+  }
+
+  private updateAudio(dt: number): void {
+    const runtime = this.runtime;
+    if (!runtime) return;
+    const p = runtime.player;
+    let scannerProximity = 0;
+    for (const beam of runtime.hazards.beams) {
+      if (!beam.armed) continue;
+      const dx = Math.abs(p.x - beam.x);
+      const dy = p.y < beam.top ? beam.top - p.y : p.y > beam.bottom ? p.y - beam.bottom : 0;
+      scannerProximity = Math.max(scannerProximity, 1 - Math.hypot(dx, dy) / 1050);
+    }
+
+    const watchdog = runtime.hazards.watchdog;
+    const watchdogPressure = watchdog.active
+      ? 1 - Math.min(1, Math.max(0, p.x - watchdog.x) / HAZARD.watchdog.maxTrail)
+      : 0;
+    const rootPressure =
+      runtime.data.level.id === "level08"
+        ? Math.max(0, (runtime.progressFraction() - 0.64) / 0.36)
+        : 0;
+
+    this.audio.update(dt, {
+      active: this.mode === "playing" && !this.modals.isOpen,
+      alive: !runtime.dead && !runtime.completed,
+      reeling: p.rope.phase === "attached" && p.rope.shrink > 0.01,
+      scannerProximity: Math.min(1, Math.max(0, scannerProximity)),
+      firewallClosed: runtime.hazards.gates.map((gate) =>
+        Math.hypot(p.x - gate.x, p.y - (gate.top + gate.bottom) / 2) < 950 ? gate.lethal : null,
+      ),
+      watchdogPressure,
+      tension: Math.max(watchdogPressure, rootPressure),
+    });
   }
 
   private updateCamera(dt: number, aim: { x: number; y: number }): void {

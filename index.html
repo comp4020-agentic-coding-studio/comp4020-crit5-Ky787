@@ -22,6 +22,7 @@
       <nav aria-label="Primary">
         <button type="button" data-nav="missions">Missions</button>
         <button type="button" data-opens-modal="howto">How to play</button>
+        <button type="button" data-opens-modal="audio">Audio</button>
         <button type="button" data-opens-modal="about">About the data</button>
       </nav>
       <p class="topbar-note">Hikari-obfuscated x86-64 · eight real traces</p>
@@ -109,6 +110,41 @@
         <p class="sheet-note">
           Checkpoints and the spawn are safe harbours — nothing can kill you inside one. Dying costs
           a retry and puts you back at the last one, with the collapsed blocks restored.
+        </p>
+      </div>
+    </dialog>
+
+    <dialog data-modal="audio" aria-labelledby="audio-title" class="sheet audio-sheet">
+      <div class="sheet-inner">
+        <header class="sheet-head">
+          <h2 id="audio-title">Audio</h2>
+          <button type="button" class="sheet-close" data-close aria-label="Close">✕</button>
+        </header>
+
+        <p class="sheet-lede">
+          Balance the soundtrack and gameplay feedback. Settings are saved in this browser.
+        </p>
+
+        <div class="audio-settings">
+          <label class="audio-setting">
+            <span>Music volume</span>
+            <input data-audio-music type="range" min="0" max="100" step="1" />
+            <output data-audio-music-value>35%</output>
+          </label>
+          <label class="audio-setting">
+            <span>SFX volume</span>
+            <input data-audio-sfx type="range" min="0" max="100" step="1" />
+            <output data-audio-sfx-value>68%</output>
+          </label>
+          <label class="audio-mute">
+            <input data-audio-mute type="checkbox" />
+            <span>Mute all audio</span>
+          </label>
+        </div>
+
+        <p class="sheet-note">
+          Audio starts after your first click or key press, as required by browser autoplay rules.
+          Visual hazard cues remain unchanged when muted.
         </p>
       </div>
     </dialog>

@@ -115,11 +115,17 @@ describe("engine: hazards never seal the route", () => {
 });
 
 describe("engine: crumble blocks", () => {
-  it("matches fake-block grapple bounds to their full visual width", () => {
+  it("matches fake-block landing and grapple bounds to their full visual width", () => {
     const { tuned } = level("level01");
     const runtime = new LevelRuntime(tuned);
 
     for (const fake of runtime.platforms.filter((p) => p.spec.kind === "crumble")) {
+      expect(fake.solid).toMatchObject({
+        x: fake.spec.x,
+        y: fake.spec.y,
+        w: fake.spec.width,
+        h: fake.spec.height,
+      });
       expect(grappleBox(fake.solid)).toEqual({
         x: fake.spec.x,
         y: fake.spec.y,

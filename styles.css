@@ -864,6 +864,52 @@ kbd {
   outline: none;
 }
 
+.audio-sheet {
+  width: min(560px, calc(100vw - 24px));
+}
+
+.audio-settings {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.audio-setting {
+  display: grid;
+  grid-template-columns: minmax(112px, 1fr) minmax(140px, 2fr) 44px;
+  gap: 14px;
+  align-items: center;
+  color: var(--ink-dim);
+  font-size: 12px;
+}
+
+.audio-setting input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.audio-setting output {
+  color: var(--ink);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.audio-mute {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  color: var(--ink);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.audio-mute input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+}
+
 @media (max-width: 560px) {
   .sheet-keys li {
     grid-template-columns: 1fr;
@@ -872,6 +918,15 @@ kbd {
 
   .sheet-keys li > span:first-child {
     text-align: left;
+  }
+
+  .audio-setting {
+    grid-template-columns: 1fr 44px;
+  }
+
+  .audio-setting input[type="range"] {
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
 }
 

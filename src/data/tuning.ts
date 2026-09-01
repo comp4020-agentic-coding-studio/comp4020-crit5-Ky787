@@ -13,8 +13,12 @@
  * Platform ids, logical nodes, occurrences, trace occurrences, raw-block
  * mappings, code display payloads, provenance, richness, machine CFG truth,
  * semantic events, `y` and heights are copied untouched. Crumble decoys widen
- * to match the genuine route platform they appear to lead toward, while keeping
- * their authored centre point fixed.
+ * to match the genuine route platform they appear to lead toward. Their near
+ * edge stays fixed and the added width grows away from that route platform.
+ * The widened slab also moves horizontally away from the straight anchor-to-
+ * target corridor by the added half-width plus a small margin. That preserves
+ * the clearance the authored narrow footprint gave an honest grapple while
+ * making the whole rendered slab valid footing.
  *
  * Two properties make it safe for all eight levels rather than only the flat
  * ones:
@@ -277,13 +281,58 @@ export function tuneLayout(level: LevelData, profile?: GapProfile): LevelData {
     const apparentTarget = p.apparent_target_platform
       ? deliveredById.get(p.apparent_target_platform)
       : undefined;
+    const physicalAnchor = p.physical_anchor_platform
+      ? deliveredById.get(p.physical_anchor_platform)
+      : undefined;
     const width = p.kind === "crumble" && apparentTarget ? apparentTarget.width : p.width;
+    const targetX = apparentTarget
+      ? apparentTarget.x + (offsets.get(apparentTarget.id) ?? 0)
+      : movedX;
+    const relative = movedX + p.width / 2 - (targetX + (apparentTarget?.width ?? p.width) / 2);
+    const widenedX =
+      p.kind !== "crumble" || width === p.width
+        ? movedX
+        : relative < 0
+          ? movedX - (width - p.width)
+          : relative > 0
+            ? movedX
+            : movedX - (width - p.width) / 2;
+    let corridorShift = 0;
+    if (p.kind === "crumble" && width > p.width && apparentTarget && physicalAnchor) {
+      const anchorX = physicalAnchor.x + (offsets.get(physicalAnchor.id) ?? 0);
+      const ax = anchorX + physicalAnchor.width / 2;
+      const ay = physicalAnchor.y + physicalAnchor.height / 2;
+      const bx = targetX + apparentTarget.width / 2;
+      const by = apparentTarget.y + apparentTarget.height / 2;
+      const cx = widenedX + width / 2;
+      const cy = p.y + p.height / 2;
+      const vx = bx - ax;
+      const vy = by - ay;
+      const lengthSq = vx * vx + vy * vy;
+      if (lengthSq > 1) {
+        const along = Math.min(1, Math.max(0, ((cx - ax) * vx + (cy - ay) * vy) / lengthSq));
+        const awayX = cx - (ax + along * vx);
+        const side = Math.sign(awayX || -vy || 1);
+        corridorShift = side * ((width - p.width) / 2 + 24);
+      }
+
+      // Keep the authored side of the physical anchor. A nearby decoy may
+      // approach the anchor as it clears the corridor, but never cross it and
+      // become a different spatial choice.
+      const authoredAnchorCentre = physicalAnchor.x + physicalAnchor.width / 2;
+      const authoredSide = Math.sign(p.x + p.width / 2 - authoredAnchorCentre);
+      const tunedAnchorCentre = anchorX + physicalAnchor.width / 2;
+      const shiftedCentre = widenedX + width / 2 + corridorShift;
+      if (authoredSide !== 0 && Math.sign(shiftedCentre - tunedAnchorCentre) !== authoredSide) {
+        corridorShift = tunedAnchorCentre + authoredSide - (widenedX + width / 2);
+      }
+    }
 
     return {
       ...p,
-      // Grow decoys equally in both directions so their authored position and
-      // relationship to the route do not move.
-      x: movedX - (width - p.width) / 2,
+      // Keep the edge facing the apparent target where it was authored; all
+      // extra footing grows away from the successful route.
+      x: widenedX + corridorShift,
       width,
     };
   });
@@ -328,4 +377,3 @@ export function layoutOffsets(level: LevelData): XOffsets {
   const profile = GAP_PROFILES[level.level.theme];
   return profile ? buildOffsets(level, profile) : new Map<string, number>();
 }
-

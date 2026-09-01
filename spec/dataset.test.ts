@@ -9,6 +9,21 @@ import { alongSegment, layoutOffsets, platformCentre, tuneLayout } from "../src/
 import { parseIndex, parseLevel } from "../src/data/levels.ts";
 import { index, levels, level, readJson } from "./fixtures.ts";
 
+function distanceToSegment(
+  point: { x: number; y: number },
+  start: { x: number; y: number },
+  end: { x: number; y: number },
+): number {
+  const vx = end.x - start.x;
+  const vy = end.y - start.y;
+  const lengthSq = vx * vx + vy * vy;
+  const along =
+    lengthSq > 0
+      ? Math.min(1, Math.max(0, ((point.x - start.x) * vx + (point.y - start.y) * vy) / lengthSq))
+      : 0;
+  return Math.hypot(point.x - start.x - along * vx, point.y - start.y - along * vy);
+}
+
 describe("dataset: index", () => {
   it("is schema version 2 and lists all eight missions in order", () => {
     expect(index.schema_version).toBe(2);
@@ -420,8 +435,9 @@ describe("layout tuning preserves every binary fact", () => {
 
       const widened = Math.abs(cx(b1) - cx(a1) - (cx(b0) - cx(a0)));
       const drift = Math.abs(cx(p1) - cx(a1) - (cx(p) - cx(a0)));
-      expect(drift, `${p.id} drifted further than its anchor step was widened`).toBeLessThanOrEqual(
-        widened + 0.5,
+      const outwardGrowth = Math.abs(p1.width - p.width);
+      expect(drift, `${p.id} drifted further than layout widening explains`).toBeLessThanOrEqual(
+        widened + outwardGrowth + 24.5,
       );
       // Vertical placement is delivered geometry and is never touched.
       expect(p1.y).toBe(p.y);
@@ -435,19 +451,37 @@ describe("layout tuning preserves every binary fact", () => {
   });
 
   it.each(levels)("$entry.id makes fake Hikari blocks as wide as normal blocks", ({ source, tuned }) => {
+    const sourceById = new Map(source.platforms.map((p) => [p.id, p]));
     const tunedById = new Map(tuned.platforms.map((p) => [p.id, p]));
     const offsets = layoutOffsets(source);
 
     for (const before of source.platforms.filter((p) => p.kind === "crumble")) {
       const after = tunedById.get(before.id)!;
       const target = tunedById.get(before.apparent_target_platform!)!;
-      const expectedCentre = before.x + before.width / 2 + (offsets.get(before.id) ?? 0);
+      const movedX = before.x + (offsets.get(before.id) ?? 0);
+      const anchorBefore = sourceById.get(before.physical_anchor_platform!)!;
+      const targetBefore = sourceById.get(before.apparent_target_platform!)!;
+      const anchorAfter = tunedById.get(before.physical_anchor_platform!)!;
+      const clearanceBefore = distanceToSegment(
+        platformCentre(before),
+        platformCentre(anchorBefore),
+        platformCentre(targetBefore),
+      );
+      const clearanceAfter = distanceToSegment(
+        platformCentre(after),
+        platformCentre(anchorAfter),
+        platformCentre(target),
+      );
 
       expect(after.width, `${before.id} does not match its normal target`).toBe(target.width);
-      expect(after.x + after.width / 2, `${before.id} moved while being widened`).toBeCloseTo(
-        expectedCentre,
-        8,
-      );
+      expect(
+        clearanceAfter,
+        `${before.id} lost its authored clearance from the honest grapple corridor`,
+      ).toBeGreaterThanOrEqual(clearanceBefore - 2);
+      expect(
+        Math.abs(platformCentre(after).x - (movedX + before.width / 2)),
+        `${before.id} moved beyond its width-clearance allowance`,
+      ).toBeLessThanOrEqual(after.width - before.width + 24.5);
     }
   });
 
