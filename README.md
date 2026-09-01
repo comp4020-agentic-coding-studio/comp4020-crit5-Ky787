@@ -9,26 +9,6 @@ anyone who trusts it.
 **Swing through the control flow of an obfuscated binary without trusting fake
 code.**
 
-## Playing it
-
-```text
-A / D            move
-Space            jump — or let go of the line with a kick
-Mouse            aim
-Left click       hold to grapple, release to let go (fires hit or miss)
-W / right click  reel the line in
-S                pay line out, or drop through a block
-R                restart at the last checkpoint
-Esc              pause
-F1               analysis overlay
-```
-
-`?level=level03` deep-links a mission; `?analysis=1` opens the overlay on load.
-
-**How to play** and **About the data** in the top bar open as dialogs rather
-than pages, so reading either mid-mission suspends the run instead of throwing
-it away.
-
 ## The eight missions
 
 | # | Mission | Shape | Identity |
