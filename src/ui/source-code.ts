@@ -70,12 +70,14 @@ export class SourceCodeView {
   private readonly trigger: HTMLButtonElement | null;
   private readonly title: HTMLElement | null;
   private readonly filename: HTMLElement | null;
+  private readonly command: HTMLElement | null;
   private readonly code: HTMLElement | null;
 
   constructor(root: ParentNode = document) {
     this.trigger = root.querySelector<HTMLButtonElement>("[data-source-trigger]");
     this.title = root.querySelector<HTMLElement>("[data-source-title]");
     this.filename = root.querySelector<HTMLElement>("[data-source-filename]");
+    this.command = root.querySelector<HTMLElement>("[data-source-command]");
     this.code = root.querySelector<HTMLElement>("[data-source-code]");
     this.clear();
   }
@@ -95,6 +97,7 @@ export class SourceCodeView {
       this.title.textContent = `${String(levelNumber).padStart(2, "0")} — ${levelName}`;
     }
     if (this.filename) this.filename.textContent = program.filename;
+    if (this.command) renderCompileCommand(this.command, program.compileCommand);
     if (this.code) renderCSource(this.code, program.text);
   }
 
@@ -105,7 +108,34 @@ export class SourceCodeView {
     }
     if (this.title) this.title.textContent = "Source code";
     if (this.filename) this.filename.textContent = "No mission selected";
+    this.command?.replaceChildren();
     this.code?.replaceChildren();
+  }
+}
+
+/** Preserve the supplied command while marking the options consumed by Hikari. */
+export function renderCompileCommand(target: HTMLElement, command: string): void {
+  target.replaceChildren();
+  let hikariOptionFollows = false;
+
+  for (const part of command.split(/(\s+)/)) {
+    if (!part) continue;
+    if (/^\s+$/.test(part)) {
+      target.append(document.createTextNode(part));
+      continue;
+    }
+
+    const node = document.createElement("span");
+    node.textContent = part;
+    if (part === "clang.exe") node.className = "command-tool";
+    if (part === "-mllvm") {
+      node.className = "command-hikari command-forwarder";
+      hikariOptionFollows = true;
+    } else if (hikariOptionFollows) {
+      node.className = "command-hikari";
+      hikariOptionFollows = false;
+    }
+    target.append(node);
   }
 }
 

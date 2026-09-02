@@ -484,6 +484,9 @@ async function main(): Promise<void> {
       open: boolean;
       title: string;
       filename: string;
+      command: boolean;
+      hikariArgs: number;
+      defaults: boolean;
       hasCode: boolean;
       highlighted: boolean;
     }>(
@@ -494,6 +497,12 @@ async function main(): Promise<void> {
           open: d.open,
           title: d.querySelector('[data-source-title]').textContent ?? '',
           filename: d.querySelector('[data-source-filename]').textContent ?? '',
+          command: (d.querySelector('[data-source-command]').textContent ?? '')
+            .includes('-mllvm -enable-bcfobf'),
+          hikariArgs: d.querySelectorAll('.command-hikari').length,
+          defaults: (d.querySelector('[data-source-defaults]').textContent ?? '')
+            .includes('bcf_cond_compl=3') &&
+            (d.querySelector('[data-source-defaults]').textContent ?? '').includes('FLA=off'),
           hasCode: (d.querySelector('[data-source-code]').textContent ?? '')
             .includes('Binary Ninja - Level 1: Ghostline'),
           highlighted: d.querySelectorAll('.c-keyword, .c-type, .c-function').length > 20,
@@ -505,6 +514,9 @@ async function main(): Promise<void> {
       source.open &&
         source.title.includes("Ghostline") &&
         source.filename === "level01_ghostline.c" &&
+        source.command &&
+        source.hikariArgs > 10 &&
+        source.defaults &&
         source.hasCode &&
         source.highlighted,
     );

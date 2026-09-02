@@ -909,6 +909,95 @@ kbd {
   font-size: 11px;
 }
 
+.source-build {
+  flex: none;
+  margin: 2px 0 16px;
+}
+
+.source-build-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.sheet .source-build-heading h3 {
+  margin: 0;
+}
+
+.source-build-heading span {
+  color: var(--ink-faint);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.source-build-heading i {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 5px;
+  border-radius: 2px;
+  background: #f18bbd;
+  box-shadow: 0 0 7px rgba(241, 139, 189, 0.55);
+}
+
+.source-command {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--accent);
+  border-radius: 5px;
+  background: #05080d;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.sheet .source-command code {
+  padding: 0;
+  background: transparent;
+  color: #9eb2c4;
+  font: 11px/1.7 var(--mono);
+}
+
+.command-tool {
+  color: #7ee787;
+  font-weight: 600;
+}
+
+.command-hikari {
+  padding: 1px 3px;
+  border-radius: 3px;
+  background: rgba(241, 139, 189, 0.1);
+  color: #f18bbd;
+  font-weight: 600;
+}
+
+.command-forwarder {
+  color: #b792e6;
+}
+
+.sheet .source-defaults {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  margin: 7px 0 0;
+  color: var(--ink-faint);
+  font-size: 9.5px;
+}
+
+.source-defaults span {
+  margin-right: 2px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sheet .source-defaults code {
+  padding: 1px 4px;
+  color: #d7a7cf;
+}
+
 .source-code {
   flex: 1;
   min-height: 0;
@@ -1035,6 +1124,15 @@ kbd {
 }
 
 @media (max-width: 560px) {
+  .source-build-heading {
+    display: block;
+  }
+
+  .source-build-heading span {
+    display: block;
+    margin-top: 3px;
+  }
+
   .sheet-keys li {
     grid-template-columns: 1fr;
     gap: 0;

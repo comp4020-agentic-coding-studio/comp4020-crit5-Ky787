@@ -127,6 +127,22 @@
           <button type="button" class="sheet-close" data-close aria-label="Close">✕</button>
         </header>
 
+        <section class="source-build" aria-labelledby="source-command-title">
+          <div class="source-build-heading">
+            <h3 id="source-command-title">Obfuscating compile command</h3>
+            <span><i aria-hidden="true"></i> Hikari-specific arguments</span>
+          </div>
+          <pre class="source-command"><code data-source-command></code></pre>
+          <p class="source-defaults" data-source-defaults>
+            <span>Effective defaults</span>
+            <code>bcf_loop=1</code>
+            <code>bcf_cond_compl=3</code>
+            <code>sub_loop=1</code>
+            <code>sub_prob=50</code>
+            <code>FLA=off</code>
+          </p>
+        </section>
+
         <p class="source-context">
           Original C source used to build this mission's program. The platforms show disassembly
           from its compiled, Hikari-obfuscated binary; this source view is provided separately for
