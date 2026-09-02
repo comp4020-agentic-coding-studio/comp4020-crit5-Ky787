@@ -22,6 +22,9 @@
       <nav aria-label="Primary">
         <button type="button" data-nav="missions">Missions</button>
         <button type="button" data-opens-modal="howto">How to play</button>
+        <button disabled type="button" data-source-trigger data-opens-modal="source">
+          Source code
+        </button>
         <button type="button" data-opens-modal="audio">Audio</button>
         <button type="button" data-opens-modal="about">About the data</button>
       </nav>
@@ -111,6 +114,26 @@
           Checkpoints and the spawn are safe harbours — nothing can kill you inside one. Dying costs
           a retry and puts you back at the last one, with the collapsed blocks restored.
         </p>
+      </div>
+    </dialog>
+
+    <dialog data-modal="source" aria-labelledby="source-title" class="sheet source-sheet">
+      <div class="sheet-inner source-sheet-inner">
+        <header class="sheet-head source-sheet-head">
+          <div>
+            <p class="source-filename" data-source-filename>No mission selected</p>
+            <h2 id="source-title" data-source-title>Source code</h2>
+          </div>
+          <button type="button" class="sheet-close" data-close aria-label="Close">✕</button>
+        </header>
+
+        <p class="source-context">
+          Original C source used to build this mission's program. The platforms show disassembly
+          from its compiled, Hikari-obfuscated binary; this source view is provided separately for
+          comparison. Blackout and Root encrypt their strings in the compiled binary.
+        </p>
+
+        <pre class="source-code" aria-label="C source code"><code data-source-code></code></pre>
       </div>
     </dialog>
 

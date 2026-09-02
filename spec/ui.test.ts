@@ -255,9 +255,11 @@ describe("top-bar dialogs", () => {
       <nav>
         <button type="button" data-nav="missions">Missions</button>
         <button type="button" data-opens-modal="howto">How to play</button>
+        <button type="button" data-opens-modal="source">Source code</button>
         <button type="button" data-opens-modal="about">About the data</button>
       </nav>
       <dialog data-modal="howto"><div><button data-close>x</button>controls</div></dialog>
+      <dialog data-modal="source"><div><button data-close>x</button>source</div></dialog>
       <dialog data-modal="about"><div><button data-close>x</button>provenance</div></dialog>`;
     return { root, modals: new Modals(root) };
   }
@@ -266,6 +268,7 @@ describe("top-bar dialogs", () => {
     const { modals } = page();
     expect(modals.isOpen).toBe(false);
     expect(modals.has("howto")).toBe(true);
+    expect(modals.has("source")).toBe(true);
     expect(modals.has("about")).toBe(true);
   });
 

@@ -478,6 +478,42 @@ async function main(): Promise<void> {
       `${carriedOn.elapsed.toFixed(2)}s`,
     );
 
+    await evaluate(cdp, `document.querySelector('[data-opens-modal="source"]').click()`);
+    await sleep(300);
+    const source = await evaluate<{
+      open: boolean;
+      title: string;
+      filename: string;
+      hasCode: boolean;
+      highlighted: boolean;
+    }>(
+      cdp,
+      `(() => {
+        const d = document.querySelector('dialog[data-modal="source"]');
+        return {
+          open: d.open,
+          title: d.querySelector('[data-source-title]').textContent ?? '',
+          filename: d.querySelector('[data-source-filename]').textContent ?? '',
+          hasCode: (d.querySelector('[data-source-code]').textContent ?? '')
+            .includes('Binary Ninja - Level 1: Ghostline'),
+          highlighted: d.querySelectorAll('.c-keyword, .c-type, .c-function').length > 20,
+        };
+      })()`,
+    );
+    check(
+      "Source code opens the active mission's highlighted C program",
+      source.open &&
+        source.title.includes("Ghostline") &&
+        source.filename === "level01_ghostline.c" &&
+        source.hasCode &&
+        source.highlighted,
+    );
+    await evaluate(
+      cdp,
+      `document.querySelector('dialog[data-modal="source"] [data-close]').click()`,
+    );
+    await sleep(250);
+
     await evaluate(cdp, `document.querySelector('[data-opens-modal="about"]').click()`);
     await sleep(300);
     const about = await evaluate<boolean>(

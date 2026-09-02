@@ -22,6 +22,7 @@ import { Modals } from "./ui/modals.ts";
 import { Progress } from "./ui/progress.ts";
 import { Screens } from "./ui/screens.ts";
 import type { MissionFacts } from "./ui/screens.ts";
+import { SourceCodeView } from "./ui/source-code.ts";
 
 type Mode = "boot" | "select" | "playing" | "paused" | "complete";
 
@@ -33,6 +34,7 @@ export class Game {
   private debug: DebugPanel;
   private screens: Screens;
   private modals: Modals;
+  private sourceCode: SourceCodeView;
   private progress = new Progress();
   private audio = new AudioManager();
 
@@ -81,10 +83,11 @@ export class Game {
       toSelect: () => this.showSelect(),
       next: () => void this.startIndex(this.levelIndex + 1),
     });
-    // Reading the controls or the provenance notes must not cost you the run,
-    // so both live in dialogs that suspend the simulation rather than pages
+    // Reading controls, source or provenance notes must not cost you the run,
+    // so they live in dialogs that suspend the simulation rather than pages
     // that throw it away.
     this.modals = new Modals(document);
+    this.sourceCode = new SourceCodeView(document);
     this.modals.watch((open) => {
       this.input.releaseAll();
       this.audio.setSuspended(open || this.mode !== "playing");
@@ -173,6 +176,7 @@ export class Game {
 
   showSelect(): void {
     this.modals.close();
+    this.sourceCode.clear();
     this.audio.stopLevel();
     this.mode = "select";
     this.hud.setVisible(false);
@@ -210,6 +214,7 @@ export class Game {
     this.hud.reset();
     this.hud.setMission(index, this.runtime);
     this.hud.setVisible(true);
+    this.sourceCode.setLevel(entry.id, entry.name, entry.number);
     this.host.style.setProperty("--accent", this.runtime.accent);
     this.audio.startLevel(this.runtime.data.level.id);
 
