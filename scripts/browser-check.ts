@@ -437,36 +437,17 @@ async function main(): Promise<void> {
       );
     }
 
-    // Crit 5 requires the game to teach itself, so the How to Play entry point
-    // is hidden while its content stays available for restoration afterwards.
+    // Reading the controls mid-mission must suspend the run, not end it.
     await waitFor(cdp, (s) => s.grounded && !s.dead, 6000);
-    const howTo = await evaluate<{ hidden: boolean; open: boolean; text: boolean }>(
-      cdp,
-      `(() => {
-        const trigger = document.querySelector('[data-opens-modal="howto"]');
-        const dialog = document.querySelector('dialog[data-modal="howto"]');
-        return {
-          hidden: trigger.hidden && getComputedStyle(trigger).display === 'none',
-          open: dialog.open,
-          text: (dialog.textContent ?? '').includes('grappling gun'),
-        };
-      })()`,
-    );
-    check(
-      "How to Play is hidden for the self-teaching crit build",
-      howTo.hidden && !howTo.open && howTo.text,
-    );
-
-    // The remaining top-bar dialogs still suspend the run rather than ending it.
     const beforeSheet = await evaluate<Snapshot>(cdp, "globalThis.binaryNinja.snapshot()");
-    await evaluate(cdp, `document.querySelector('[data-opens-modal="about"]').click()`);
+    await evaluate(cdp, `document.querySelector('[data-opens-modal="howto"]').click()`);
     await sleep(300);
-    const about = await evaluate<boolean>(
+    const sheetOpen = await evaluate<{ open: boolean; text: boolean }>(
       cdp,
-      `(() => { const d = document.querySelector('dialog[data-modal="about"]');
-        return d.open && (d.textContent ?? '').includes('alteredBB'); })()`,
+      `(() => { const d = document.querySelector('dialog[data-modal="howto"]');
+        return { open: d.open, text: (d.textContent ?? '').includes('grappling gun') }; })()`,
     );
-    check("the About the data dialog opens over the game", about);
+    check("the top bar opens a How to play dialog", sheetOpen.open && sheetOpen.text);
 
     await sleep(900);
     const duringSheet = await evaluate<Snapshot>(cdp, "globalThis.binaryNinja.snapshot()");
@@ -477,13 +458,13 @@ async function main(): Promise<void> {
       `${beforeSheet.elapsed.toFixed(2)}s -> ${duringSheet.elapsed.toFixed(2)}s`,
     );
 
-    // Escape belongs to the visible dialog, not to the pause menu behind it.
+    // Escape belongs to the dialog, not to the pause menu behind it.
     await key(cdp, "keyDown", "Escape", "Escape");
     await key(cdp, "keyUp", "Escape", "Escape");
     await sleep(400);
     const afterEscape = await evaluate<{ open: boolean; mode: string; elapsed: number }>(
       cdp,
-      `(() => { const d = document.querySelector('dialog[data-modal="about"]');
+      `(() => { const d = document.querySelector('dialog[data-modal="howto"]');
         const s = globalThis.binaryNinja.snapshot();
         return { open: d.open, mode: s.mode, elapsed: s.elapsed }; })()`,
     );
@@ -496,6 +477,17 @@ async function main(): Promise<void> {
       carriedOn.elapsed > duringSheet.elapsed + 0.3 && carriedOn.level === "level01",
       `${carriedOn.elapsed.toFixed(2)}s`,
     );
+
+    await evaluate(cdp, `document.querySelector('[data-opens-modal="about"]').click()`);
+    await sleep(300);
+    const about = await evaluate<boolean>(
+      cdp,
+      `(() => { const d = document.querySelector('dialog[data-modal="about"]');
+        return d.open && (d.textContent ?? '').includes('alteredBB'); })()`,
+    );
+    check("the About the data dialog opens over the game", about);
+    await evaluate(cdp, `document.querySelector('dialog[data-modal="about"] [data-close]').click()`);
+    await sleep(250);
 
     // Mission select, and starting a different level from it.
     await evaluate(cdp, `document.querySelector('[data-nav="missions"]').click()`);
